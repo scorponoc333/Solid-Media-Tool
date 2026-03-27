@@ -10,7 +10,7 @@ if (APP_ENV === 'local') {
     define('DB_USER', 'root');
     define('DB_PASS', '');
     define('DB_PORT', '3306');
-    define('BASE_URL', 'http://localhost/social-media/public');
+    define('BASE_URL', 'http://localhost/Solid-SocialMedia/public');
 } else {
     define('DB_HOST', 'localhost');
     define('DB_NAME', 'solidtech_social_prod');
