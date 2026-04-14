@@ -1096,20 +1096,26 @@ function updateResultsCount() {
 // ── Delete single card ──
 function confirmDeleteCard(uid) {
     confirmModal('Remove Post', 'Are you sure you want to remove this generated post?', function() {
-        var card = document.getElementById('card-' + uid);
-        if (!card) return;
-        card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.95)';
+        showDeletingOverlay('Removing post...', 'Cleaning up');
+
         setTimeout(function() {
-            card.remove();
-            persistGeneratedPosts();
-            updateResultsCount();
-            // Show empty state if no cards left
-            if (!document.querySelectorAll('.result-card').length) {
-                showEmptyGeneratorState();
-            }
-        }, 400);
+            hideDeletingOverlay();
+            setTimeout(function() {
+                var card = document.getElementById('card-' + uid);
+                if (!card) return;
+                card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.95) translateY(-8px)';
+                setTimeout(function() {
+                    card.remove();
+                    persistGeneratedPosts();
+                    updateResultsCount();
+                    if (!document.querySelectorAll('.result-card').length) {
+                        showEmptyGeneratorState();
+                    }
+                }, 400);
+            }, 300);
+        }, 1500);
     });
 }
 
@@ -1117,22 +1123,12 @@ function confirmDeleteCard(uid) {
 function confirmClearAll() {
     var count = document.querySelectorAll('.result-card').length;
     confirmModal('Clear All Posts', 'Are you sure you want to clear all ' + count + ' generated post' + (count > 1 ? 's' : '') + '? This cannot be undone.', function() {
-        // Show clearing overlay
-        var primary = '<?= $primaryColor ?>';
-        var overlay = document.createElement('div');
-        overlay.id = 'clearingOverlay';
-        overlay.style.cssText = 'position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(165deg,' + primary + ' 0%,color-mix(in srgb,' + primary + ' 35%,#0a0a0a) 55%,#0a0a0a 100%);opacity:0;transition:opacity 0.3s ease';
-        overlay.innerHTML = '<div style="width:48px;height:48px;border:2.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.7);border-radius:50%;animation:cinSpin 0.7s linear infinite;margin-bottom:16px"></div>'
-            + '<div style="font-size:16px;font-weight:600;color:rgba(255,255,255,0.7)">Clearing posts...</div>'
-            + '<div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:6px">One moment</div>';
-        document.body.appendChild(overlay);
-        requestAnimationFrame(function() { overlay.style.opacity = '1'; });
+        showDeletingOverlay('Clearing posts...', 'Removing all generated content');
 
         // After 1.5s, fade out overlay, then stagger-remove cards
         setTimeout(function() {
-            overlay.style.opacity = '0';
+            hideDeletingOverlay();
             setTimeout(function() {
-                overlay.remove();
                 // Stagger fade out each card
                 var cards = Array.from(document.querySelectorAll('.result-card'));
                 cards.forEach(function(card, i) {
@@ -1153,6 +1149,48 @@ function confirmClearAll() {
             }, 300);
         }, 1500);
     });
+}
+
+function showDeletingOverlay(title, subtitle) {
+    var primary = '<?= $primaryColor ?>';
+    var overlay = document.createElement('div');
+    overlay.id = 'clearingOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(165deg,' + primary + ' 0%,color-mix(in srgb,' + primary + ' 35%,#0a0a0a) 55%,#0a0a0a 100%);opacity:0;transition:opacity 0.3s ease;overflow:hidden';
+
+    // Particles
+    var particles = '';
+    for (var i = 0; i < 14; i++) {
+        var sz = 2 + Math.random() * 3;
+        particles += '<span style="position:absolute;width:' + sz + 'px;height:' + sz + 'px;border-radius:50%;background:rgba(255,255,255,0.4);opacity:0;left:' + (5 + Math.random() * 90) + '%;animation:cinFloat ' + (2 + Math.random() * 2.5) + 's ease-in-out infinite;animation-delay:-' + (Math.random() * 3).toFixed(1) + 's"></span>';
+    }
+
+    overlay.innerHTML = '<div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">' + particles + '</div>'
+        // Atom orbits
+        + '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:260px;height:260px;pointer-events:none">'
+        + '<div style="position:absolute;width:280px;height:100px;top:calc(50% - 50px);left:calc(50% - 140px);border:1.5px solid rgba(255,255,255,0.08);border-radius:50%;animation:cinSpin 6s linear infinite"><div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2.5px;left:calc(50% - 2.5px);box-shadow:0 0 10px rgba(255,255,255,0.6)"></div></div>'
+        + '<div style="position:absolute;width:240px;height:85px;top:calc(50% - 42px);left:calc(50% - 120px);border:1.5px solid rgba(255,255,255,0.06);border-radius:50%;animation:cinSpin 4.5s linear infinite reverse;transform:rotate(55deg)"><div style="position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.5)"></div></div>'
+        + '<div style="position:absolute;width:80px;height:240px;top:calc(50% - 120px);left:calc(50% - 40px);border:1.5px solid rgba(255,255,255,0.05);border-radius:50%;animation:cinSpin 8s linear infinite;transform:rotate(25deg)"><div style="position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.4)"></div></div>'
+        + '</div>'
+        // Pulse rings
+        + '<div style="position:absolute;top:50%;left:50%;width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);animation:tbPulse 2.4s ease-out infinite;pointer-events:none"></div>'
+        + '<div style="position:absolute;top:50%;left:50%;width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);animation:tbPulse 2.4s ease-out infinite 0.8s;pointer-events:none"></div>'
+        // Center content
+        + '<div style="position:relative;z-index:10;text-align:center">'
+        + '<div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;margin:0 auto 18px"><i class="fas fa-trash-alt" style="color:#fff;font-size:24px;filter:drop-shadow(0 0 8px rgba(255,255,255,0.4))"></i></div>'
+        + '<div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:6px">' + title + '</div>'
+        + '<div style="font-size:13px;color:rgba(255,255,255,0.5)">' + subtitle + '</div>'
+        + '</div>';
+
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function() { overlay.style.opacity = '1'; });
+}
+
+function hideDeletingOverlay() {
+    var overlay = document.getElementById('clearingOverlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(function() { overlay.remove(); }, 300);
+    }
 }
 
 function showEmptyGeneratorState() {
@@ -1486,26 +1524,27 @@ function showImageErrorModal(errorMsg, retryCallback) {
     top: 10px;
     right: 10px;
     z-index: 15;
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    border: none;
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    font-size: 16px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 18px;
     line-height: 1;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    backdrop-filter: blur(4px);
-    opacity: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-.result-card:hover .card-delete-x { opacity: 1; }
 .card-delete-x:hover {
     background: var(--danger);
+    color: #fff;
+    border-color: var(--danger);
     transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(239,68,68,0.3);
 }
 
 .save-lock-overlay {
