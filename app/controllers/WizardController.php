@@ -15,10 +15,13 @@ class WizardController extends Controller
         $strategyService = new ContentStrategyService();
         $existingThemes = $strategyService->getThemes($clientId);
 
+        $isMandatory = !empty($_SESSION['needs_wizard']);
+
         $this->view('wizard/index', [
             'pageTitle' => 'Setup Wizard',
             'branding' => $branding,
             'isRerun' => $isRerun,
+            'isMandatory' => $isMandatory,
             'existingThemes' => $existingThemes,
         ]);
     }
@@ -118,8 +121,15 @@ class WizardController extends Controller
         $service = new WizardService();
         $service->saveWizardData($clientId, $input);
 
-        // Mark wizard as complete in session
+        // Mark wizard as complete, clear the mandatory flag
         $_SESSION['wizard_complete'] = true;
+        unset($_SESSION['needs_wizard']);
+
+        // If admin hasn't completed tour yet, queue it up next
+        $user = (new User())->find($_SESSION['user_id']);
+        if ($user && empty($user['has_completed_tour'])) {
+            $_SESSION['needs_tour'] = true;
+        }
 
         @ob_clean();
         $this->json(['success' => true]);

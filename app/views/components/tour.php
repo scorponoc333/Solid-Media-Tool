@@ -80,6 +80,7 @@ $tourSteps = match ($tourRole) {
 .tour-transition.active {
     opacity: 1;
     pointer-events: all;
+    pointer-events: all;
 }
 
 /* Transition inner elements */
@@ -271,9 +272,10 @@ $tourSteps = match ($tourRole) {
     justify-content: center;
     background: linear-gradient(165deg, <?= htmlspecialchars($tourPrimaryColor) ?> 0%, color-mix(in srgb, <?= htmlspecialchars($tourPrimaryColor) ?> 35%, #0a0a0a) 55%, #0a0a0a 100%);
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.4s ease;
 }
-.tour-welcome.active { opacity: 1; }
+.tour-welcome.active { opacity: 1; pointer-events: all; }
 .tour-welcome-card {
     text-align: center;
     color: #fff;

@@ -106,7 +106,17 @@ class AuthController extends Controller
         if (!empty($user['must_change_password'])) {
             $_SESSION['must_change_password'] = true;
         }
-        if (empty($user['has_completed_tour'])) {
+
+        // Admins: check if wizard/setup is needed before tour
+        if ($user['role'] === 'admin') {
+            $wizardService = new WizardService();
+            if (!$wizardService->isSetupComplete($GLOBALS['client_id'])) {
+                $_SESSION['needs_wizard'] = true;
+                // Tour will start after wizard completes
+            } elseif (empty($user['has_completed_tour'])) {
+                $_SESSION['needs_tour'] = true;
+            }
+        } elseif (empty($user['has_completed_tour'])) {
             $_SESSION['needs_tour'] = true;
         }
 

@@ -11,6 +11,12 @@ if ($basePath && str_starts_with($currentPath, $basePath)) {
 }
 $currentPath = $currentPath ?: '/';
 
+// Admin first-time: force wizard before anything else
+if (!empty($_SESSION['needs_wizard']) && $_SESSION['role'] === 'admin' && $currentPath !== '/wizard') {
+    header('Location: ' . BASE_URL . '/wizard');
+    exit;
+}
+
 $darkMode = $_COOKIE['darkMode'] ?? 'false';
 $isDark = $darkMode === 'true';
 

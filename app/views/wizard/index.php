@@ -8,6 +8,7 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 $csrfToken = $_SESSION['csrf_token'];
+$isMandatory = $isMandatory ?? false;
 ?>
 
 <style>
@@ -442,7 +443,7 @@ $csrfToken = $_SESSION['csrf_token'];
                 </div>
 
                 <div class="wizard-footer">
-                    <?php if ($isRerun): ?>
+                    <?php if ($isRerun && empty($isMandatory)): ?>
                     <a href="<?= BASE_URL ?>/branding" class="btn btn-ghost">Cancel</a>
                     <?php else: ?>
                     <div></div>
