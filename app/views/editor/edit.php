@@ -1449,18 +1449,5 @@ function critiquePost() {
     });
 }
 
-// Platform checkbox toggle — sync .selected class with checkbox state
-document.querySelectorAll('.platform-option').forEach(function(label) {
-    label.addEventListener('click', function() {
-        var cb = this.querySelector('input[type="checkbox"]');
-        // Small delay to let the browser toggle the checkbox first
-        setTimeout(function() {
-            if (cb.checked) {
-                label.classList.add('selected');
-            } else {
-                label.classList.remove('selected');
-            }
-        }, 10);
-    });
-});
+
 </script>
