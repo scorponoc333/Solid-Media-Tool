@@ -23,11 +23,25 @@ class EmailService
 
         $provider = $this->settings['provider'] ?? 'smtp';
 
-        return match ($provider) {
+        $result = match ($provider) {
             'sendgrid' => $this->sendViaSendGrid($to, $subject, $htmlBody),
             'mailgun' => $this->sendViaMailgun($to, $subject, $htmlBody),
+            'emailit' => $this->sendViaEmailit($to, $subject, $htmlBody),
             default => $this->sendViaSmtp($to, $subject, $htmlBody),
         };
+
+        // Fallback to Emailit if primary provider fails
+        if (!($result['success'] ?? false) && $provider !== 'emailit') {
+            $emailitKey = $this->settings['emailit_api_key'] ?? '';
+            if (!empty($emailitKey)) {
+                $fallback = $this->sendViaEmailit($to, $subject, $htmlBody);
+                if ($fallback['success'] ?? false) {
+                    return $fallback;
+                }
+            }
+        }
+
+        return $result;
     }
 
     private function sendViaSmtp(string $to, string $subject, string $htmlBody): array
@@ -199,6 +213,54 @@ class EmailService
         }
         $data = json_decode($response, true);
         return ['success' => false, 'error' => $data['message'] ?? "HTTP {$httpCode}"];
+    }
+
+    private function sendViaEmailit(string $to, string $subject, string $htmlBody): array
+    {
+        $apiKey = $this->settings['emailit_api_key'] ?? '';
+        $fromEmail = $this->settings['from_email'] ?? '';
+        $fromName = $this->settings['from_name'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => 'Emailit API key not configured'];
+        }
+
+        $from = $fromName ? "{$fromName} <{$fromEmail}>" : $fromEmail;
+
+        $payload = json_encode([
+            'from' => $from,
+            'to' => [$to],
+            'subject' => $subject,
+            'html' => $htmlBody,
+        ]);
+
+        $ch = curl_init('https://api.emailit.com/v2/emails');
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $payload,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+            CURLOPT_TIMEOUT => 15,
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            return ['success' => false, 'error' => 'Emailit connection error: ' . $error];
+        }
+
+        if ($httpCode >= 200 && $httpCode < 300) {
+            return ['success' => true];
+        }
+
+        $data = json_decode($response, true);
+        return ['success' => false, 'error' => 'Emailit: ' . ($data['message'] ?? $data['error'] ?? "HTTP {$httpCode}")];
     }
 
     public function buildInvitationHtml(string $logoUrl, string $primaryColor, string $companyName, string $recipientName, string $tempPassword, string $loginUrl): string
