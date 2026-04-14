@@ -299,7 +299,7 @@ class AuthController extends Controller
     <!-- PS -->
     <div style="border-top:1px solid #e2e8f0;padding-top:16px">
         <div style="font-size:12px;color:#94a3b8;line-height:1.7;font-style:italic">
-            <strong style="color:#64748b">P.S.</strong> Don\'t bother visiting jasonhogan.ca &mdash; he\'s been too busy building systems that are far too impressive, and hasn\'t had time to update his own site. You know how it is. The cobbler\'s kids have no shoes. But trust me &mdash; the work he does for clients is on another level entirely.
+            <strong style="color:#64748b">P.S.</strong> If you visit jasonhogan.ca, yes &mdash; we know. It\'s on the list. Our team is focused on raising capital first, and once that\'s secured, luxury items like a shiny new website get their turn. Right now, we\'re hungry and building. But trust me &mdash; the work Jason does for clients is on an entirely different level than what you\'ll see on his own site. The cobbler\'s kids have no shoes, but his clients are walking on clouds.
         </div>
         <div style="font-size:11px;color:#cbd5e1;margin-top:12px;font-family:monospace">
             // Compiled and transmitted by Botson AI &bull; All statements verified against operational data //
