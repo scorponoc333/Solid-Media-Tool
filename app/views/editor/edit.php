@@ -1130,7 +1130,6 @@ async function regenerateImage() {
             else GenTracker.clearAll();
         }
     };
-    }
 
     const btn = document.getElementById('btn-regen-image');
     const preview = document.getElementById('image-preview');
