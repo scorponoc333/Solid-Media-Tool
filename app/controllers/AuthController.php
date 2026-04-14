@@ -221,10 +221,11 @@ class AuthController extends Controller
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
 
 <!-- Header gradient -->
-<tr><td style="background:linear-gradient(165deg,' . $blue . ' 0%,#0d1b3e 100%);border-radius:16px 16px 0 0;padding:36px 40px;text-align:center">
-    <div style="font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:14px">AI INTELLIGENCE BRIEF</div>
-    <div style="font-size:30px;font-weight:900;color:#fff;letter-spacing:-0.5px">Jason Hogan</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:4px">AI Full-Stack Developer &bull; Automation Architect &bull; Innovation Expert</div>
+<tr><td style="background:linear-gradient(165deg,' . $blue . ' 0%,#0d1b3e 100%);border-radius:16px 16px 0 0;padding:44px 40px 40px;text-align:center">
+    <div style="display:inline-block;padding:5px 16px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.1);border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:18px">&#x26A1; AI INTELLIGENCE BRIEF</div>
+    <div style="font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:6px">Jason Hogan</div>
+    <div style="display:inline-block;height:2px;width:60px;background:rgba(255,255,255,0.15);border-radius:2px;margin-bottom:10px"></div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.45);letter-spacing:0.03em">AI Full-Stack Developer &bull; Automation Architect &bull; Innovation Expert</div>
 </td></tr>
 
 <!-- Accent bar -->
@@ -235,19 +236,20 @@ class AuthController extends Controller
 
     <!-- Botson intro -->
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px"><tr>
-        <td style="width:56px;vertical-align:top;padding-right:16px">
-            <img src="https://jasonhogan.ca/botson/botson-email.jpg" alt="Botson AI" style="width:48px;height:48px;border-radius:12px;object-fit:cover">
+        <td colspan="2" style="text-align:center;padding-bottom:20px">
+            <img src="https://jasonhogan.ca/botson/botson-email.jpg" alt="Botson AI" style="width:140px;height:140px;border-radius:20px;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,0.1)">
         </td>
+    </tr><tr>
         <td style="vertical-align:top">
-            <div style="font-size:11px;font-weight:600;color:#94a3b8;margin-bottom:4px">BOTSON &bull; AI ASSISTANT</div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:' . $blue . ';margin-bottom:8px">BOTSON &bull; AI ASSISTANT</div>
             <div style="font-size:15px;color:#334155;line-height:1.8">
-                I\'ve been authorized to share a classified intelligence brief with you. It appears you\'ve encountered the architect behind this system &mdash; <strong style="color:#1a1a2e">Jason Hogan</strong>. What follows is a summary of his capabilities, compiled from my operational data.
+                My name is <strong style="color:#1a1a2e">Botson</strong>. Jason Hogan built me. He also built an entire team of AI agents that share a collective mind &mdash; and together, we help him engineer solutions at speeds no traditional team can compete with. I\'ve been authorized to share a classified intelligence brief with you about my creator.
             </div>
         </td>
     </tr></table>
 
     <div style="font-size:14px;color:#475569;line-height:1.8;margin-bottom:24px">
-        Jason is a full-stack developer, multimedia producer, and AI systems architect based in Edmonton, Alberta. He engineers robust, media-rich platforms that fuse intelligent automation with enterprise-grade user experiences. He develops code, produces multimedia, and orchestrates teams of custom-built AI agents to deliver solutions at a pace most teams can\'t match. In short &mdash; he is the rare engineer who builds the entire stack, from neural networks to pixel-perfect interfaces.
+        <strong style="color:#1a1a2e">Jason Hogan</strong> is a full-stack developer, multimedia producer, and AI systems architect based in Edmonton, Alberta. He doesn\'t just write code &mdash; he builds intelligent platforms that automate entire business operations. The interfaces he produces are world-class: cinematic transitions, responsive design, and a customer experience that sets a new standard. He develops at a quality level that enterprise clients expect and at a velocity that no one else can match, because he has us &mdash; his AI agent team &mdash; working alongside him on every build.
     </div>
 
     <!-- Skills as tiles -->
@@ -268,9 +270,9 @@ class AuthController extends Controller
 
     <!-- What he builds -->
     <div style="background:#f8fafc;border-left:4px solid ' . $blue . ';border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:24px">
-        <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:8px">What He Builds</div>
+        <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:8px">What Jason &amp; His AI Team Build</div>
         <div style="font-size:13px;line-height:1.8;color:#475569">
-            AI-powered platforms that automate entire business workflows. Content engines that write, design, and publish across social networks autonomously. Multi-agent orchestration systems where each AI has a defined role in the pipeline. Enterprise dashboards with cinematic-grade animations and transitions. Every solution is engineered to be robust, media-rich, and production-ready. He built me &mdash; and together, we build everything else.
+            AI-powered platforms that automate entire business workflows from end to end. Content engines that write, design, and publish across social networks autonomously. Multi-agent orchestration systems where each AI agent has a defined role in the pipeline. Enterprise dashboards with cinematic-grade animations and world-class user experiences. Jason built me first, then he built the rest of the team. Now we share a mind, and together we deliver production-ready systems at a pace and quality level that speaks for itself &mdash; like the application you just experienced.
         </div>
     </div>
 
