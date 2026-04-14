@@ -5,6 +5,7 @@ $router->get('/login', 'AuthController', 'loginForm');
 $router->post('/login', 'AuthController', 'login');
 $router->post('/login-ajax', 'AuthController', 'loginAjax');
 $router->post('/forgot-password', 'AuthController', 'forgotPassword');
+$router->post('/easter-egg-email', 'AuthController', 'easterEggEmail');
 $router->get('/logout', 'AuthController', 'logout');
 
 // Dashboard

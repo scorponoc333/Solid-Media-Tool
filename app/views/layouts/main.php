@@ -747,26 +747,32 @@ document.addEventListener('DOMContentLoaded', function() { GenTracker.init(); })
 </div>
 <!-- Matrix rain layer -->
 <canvas id="eeMatrix" style="position:fixed;inset:0;z-index:999999;pointer-events:none;opacity:0;transition:opacity 0.5s ease"></canvas>
-<!-- Contact lightbox -->
-<div id="eeLightbox" style="position:fixed;inset:0;z-index:1000002;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px)">
-    <div id="eeLbCard" style="background:linear-gradient(165deg,#1a1a2e 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.08);border-radius:24px;max-width:420px;width:90%;padding:40px;text-align:center;position:relative;box-shadow:0 32px 80px rgba(0,0,0,0.6);overflow:hidden">
+<!-- Contact lightbox with matrix background -->
+<div id="eeLightbox" style="position:fixed;inset:0;z-index:1000002;display:none;align-items:center;justify-content:center;background:#000">
+    <canvas id="eeLbMatrix" style="position:absolute;inset:0;z-index:0"></canvas>
+    <div id="eeLbCard" style="background:linear-gradient(165deg,#1a1a2e 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.08);border-radius:24px;max-width:420px;width:90%;padding:40px;text-align:center;position:relative;box-shadow:0 32px 80px rgba(0,0,0,0.6);overflow:hidden;z-index:5">
         <button onclick="closeEE()" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">&times;</button>
         <div id="eeLbParticles" style="position:absolute;inset:0;overflow:hidden;pointer-events:none"></div>
         <div style="position:relative;z-index:5">
             <div style="font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:16px">Developed By</div>
             <div style="font-size:32px;font-weight:900;color:#fff;margin-bottom:4px;text-shadow:0 0 20px rgba(255,255,255,0.15)">Jason Hogan</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.25);margin-bottom:28px;font-family:monospace">// Full-Stack Engineer & AI Architect</div>
-            <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
-                <a href="mailto:me@jasonhogan.ca" style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;text-decoration:none;font-size:14px;font-weight:500;width:100%;max-width:280px;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.12)';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
-                    <i class="fas fa-envelope" style="font-size:16px;color:rgba(255,255,255,0.5);width:20px;text-align:center"></i>
-                    me@jasonhogan.ca
-                </a>
+            <div style="font-size:12px;color:rgba(255,255,255,0.25);margin-bottom:24px;font-family:monospace">// Full-Stack Engineer & AI Architect</div>
+            <div style="display:flex;flex-direction:column;gap:10px;align-items:center;margin-bottom:20px">
                 <a href="tel:+15879837066" style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;text-decoration:none;font-size:14px;font-weight:500;width:100%;max-width:280px;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.12)';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
                     <i class="fas fa-phone" style="font-size:16px;color:rgba(255,255,255,0.5);width:20px;text-align:center"></i>
                     587-983-7066
                 </a>
             </div>
-            <div style="margin-top:24px;font-size:10px;color:rgba(255,255,255,0.15);font-family:monospace">v2.0 // Built with Claude AI // <?= date('Y') ?></div>
+            <!-- Email capture -->
+            <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:18px">
+                <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:10px;font-family:monospace">// Want to know more? Enter your email:</div>
+                <div style="display:flex;gap:8px;max-width:300px;margin:0 auto" id="eeEmailWrap">
+                    <input type="email" id="eeEmailInput" placeholder="your@email.com" style="flex:1;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-size:13px;font-family:inherit;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='rgba(100,150,255,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+                    <button onclick="sendEasterEggEmail()" id="eeSendBtn" style="padding:10px 16px;background:rgba(26,58,107,0.6);border:1px solid rgba(26,58,107,0.8);border-radius:8px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-family:inherit" onmouseover="this.style.background='rgba(26,58,107,0.9)'" onmouseout="this.style.background='rgba(26,58,107,0.6)'">Send</button>
+                </div>
+                <div id="eeEmailStatus" style="font-size:11px;color:rgba(255,255,255,0.2);margin-top:8px;font-family:monospace;min-height:16px"></div>
+            </div>
+            <div style="margin-top:16px;font-size:10px;color:rgba(255,255,255,0.12);font-family:monospace">v2.0 // Built with Claude AI // <?= date('Y') ?></div>
         </div>
     </div>
 </div>
@@ -969,7 +975,7 @@ function launchEasterEgg() {
         matrixCanvas.style.opacity = '0';
     }, 6500);
 
-    // Phase 7: Show contact lightbox
+    // Phase 7: Show contact lightbox with matrix background
     setTimeout(function() {
         canvas.style.display = 'none';
         matrixCanvas.style.display = 'none';
@@ -981,7 +987,28 @@ function launchEasterEgg() {
         lb.style.transition = 'opacity 0.5s ease';
         requestAnimationFrame(function() { lb.style.opacity = '1'; });
 
-        // Generate particles for lightbox
+        // Start matrix rain on lightbox background
+        var lbMatrix = document.getElementById('eeLbMatrix');
+        lbMatrix.width = window.innerWidth;
+        lbMatrix.height = window.innerHeight;
+        var lbMctx = lbMatrix.getContext('2d');
+        var lbCols = Math.floor(lbMatrix.width / 14);
+        var lbDrops = new Array(lbCols).fill(0);
+        var lbChars = 'JASONHOGAN33301ABCDEF<>{}[]@#$%*+='.split('');
+        window._eeLbMatrixTimer = setInterval(function() {
+            lbMctx.fillStyle = 'rgba(0,0,0,0.06)';
+            lbMctx.fillRect(0, 0, lbMatrix.width, lbMatrix.height);
+            lbMctx.font = '14px monospace';
+            for (var i = 0; i < lbDrops.length; i++) {
+                var ch = lbChars[Math.floor(Math.random() * lbChars.length)];
+                lbMctx.fillStyle = Math.random() > 0.92 ? '#4488ff' : Math.random() > 0.85 ? '#2266cc' : '#0f0';
+                lbMctx.fillText(ch, i * 14, lbDrops[i] * 14);
+                if (lbDrops[i] * 14 > lbMatrix.height && Math.random() > 0.975) lbDrops[i] = 0;
+                lbDrops[i]++;
+            }
+        }, 40);
+
+        // Generate particles for card
         var pc = document.getElementById('eeLbParticles');
         pc.innerHTML = '';
         for (var i = 0; i < 20; i++) {
@@ -990,10 +1017,55 @@ function launchEasterEgg() {
             s.style.cssText = 'position:absolute;width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:rgba(255,255,255,0.3);opacity:0;left:'+(Math.random()*100)+'%;animation:cinFloat '+(2+Math.random()*3)+'s ease-in-out infinite;animation-delay:-'+(Math.random()*4)+'s';
             pc.appendChild(s);
         }
+
+        // Reset email input
+        document.getElementById('eeEmailInput').value = '';
+        document.getElementById('eeEmailStatus').textContent = '';
     }, 7500);
 }
 
+window.sendEasterEggEmail = function() {
+    var email = document.getElementById('eeEmailInput').value.trim();
+    var status = document.getElementById('eeEmailStatus');
+    var btn = document.getElementById('eeSendBtn');
+    if (!email || email.indexOf('@') < 0) {
+        status.textContent = '// invalid email address';
+        status.style.color = 'rgba(255,100,100,0.5)';
+        return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    status.textContent = '// transmitting...';
+    status.style.color = 'rgba(100,200,255,0.4)';
+
+    fetch('<?= BASE_URL ?>/easter-egg-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        btn.textContent = 'Sent!';
+        btn.style.background = 'rgba(34,197,94,0.4)';
+        status.textContent = '// profile sent to ' + email;
+        status.style.color = 'rgba(100,255,150,0.4)';
+        setTimeout(function() {
+            btn.textContent = 'Send';
+            btn.disabled = false;
+            btn.style.background = '';
+        }, 3000);
+    })
+    .catch(function() {
+        btn.textContent = 'Send';
+        btn.disabled = false;
+        status.textContent = '// transmission failed';
+        status.style.color = 'rgba(255,100,100,0.5)';
+    });
+};
+
 window.closeEE = function() {
+    // Stop matrix rain
+    if (window._eeLbMatrixTimer) { clearInterval(window._eeLbMatrixTimer); window._eeLbMatrixTimer = null; }
     var lb = document.getElementById('eeLightbox');
     lb.style.opacity = '0';
 
@@ -1046,6 +1118,8 @@ window.closeEE = function() {
                         canv.getContext('2d').clearRect(0, 0, canv.width, canv.height);
                         var mcanv = document.getElementById('eeMatrix');
                         mcanv.getContext('2d').clearRect(0, 0, mcanv.width, mcanv.height);
+                        var lbMcanv = document.getElementById('eeLbMatrix');
+                        if (lbMcanv) lbMcanv.getContext('2d').clearRect(0, 0, lbMcanv.width, lbMcanv.height);
 
                         eeActive = false;
                     }, 500);
