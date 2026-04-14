@@ -346,15 +346,25 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
     </div>
 </div>
 
-<!-- Phase 4: Success lightbox -->
+<!-- Phase 4: Success lightbox — branded gradient with atom -->
 <div id="pwSuccessOverlay" style="position:fixed;inset:0;z-index:99993;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px)">
-    <div style="background:var(--bg-card);border-radius:24px;max-width:380px;width:90%;padding:36px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.4);animation:wizSlideUp 0.5s cubic-bezier(0.34,1.56,0.64,1)">
-        <div style="width:56px;height:56px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
-            <i class="fas fa-check" style="color:#fff;font-size:24px"></i>
+    <div id="pwSuccessCard" style="background:linear-gradient(165deg,<?= $primaryColor ?> 0%,color-mix(in srgb,<?= $primaryColor ?> 35%,#0a0a0a) 55%,#0a0a0a 100%);border-radius:24px;max-width:400px;width:90%;padding:44px 36px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.5);position:relative;overflow:hidden;animation:wizSlideUp 0.5s cubic-bezier(0.34,1.56,0.64,1);transition:all 0.4s cubic-bezier(0.23,1,0.32,1)">
+        <!-- Atom orbits behind checkmark -->
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:200px;height:200px;pointer-events:none">
+            <div style="position:absolute;width:220px;height:80px;top:calc(50% - 40px);left:calc(50% - 110px);border:1.5px solid rgba(255,255,255,0.08);border-radius:50%;animation:cinSpin 6s linear infinite"><div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2.5px;left:calc(50% - 2.5px);box-shadow:0 0 10px rgba(255,255,255,0.6)"></div></div>
+            <div style="position:absolute;width:190px;height:70px;top:calc(50% - 35px);left:calc(50% - 95px);border:1.5px solid rgba(255,255,255,0.06);border-radius:50%;animation:cinSpin 4.5s linear infinite reverse;transform:rotate(55deg)"><div style="position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.5)"></div></div>
+            <div style="position:absolute;width:60px;height:180px;top:calc(50% - 90px);left:calc(50% - 30px);border:1.5px solid rgba(255,255,255,0.05);border-radius:50%;animation:cinSpin 8s linear infinite;transform:rotate(25deg)"><div style="position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.4)"></div></div>
         </div>
-        <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px">Password Updated</h3>
-        <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px">Your password has been successfully updated. You can now close this window.</p>
-        <button class="btn btn-primary" onclick="dismissPwSuccess()" style="padding:12px 32px;position:relative;overflow:hidden">
+        <!-- Pulse rings -->
+        <div style="position:absolute;top:38%;left:50%;width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);animation:tbPulse 2.4s ease-out infinite;pointer-events:none"></div>
+        <div style="position:absolute;top:38%;left:50%;width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);animation:tbPulse 2.4s ease-out infinite 0.8s;pointer-events:none"></div>
+        <!-- Checkmark -->
+        <div style="position:relative;z-index:10;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 0 20px rgba(255,255,255,0.1)">
+            <i class="fas fa-check" style="color:#fff;font-size:28px;filter:drop-shadow(0 0 8px rgba(255,255,255,0.5))"></i>
+        </div>
+        <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;position:relative;z-index:10">Password Updated</h3>
+        <p style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:28px;position:relative;z-index:10">Your password has been successfully updated.<br>You can now close this window.</p>
+        <button class="btn" onclick="dismissPwSuccess()" style="padding:12px 36px;position:relative;overflow:hidden;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;backdrop-filter:blur(4px);z-index:10;transition:all 0.2s ease" onmouseover="this.style.background='rgba(255,255,255,0.25)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='translateY(0)'">
             OK
             <span style="position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:alertShine 3s ease 0.5s infinite"></span>
         </button>
@@ -437,7 +447,13 @@ function submitPasswordChange() {
 }
 
 function dismissPwSuccess() {
-    document.getElementById('pwSuccessOverlay').style.display = 'none';
+    var card = document.getElementById('pwSuccessCard');
+    var overlay = document.getElementById('pwSuccessOverlay');
+    card.style.transform = 'scale(0.9)';
+    card.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.3s ease';
+    overlay.style.opacity = '0';
+    setTimeout(function() { overlay.style.display = 'none'; }, 350);
 }
 </script>
 <?php endif; ?>
