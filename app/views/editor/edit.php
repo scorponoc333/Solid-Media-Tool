@@ -1230,49 +1230,68 @@ async function regenerateImage() {
         const formData = new FormData();
         formData.append('csrf_token', csrfToken());
         formData.append('prompt', imagePrompt);
+        formData.append('uid', 'post_' + postId);
 
-        const res = await fetch(BASE + '/generator/regenerate-image', {
+        // Start async image job (returns immediately)
+        const res = await fetch(BASE + '/generator/start-image-job', {
             method: 'POST',
             body: formData
         });
+        const jobData = await res.json();
+        if (!res.ok) throw new Error(jobData.error || 'Failed to start image generation');
 
-        const text = await res.text();
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (e) {
-            throw new Error('Image generation timed out. Please try again.');
-        }
-        if (!res.ok) throw new Error(data.error || 'Image generation failed');
+        // Poll for completion every 6 seconds
+        var pollTimer = setInterval(async function() {
+            try {
+                const checkRes = await fetch(BASE + '/generator/check-image-jobs');
+                const checkData = await checkRes.json();
+                var jobs = checkData.jobs || [];
+                for (var j = 0; j < jobs.length; j++) {
+                    if (jobs[j].uid === 'post_' + postId) {
+                        if (jobs[j].status === 'completed' && jobs[j].image_url) {
+                            clearInterval(pollTimer);
+                            clearInterval(portalInterval);
 
-        clearInterval(portalInterval);
-        if (data.image_url) {
-            // Check if it's a placeholder/failure URL (not a real generated image)
-            if (data.image_url.includes('placehold.co') || data.image_url.includes('Image+')) {
-                throw new Error('Image generation failed or timed out. Please try again.');
-            }
+                            currentImageUrl = jobs[j].image_url;
+                            preview.innerHTML = '<img src="' + jobs[j].image_url + '" alt="Post image" id="preview-img">';
 
-            currentImageUrl = data.image_url;
-            preview.innerHTML = '<img src="' + data.image_url + '" alt="Post image" id="preview-img">';
+                            // Auto-save the new image URL
+                            const saveFormData = new FormData();
+                            saveFormData.append('csrf_token', csrfToken());
+                            const postData = getPostData();
+                            Object.entries(postData).forEach(([k, v]) => saveFormData.append(k, v));
+                            fetch(BASE + '/posts/update/' + postId, { method: 'POST', body: saveFormData });
 
-            // Auto-save the new image URL to the post
-            const saveFormData = new FormData();
-            saveFormData.append('csrf_token', csrfToken());
-            const postData = getPostData();
-            Object.entries(postData).forEach(([k, v]) => saveFormData.append(k, v));
-            await fetch(BASE + '/posts/update/' + postId, { method: 'POST', body: saveFormData });
+                            _genTrackerCleanup(true);
+                            setLoading(btn, false);
+                            showToast('Image regenerated and saved!', 'success');
+                        } else if (jobs[j].status === 'failed') {
+                            clearInterval(pollTimer);
+                            clearInterval(portalInterval);
+                            _genTrackerCleanup(false);
+                            setLoading(btn, false);
+                            preview.innerHTML = '<div class="placeholder-icon"><i class="fas fa-image"></i><span>Image generation failed</span></div>';
+                            showImageErrorModal(jobs[j].error || 'Image generation failed', function() { regenerateImage(); });
+                        }
+                        break;
+                    }
+                }
+            } catch (e) {}
+        }, 6000);
 
-            _genTrackerCleanup(true);
-            showToast('Image regenerated and saved!', 'success');
-        } else {
-            throw new Error('No image was returned');
-        }
+        // Safety timeout after 3 minutes
+        setTimeout(function() {
+            clearInterval(pollTimer);
+            clearInterval(portalInterval);
+            _genTrackerCleanup(false);
+            setLoading(btn, false);
+        }, 180000);
+
     } catch (err) {
         clearInterval(portalInterval);
         _genTrackerCleanup(false);
         preview.innerHTML = '<div class="placeholder-icon"><i class="fas fa-image"></i><span>Image generation failed</span></div>';
         showImageErrorModal(err.message, function() { regenerateImage(); });
-    } finally {
         setLoading(btn, false);
     }
 }
