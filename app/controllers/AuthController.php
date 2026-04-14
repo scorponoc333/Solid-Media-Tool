@@ -222,8 +222,7 @@ class AuthController extends Controller
 
 <!-- Header gradient -->
 <tr><td style="background:linear-gradient(165deg,' . $blue . ' 0%,#0d1b3e 100%);border-radius:16px 16px 0 0;padding:36px 40px;text-align:center">
-    <div style="font-size:32px;margin-bottom:8px">&#x1F916;</div>
-    <div style="font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:10px">AI TRANSMISSION</div>
+    <div style="font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:14px">AI INTELLIGENCE BRIEF</div>
     <div style="font-size:30px;font-weight:900;color:#fff;letter-spacing:-0.5px">Jason Hogan</div>
     <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:4px">AI Full-Stack Developer &bull; Automation Architect &bull; Innovation Expert</div>
 </td></tr>
@@ -234,16 +233,21 @@ class AuthController extends Controller
 <!-- Body — LIGHT MODE -->
 <tr><td style="background:#ffffff;padding:40px">
 
-    <!-- Robot intro -->
-    <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:24px">
-        <div style="font-size:24px;flex-shrink:0">&#x1F916;</div>
-        <div style="font-size:15px;color:#334155;line-height:1.8">
-            <strong style="color:#1a1a2e">Hello, human.</strong> I see you\'ve been introduced to my creator today. Allow me to tell you about the person who built me &mdash; and the remarkable systems he engineers.
-        </div>
-    </div>
+    <!-- Botson intro -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px"><tr>
+        <td style="width:56px;vertical-align:top;padding-right:16px">
+            <img src="https://jasonhogan.ca/botson/botson-email.jpg" alt="Botson AI" style="width:48px;height:48px;border-radius:12px;object-fit:cover">
+        </td>
+        <td style="vertical-align:top">
+            <div style="font-size:11px;font-weight:600;color:#94a3b8;margin-bottom:4px">BOTSON &bull; AI ASSISTANT</div>
+            <div style="font-size:15px;color:#334155;line-height:1.8">
+                I\'ve been authorized to share a classified intelligence brief with you. It appears you\'ve encountered the architect behind this system &mdash; <strong style="color:#1a1a2e">Jason Hogan</strong>. What follows is a summary of his capabilities, compiled from my operational data.
+            </div>
+        </td>
+    </tr></table>
 
     <div style="font-size:14px;color:#475569;line-height:1.8;margin-bottom:24px">
-        <strong style="color:#1a1a2e">Jason Hogan</strong> is a full-stack developer, multimedia producer, and AI systems architect based in Edmonton, Alberta. He builds robust, media-rich solutions that combine intelligent automation with polished user experiences. He is, quite simply, a jack of all trades who has mastered them all &mdash; and he works alongside a team of AI agents that he custom-built himself.
+        Jason is a full-stack developer, multimedia producer, and AI systems architect based in Edmonton, Alberta. He engineers robust, media-rich platforms that fuse intelligent automation with enterprise-grade user experiences. He develops code, produces multimedia, and orchestrates teams of custom-built AI agents to deliver solutions at a pace most teams can\'t match. In short &mdash; he is the rare engineer who builds the entire stack, from neural networks to pixel-perfect interfaces.
     </div>
 
     <!-- Skills as tiles -->
@@ -264,9 +268,9 @@ class AuthController extends Controller
 
     <!-- What he builds -->
     <div style="background:#f8fafc;border-left:4px solid ' . $blue . ';border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:24px">
-        <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:8px">&#x1F916; What My Creator Builds</div>
+        <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:8px">What He Builds</div>
         <div style="font-size:13px;line-height:1.8;color:#475569">
-            Jason develops code <em>and</em> multimedia. He creates AI-powered platforms that automate entire business workflows &mdash; content engines that write, design, and publish across social platforms. Multi-agent systems where each AI has a role. Enterprise dashboards with cinematic animations. Every solution is robust, media-rich, and functional. He built me, and I help him build everything else.
+            AI-powered platforms that automate entire business workflows. Content engines that write, design, and publish across social networks autonomously. Multi-agent orchestration systems where each AI has a defined role in the pipeline. Enterprise dashboards with cinematic-grade animations and transitions. Every solution is engineered to be robust, media-rich, and production-ready. He built me &mdash; and together, we build everything else.
         </div>
     </div>
 
@@ -296,7 +300,7 @@ class AuthController extends Controller
             <strong style="color:#64748b">P.S.</strong> Don\'t bother visiting jasonhogan.ca &mdash; he\'s been too busy building systems that are far too impressive, and hasn\'t had time to update his own site. You know how it is. The cobbler\'s kids have no shoes. But trust me &mdash; the work he does for clients is on another level entirely.
         </div>
         <div style="font-size:11px;color:#cbd5e1;margin-top:12px;font-family:monospace">
-            &#x1F916; // This message was composed by Jason\'s AI assistant. The opinions expressed are factually accurate. //
+            // Compiled and transmitted by Botson AI &bull; All statements verified against operational data //
         </div>
     </div>
 
