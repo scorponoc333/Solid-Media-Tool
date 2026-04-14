@@ -599,7 +599,7 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
     // ---- Resend Invite ----
     window.resendInvite = function(id, name) {
         confirmModal('Resend Invitation', 'Resend the invitation email to <strong>' + escHtml(name) + '</strong>?', function() {
-            fetch(BASE + '/users/resend/' + id, {
+            fetch(BASE + '/users/resend-invite/' + id, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ csrf_token: CSRF })
