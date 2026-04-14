@@ -1229,13 +1229,30 @@ async function saveDraft(uid, postType, topic, keywords, angle) {
         btn.innerHTML = '<i class="fas fa-check"></i> Saved';
         btn.classList.add('btn-success');
         btn.classList.remove('btn-primary');
-        // Remove from sessionStorage
-        persistGeneratedPosts();
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-save"></i> Save Draft';
-            btn.classList.remove('btn-success');
-            btn.classList.add('btn-primary');
-        }, 2500);
+
+        // After 5 seconds: fade out the card, then collapse and remove
+        setTimeout(function() {
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease, max-height 0.5s ease 0.4s, margin 0.5s ease 0.4s, padding 0.5s ease 0.4s';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95) translateY(-10px)';
+            card.style.maxHeight = card.offsetHeight + 'px';
+            card.style.overflow = 'hidden';
+
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    card.style.maxHeight = '0px';
+                    card.style.marginBottom = '0px';
+                    card.style.paddingTop = '0px';
+                    card.style.paddingBottom = '0px';
+                });
+            });
+
+            setTimeout(function() {
+                card.remove();
+                persistGeneratedPosts();
+                updateResultsCount();
+            }, 1000);
+        }, 5000);
     } catch (err) {
         showToast(err.message, 'error');
     } finally {
