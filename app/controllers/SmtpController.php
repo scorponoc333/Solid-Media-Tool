@@ -47,6 +47,9 @@ class SmtpController extends Controller
             $data['mailgun_api_key'] = trim($input['mailgun_api_key'] ?? '');
             $data['mailgun_domain'] = trim($input['mailgun_domain'] ?? '');
             $data['is_configured'] = !empty($data['mailgun_api_key']) && !empty($data['mailgun_domain']) && !empty($data['from_email']) ? 1 : 0;
+        } elseif ($provider === 'emailit') {
+            $data['emailit_api_key'] = trim($input['emailit_api_key'] ?? '');
+            $data['is_configured'] = !empty($data['emailit_api_key']) && !empty($data['from_email']) ? 1 : 0;
         }
 
         $model = new SmtpSetting();

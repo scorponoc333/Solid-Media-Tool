@@ -11,6 +11,7 @@ $fromEmail    = htmlspecialchars($s['from_email'] ?? '');
 $sgKey        = htmlspecialchars($s['sendgrid_api_key'] ?? '');
 $mgKey        = htmlspecialchars($s['mailgun_api_key'] ?? '');
 $mgDomain     = htmlspecialchars($s['mailgun_domain'] ?? '');
+$eiKey        = htmlspecialchars($s['emailit_api_key'] ?? '');
 $isConfigured = !empty($s['is_configured']);
 
 if (empty($_SESSION['csrf_token'])) {
@@ -180,6 +181,9 @@ $csrfToken = $_SESSION['csrf_token'];
             <button type="button" class="provider-tab <?= $provider === 'mailgun' ? 'active' : '' ?>" onclick="switchProvider('mailgun')" id="tab-mailgun">
                 <i class="fas fa-mail-bulk"></i> Mailgun
             </button>
+            <button type="button" class="provider-tab <?= $provider === 'emailit' ? 'active' : '' ?>" onclick="switchProvider('emailit')" id="tab-emailit">
+                <i class="fas fa-bolt"></i> Emailit
+            </button>
         </div>
 
         <!-- SMTP Panel -->
@@ -290,6 +294,35 @@ $csrfToken = $_SESSION['csrf_token'];
             </div>
         </div>
 
+        <!-- Emailit Panel -->
+        <div class="provider-panel <?= $provider === 'emailit' ? 'active' : '' ?>" id="panel-emailit">
+            <div class="form-group">
+                <label class="form-label" for="ei_api_key">API Key</label>
+                <div class="password-wrapper">
+                    <input type="password" id="ei_api_key" class="form-input" value="<?= $eiKey ?>" placeholder="secret_xxxxxxxxxxxxxxxxxxxx">
+                    <button type="button" class="btn btn-ghost" onclick="togglePasswordVisibility('ei_api_key', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="smtp-external-link">
+                <i class="fas fa-external-link-alt"></i>
+                Get your key at <a href="https://emailit.com" target="_blank">emailit.com</a>
+            </div>
+
+            <div class="smtp-form-grid">
+                <div class="form-group">
+                    <label class="form-label" for="ei_from_name">From Name</label>
+                    <input type="text" id="ei_from_name" class="form-input" value="<?= $fromName ?>" placeholder="My Company">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="ei_from_email">From Email</label>
+                    <input type="email" id="ei_from_email" class="form-input" value="<?= $fromEmail ?>" placeholder="noreply@mycompany.com">
+                </div>
+            </div>
+        </div>
+
         <!-- Actions -->
         <div class="smtp-actions">
             <button type="button" class="btn btn-ghost" onclick="testSmtp()" id="testBtn">
@@ -349,6 +382,10 @@ function gatherData() {
         data.mailgun_domain  = document.getElementById('mg_domain').value;
         data.from_name       = document.getElementById('mg_from_name').value;
         data.from_email      = document.getElementById('mg_from_email').value;
+    } else if (activeProvider === 'emailit') {
+        data.emailit_api_key = document.getElementById('ei_api_key').value;
+        data.from_name       = document.getElementById('ei_from_name').value;
+        data.from_email      = document.getElementById('ei_from_email').value;
     }
 
     return data;
