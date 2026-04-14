@@ -34,6 +34,7 @@ class BrandingController extends Controller
             'secondary_color' => trim($_POST['secondary_color'] ?? '#8b5cf6'),
             'tagline' => trim($_POST['tagline'] ?? ''),
             'website' => trim($_POST['website'] ?? ''),
+            'phone' => trim($_POST['phone'] ?? ''),
             'first_comment' => trim($_POST['first_comment'] ?? ''),
             'particles_enabled' => isset($_POST['particles_enabled']) ? 1 : 0,
         ];
@@ -66,6 +67,10 @@ class BrandingController extends Controller
                 $this->generateFaviconSizes($faviconPath);
             }
         }
+
+        // Debug: log what we're saving (temporary — remove after fix)
+        $logFile = APP_ROOT . '/storage/branding_debug.log';
+        file_put_contents($logFile, date('Y-m-d H:i:s') . " SAVE DATA: " . json_encode($data) . "\nFILES: " . json_encode(array_map(function($f) { return ['name' => $f['name'] ?? '', 'size' => $f['size'] ?? 0, 'error' => $f['error'] ?? -1, 'tmp' => $f['tmp_name'] ?? '']; }, $_FILES)) . "\n", FILE_APPEND);
 
         $brandingService->save($clientId, $data);
 

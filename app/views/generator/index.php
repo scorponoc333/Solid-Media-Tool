@@ -168,7 +168,7 @@ function checkBrandingComplete() {
         var list = MISSING_BRANDING.join(', ');
         alertModal(
             'Complete Your Profile First',
-            'Before generating posts, please set up the following in your branding settings: <strong>' + list + '</strong>.<br><br>This ensures every post includes your company contact information.<br><br><a href="' + BASE + '/branding" class="btn btn-primary btn-sm" style="margin-top:8px"><i class="fas fa-palette" style="margin-right:4px"></i> Go to Branding</a>',
+            'Before generating posts, please set up the following in your branding settings: <strong>' + list + '</strong>.<br><br>This ensures every post includes your company contact information.<br><br><a href="' + BASE + '/branding" class="btn btn-primary cinematic-link" data-cin-label="Opening Branding..." style="margin-top:12px;padding:12px 28px;font-size:14px;position:relative;overflow:hidden;display:inline-block"><i class="fas fa-palette" style="margin-right:6px"></i> Go to Branding<span style="position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:alertShine 3s ease 0.5s infinite"></span></a><style>@keyframes alertShine{0%{left:-100%}30%{left:100%}100%{left:100%}}</style>',
             'warning'
         );
         return false;

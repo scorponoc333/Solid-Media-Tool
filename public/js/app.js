@@ -54,7 +54,9 @@ function alertModal(title, message, type = 'info') {
             <p style="margin-top:16px;color:var(--text-secondary);line-height:1.6">${message}</p>
         </div>
     `;
-    const footer = `<button class="btn btn-primary" onclick="closeModal()">OK</button>`;
+    // Skip OK button if message contains an action button/link
+    const hasAction = message.includes('class="btn');
+    const footer = hasAction ? '' : '<button class="btn btn-primary" onclick="closeModal()">OK</button>';
     openModal(title, body, footer);
 }
 

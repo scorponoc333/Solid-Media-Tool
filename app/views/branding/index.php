@@ -3,6 +3,7 @@ $b = $branding ?? [];
 $companyName = htmlspecialchars($b['company_name'] ?? '');
 $tagline = htmlspecialchars($b['tagline'] ?? '');
 $website = htmlspecialchars($b['website'] ?? '');
+$phone = htmlspecialchars($b['phone'] ?? '');
 $firstComment = htmlspecialchars($b['first_comment'] ?? '');
 $primaryColor = htmlspecialchars($b['primary_color'] ?? '#6366f1');
 $secondaryColor = htmlspecialchars($b['secondary_color'] ?? '#8b5cf6');
@@ -346,6 +347,10 @@ $csrfToken = $_SESSION['csrf_token'];
                 <div class="form-group">
                     <label class="form-label" for="website">Website</label>
                     <input type="text" id="website" name="website" class="form-input" value="<?= $website ?>" placeholder="e.g. solidtech.ca">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" class="form-input" value="<?= $phone ?>" placeholder="e.g. 587-557-1234">
                 </div>
 
                 <div class="form-group">
