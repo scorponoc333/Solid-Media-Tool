@@ -13,7 +13,7 @@ class UserManagementService
     {
         return Database::fetchAll(
             "SELECT id, username, first_name, email, role, is_active, must_change_password, has_completed_tour, last_login_at, created_at
-             FROM users WHERE client_id = :cid ORDER BY created_at DESC",
+             FROM users WHERE client_id = :cid AND (is_deleted = 0 OR is_deleted IS NULL) ORDER BY created_at DESC",
             ['cid' => $clientId]
         );
     }
@@ -26,6 +26,15 @@ class UserManagementService
             $password .= $chars[random_int(0, strlen($chars) - 1)];
         }
         return $password;
+    }
+
+    public function listDeletedUsers(int $clientId): array
+    {
+        return Database::fetchAll(
+            "SELECT id, username, first_name, email, role, last_login_at, created_at
+             FROM users WHERE client_id = :cid AND is_deleted = 1 ORDER BY created_at DESC",
+            ['cid' => $clientId]
+        );
     }
 
     public function createUser(int $clientId, string $email, string $firstName, string $role): array
@@ -94,13 +103,37 @@ class UserManagementService
     {
         $user = Database::fetch("SELECT * FROM users WHERE id = :id AND client_id = :cid", ['id' => $userId, 'cid' => $clientId]);
         if (!$user) return false;
-
-        // Prevent deactivating yourself
-        if ($userId === (int)($_SESSION['user_id'] ?? 0)) {
-            return false;
-        }
+        if ($userId === (int)($_SESSION['user_id'] ?? 0)) return false;
 
         $this->userModel->update($userId, ['is_active' => 0]);
+        return true;
+    }
+
+    public function activateUser(int $userId, int $clientId): bool
+    {
+        $user = Database::fetch("SELECT * FROM users WHERE id = :id AND client_id = :cid", ['id' => $userId, 'cid' => $clientId]);
+        if (!$user) return false;
+
+        $this->userModel->update($userId, ['is_active' => 1]);
+        return true;
+    }
+
+    public function softDeleteUser(int $userId, int $clientId): bool
+    {
+        $user = Database::fetch("SELECT * FROM users WHERE id = :id AND client_id = :cid", ['id' => $userId, 'cid' => $clientId]);
+        if (!$user) return false;
+        if ($userId === (int)($_SESSION['user_id'] ?? 0)) return false;
+
+        $this->userModel->update($userId, ['is_active' => 0, 'is_deleted' => 1]);
+        return true;
+    }
+
+    public function restoreUser(int $userId, int $clientId): bool
+    {
+        $user = Database::fetch("SELECT * FROM users WHERE id = :id AND client_id = :cid", ['id' => $userId, 'cid' => $clientId]);
+        if (!$user) return false;
+
+        $this->userModel->update($userId, ['is_deleted' => 0, 'is_active' => 1]);
         return true;
     }
 

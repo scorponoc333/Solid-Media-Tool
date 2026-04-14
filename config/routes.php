@@ -70,6 +70,9 @@ $router->get('/users', 'UserController', 'index');
 $router->post('/users/create', 'UserController', 'create');
 $router->post('/users/update/{id}', 'UserController', 'update');
 $router->post('/users/deactivate/{id}', 'UserController', 'deactivate');
+$router->post('/users/activate/{id}', 'UserController', 'activate');
+$router->post('/users/delete/{id}', 'UserController', 'deleteUser');
+$router->post('/users/restore/{id}', 'UserController', 'restoreUser');
 $router->post('/users/resend-invite/{id}', 'UserController', 'resendInvite');
 $router->post('/users/save-approval-settings', 'UserController', 'saveApprovalSettings');
 

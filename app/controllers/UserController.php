@@ -15,9 +15,12 @@ class UserController extends Controller
         $approvalSettings = $approvalService->getSettings($clientId);
         $smtpConfigured = $emailService->isConfigured();
 
+        $deletedUsers = $service->listDeletedUsers($clientId);
+
         $this->view('users/index', [
             'pageTitle' => 'User Management',
             'users' => $users,
+            'deletedUsers' => $deletedUsers,
             'approvalSettings' => $approvalSettings,
             'smtpConfigured' => $smtpConfigured,
         ]);
@@ -102,6 +105,57 @@ class UserController extends Controller
 
         $service = new UserManagementService();
         $result = $service->deactivateUser((int)$id, $GLOBALS['client_id']);
+
+        @ob_clean();
+        $this->json(['success' => $result]);
+    }
+
+    public function activate(string $id): void
+    {
+        $this->requireRole('admin');
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input || ($input['csrf_token'] ?? '') !== ($_SESSION['csrf_token'] ?? '')) {
+            $this->json(['error' => 'Invalid request.'], 403);
+            return;
+        }
+
+        $service = new UserManagementService();
+        $result = $service->activateUser((int)$id, $GLOBALS['client_id']);
+
+        @ob_clean();
+        $this->json(['success' => $result]);
+    }
+
+    public function deleteUser(string $id): void
+    {
+        $this->requireRole('admin');
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input || ($input['csrf_token'] ?? '') !== ($_SESSION['csrf_token'] ?? '')) {
+            $this->json(['error' => 'Invalid request.'], 403);
+            return;
+        }
+
+        $service = new UserManagementService();
+        $result = $service->softDeleteUser((int)$id, $GLOBALS['client_id']);
+
+        @ob_clean();
+        $this->json(['success' => $result]);
+    }
+
+    public function restoreUser(string $id): void
+    {
+        $this->requireRole('admin');
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input || ($input['csrf_token'] ?? '') !== ($_SESSION['csrf_token'] ?? '')) {
+            $this->json(['error' => 'Invalid request.'], 403);
+            return;
+        }
+
+        $service = new UserManagementService();
+        $result = $service->restoreUser((int)$id, $GLOBALS['client_id']);
 
         @ob_clean();
         $this->json(['success' => $result]);

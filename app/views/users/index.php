@@ -318,6 +318,9 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
                                 <button class="btn btn-ghost btn-sm btn-icon" title="<?= $uactive ? 'Deactivate' : 'Activate' ?>" onclick="deactivateUser(<?= $uid ?>, '<?= addslashes($fname ?: $uname) ?>', <?= $uactive ?>)">
                                     <i class="fas fa-<?= $uactive ? 'ban' : 'check-circle' ?>" style="<?= $uactive ? 'color:var(--danger)' : 'color:var(--success)' ?>"></i>
                                 </button>
+                                <button class="btn btn-ghost btn-sm btn-icon" title="Delete User" onclick="deleteUser(<?= $uid ?>, '<?= addslashes($fname ?: $uname) ?>')">
+                                    <i class="fas fa-trash-alt" style="color:var(--danger)"></i>
+                                </button>
                                 <?php endif; ?>
                             </div>
                         </td>
@@ -328,6 +331,52 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
         </div>
     <?php endif; ?>
 </div>
+
+<!-- Deleted Users Bucket -->
+<?php $deletedUsers = $deletedUsers ?? []; ?>
+<?php if (!empty($deletedUsers)): ?>
+<div class="card" style="margin-bottom:28px;opacity:0.8">
+    <div class="card-header">
+        <div>
+            <div class="card-title" style="color:var(--text-muted)"><i class="fas fa-trash-alt" style="margin-right:8px;opacity:0.5"></i>Deleted Users</div>
+            <div class="card-subtitle"><?= count($deletedUsers) ?> deleted user<?= count($deletedUsers) !== 1 ? 's' : '' ?></div>
+        </div>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>User</th><th>Role</th><th>Deleted</th><th></th></tr>
+            </thead>
+            <tbody>
+                <?php foreach ($deletedUsers as $du):
+                    $duid = (int)$du['id'];
+                    $dname = htmlspecialchars($du['first_name'] ?: $du['username']);
+                    $demail = htmlspecialchars($du['email']);
+                ?>
+                <tr>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <div style="width:36px;height:36px;border-radius:50%;background:var(--bg-input);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px"><?= strtoupper(substr($dname, 0, 1)) ?></div>
+                            <div>
+                                <div style="font-weight:600;color:var(--text-muted)"><?= $dname ?></div>
+                                <div style="font-size:12px;color:var(--text-muted)"><?= $demail ?></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge" style="opacity:0.5"><?= ucfirst(htmlspecialchars($du['role'])) ?></span></td>
+                    <td><span class="text-small text-muted">—</span></td>
+                    <td>
+                        <button class="btn btn-ghost btn-sm" onclick="restoreUser(<?= $duid ?>, '<?= addslashes($dname) ?>')" style="color:var(--success)">
+                            <i class="fas fa-undo" style="margin-right:4px"></i> Restore
+                        </button>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<?php endif; ?>
 
 <!-- Approval Settings Card -->
 <div class="card" style="margin-bottom:28px">
@@ -626,6 +675,52 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
                     }
                 } else {
                     showToast(data.error || 'Failed to resend invitation.', 'error');
+                }
+            })
+            .catch(function() {
+                showToast('Network error. Please try again.', 'error');
+            });
+        });
+    };
+
+    // ---- Delete User ----
+    window.deleteUser = function(id, name) {
+        confirmModal('Delete User', 'Are you sure you want to delete <strong>' + escHtml(name) + '</strong>? They will be moved to the deleted users list and can be restored later.', function() {
+            fetch(BASE + '/users/delete/' + id, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ csrf_token: CSRF })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showToast(escHtml(name) + ' has been deleted.', 'success');
+                    setTimeout(function() { location.reload(); }, 600);
+                } else {
+                    showToast(data.error || 'Failed to delete user.', 'error');
+                }
+            })
+            .catch(function() {
+                showToast('Network error. Please try again.', 'error');
+            });
+        });
+    };
+
+    // ---- Restore User ----
+    window.restoreUser = function(id, name) {
+        confirmModal('Restore User', 'Restore <strong>' + escHtml(name) + '</strong> to active users?', function() {
+            fetch(BASE + '/users/restore/' + id, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ csrf_token: CSRF })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showToast(escHtml(name) + ' has been restored.', 'success');
+                    setTimeout(function() { location.reload(); }, 600);
+                } else {
+                    showToast(data.error || 'Failed to restore user.', 'error');
                 }
             })
             .catch(function() {
