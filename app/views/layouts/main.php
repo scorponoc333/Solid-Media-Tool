@@ -736,5 +736,325 @@ document.addEventListener('DOMContentLoaded', function() { GenTracker.init(); })
     });
 })();
 </script>
+<!-- ═══ EASTER EGG: Ctrl+Shift+J ═══ -->
+<div id="ee" style="display:none">
+<div id="eeBlack" style="position:fixed;inset:0;z-index:999999;background:#000;opacity:0;transition:opacity 1s ease;pointer-events:all"></div>
+<canvas id="eeCanvas" style="position:fixed;inset:0;z-index:1000000;pointer-events:none"></canvas>
+<div id="eeText" style="position:fixed;inset:0;z-index:1000001;display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none;opacity:0">
+    <div id="eeSubtitle" style="font-size:14px;font-weight:300;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:12px;font-family:monospace"></div>
+    <div id="eeName" style="font-size:0px;font-weight:900;color:#fff;letter-spacing:-2px;text-shadow:0 0 40px rgba(255,255,255,0.5);transition:all 0.8s cubic-bezier(0.34,1.56,0.64,1);filter:blur(20px);font-family:'Inter',sans-serif"></div>
+    <div id="ee333" style="font-size:120px;font-weight:900;color:rgba(255,255,255,0.03);position:absolute;font-family:monospace;pointer-events:none"></div>
+</div>
+<!-- Matrix rain layer -->
+<canvas id="eeMatrix" style="position:fixed;inset:0;z-index:999999;pointer-events:none;opacity:0;transition:opacity 0.5s ease"></canvas>
+<!-- Contact lightbox -->
+<div id="eeLightbox" style="position:fixed;inset:0;z-index:1000002;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px)">
+    <div id="eeLbCard" style="background:linear-gradient(165deg,#1a1a2e 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.08);border-radius:24px;max-width:420px;width:90%;padding:40px;text-align:center;position:relative;box-shadow:0 32px 80px rgba(0,0,0,0.6);overflow:hidden">
+        <button onclick="closeEE()" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">&times;</button>
+        <div id="eeLbParticles" style="position:absolute;inset:0;overflow:hidden;pointer-events:none"></div>
+        <div style="position:relative;z-index:5">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:16px">Developed By</div>
+            <div style="font-size:32px;font-weight:900;color:#fff;margin-bottom:4px;text-shadow:0 0 20px rgba(255,255,255,0.15)">Jason Hogan</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.25);margin-bottom:28px;font-family:monospace">// Full-Stack Engineer & AI Architect</div>
+            <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
+                <a href="mailto:me@jasonhogan.ca" style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;text-decoration:none;font-size:14px;font-weight:500;width:100%;max-width:280px;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.12)';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
+                    <i class="fas fa-envelope" style="font-size:16px;color:rgba(255,255,255,0.5);width:20px;text-align:center"></i>
+                    me@jasonhogan.ca
+                </a>
+                <a href="tel:+15879837066" style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;text-decoration:none;font-size:14px;font-weight:500;width:100%;max-width:280px;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.12)';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
+                    <i class="fas fa-phone" style="font-size:16px;color:rgba(255,255,255,0.5);width:20px;text-align:center"></i>
+                    587-983-7066
+                </a>
+            </div>
+            <div style="margin-top:24px;font-size:10px;color:rgba(255,255,255,0.15);font-family:monospace">v2.0 // Built with Claude AI // <?= date('Y') ?></div>
+        </div>
+    </div>
+</div>
+<!-- Subliminal flash -->
+<div id="eeSubliminal" style="position:fixed;inset:0;z-index:1000003;display:none;align-items:center;justify-content:center;background:#000;pointer-events:all">
+    <div id="eeSubliminalText" style="font-size:48px;font-weight:900;color:#fff;text-align:center;font-family:'Inter',sans-serif"></div>
+</div>
+<!-- Technical difficulties -->
+<div id="eeTechDiff" style="position:fixed;inset:0;z-index:1000003;display:none;align-items:center;justify-content:center;flex-direction:column;background:#0a0a0a;font-family:monospace;pointer-events:all">
+    <div style="font-size:64px;margin-bottom:20px">&#x26A0;</div>
+    <div style="font-size:18px;font-weight:700;color:#ef4444;margin-bottom:8px">FATAL ERROR</div>
+    <div style="font-size:13px;color:#64748b;max-width:400px;text-align:center;line-height:1.8">
+        <span style="color:#ef4444">Segmentation fault</span> (core dumped)<br>
+        <span style="color:#f59e0b">Warning:</span> Cannot allocate memory in <span style="color:#94a3b8">/app/core/brain.php</span> on line <span style="color:#fff">333</span><br>
+        <span style="color:#ef4444">Stack trace:</span> 0x7f3a2b... → awesomeness_overflow()
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:#334155">Please contact your system administrator. Error code: JH-333</div>
+</div>
+</div>
+
+<script>
+(function(){
+var eeActive = false;
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+        e.preventDefault();
+        if (eeActive) return;
+        eeActive = true;
+        launchEasterEgg();
+    }
+});
+
+function launchEasterEgg() {
+    var container = document.getElementById('ee');
+    container.style.display = 'block';
+    var black = document.getElementById('eeBlack');
+    var canvas = document.getElementById('eeCanvas');
+    var ctx = canvas.getContext('2d');
+    var matrixCanvas = document.getElementById('eeMatrix');
+    var mctx = matrixCanvas.getContext('2d');
+
+    canvas.width = matrixCanvas.width = window.innerWidth;
+    canvas.height = matrixCanvas.height = window.innerHeight;
+
+    // ═══ SOUND: Cinematic impact ═══
+    try {
+        var audio = new (window.AudioContext || window.webkitAudioContext)();
+        // Deep bass hit
+        var osc1 = audio.createOscillator();
+        var gain1 = audio.createGain();
+        osc1.type = 'sine'; osc1.frequency.setValueAtTime(40, audio.currentTime);
+        osc1.frequency.exponentialRampToValueAtTime(20, audio.currentTime + 1.5);
+        gain1.gain.setValueAtTime(0.8, audio.currentTime);
+        gain1.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 2);
+        osc1.connect(gain1); gain1.connect(audio.destination);
+        osc1.start(); osc1.stop(audio.currentTime + 2);
+        // Rising synth sweep
+        var osc2 = audio.createOscillator();
+        var gain2 = audio.createGain();
+        osc2.type = 'sawtooth'; osc2.frequency.setValueAtTime(80, audio.currentTime + 0.3);
+        osc2.frequency.exponentialRampToValueAtTime(800, audio.currentTime + 2);
+        gain2.gain.setValueAtTime(0.15, audio.currentTime + 0.3);
+        gain2.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 2.5);
+        osc2.connect(gain2); gain2.connect(audio.destination);
+        osc2.start(audio.currentTime + 0.3); osc2.stop(audio.currentTime + 2.5);
+        // High freq sparkle
+        var osc3 = audio.createOscillator();
+        var gain3 = audio.createGain();
+        osc3.type = 'sine'; osc3.frequency.setValueAtTime(2000, audio.currentTime + 1);
+        gain3.gain.setValueAtTime(0.1, audio.currentTime + 1);
+        gain3.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 1.5);
+        osc3.connect(gain3); gain3.connect(audio.destination);
+        osc3.start(audio.currentTime + 1); osc3.stop(audio.currentTime + 1.5);
+    } catch(e) {}
+
+    // Phase 1: Fade to black
+    requestAnimationFrame(function() { black.style.opacity = '1'; });
+
+    // Phase 2: Matrix rain starts
+    setTimeout(function() {
+        matrixCanvas.style.opacity = '0.6';
+        var cols = Math.floor(canvas.width / 14);
+        var drops = new Array(cols).fill(0);
+        var chars = 'JASONHOGAN333アイウエオカキクケコ01█▓░</>{}=+*#@!?$%^&'.split('');
+        var matrixTimer = setInterval(function() {
+            mctx.fillStyle = 'rgba(0,0,0,0.05)';
+            mctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            mctx.fillStyle = '#0f0';
+            mctx.font = '14px monospace';
+            for (var i = 0; i < drops.length; i++) {
+                var ch = chars[Math.floor(Math.random() * chars.length)];
+                // Mix in red and gold occasionally
+                mctx.fillStyle = Math.random() > 0.95 ? '#f00' : Math.random() > 0.9 ? '#ff0' : '#0f0';
+                mctx.fillText(ch, i * 14, drops[i] * 14);
+                if (drops[i] * 14 > matrixCanvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }, 33);
+        setTimeout(function() { clearInterval(matrixTimer); }, 8000);
+    }, 1200);
+
+    // Phase 3: Subtitle text types in
+    setTimeout(function() {
+        var textEl = document.getElementById('eeText');
+        textEl.style.opacity = '1';
+        var sub = document.getElementById('eeSubtitle');
+        var subText = '// THIS APPLICATION WAS DEVELOPED BY //';
+        var si = 0;
+        var typeTimer = setInterval(function() {
+            si++;
+            sub.textContent = subText.substring(0, si);
+            if (si >= subText.length) clearInterval(typeTimer);
+        }, 40);
+
+        // 333 subliminal
+        var s333 = document.getElementById('ee333');
+        s333.textContent = '333';
+        s333.style.opacity = '0.04';
+    }, 2000);
+
+    // Phase 4: Name EXPLODES in
+    setTimeout(function() {
+        var name = document.getElementById('eeName');
+        name.textContent = 'JASON HOGAN';
+        name.style.fontSize = '72px';
+        name.style.filter = 'blur(0px)';
+        name.style.textShadow = '0 0 80px rgba(255,255,255,0.8), 0 0 160px rgba(255,100,100,0.4)';
+
+        // Flash the screen white
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        setTimeout(function() { ctx.clearRect(0, 0, canvas.width, canvas.height); }, 100);
+    }, 3500);
+
+    // Phase 5: PARTICLE EXPLOSION
+    setTimeout(function() {
+        var particles = [];
+        var cx = canvas.width / 2, cy = canvas.height / 2;
+        for (var i = 0; i < 300; i++) {
+            var angle = Math.random() * Math.PI * 2;
+            var speed = 2 + Math.random() * 12;
+            var size = 1 + Math.random() * 4;
+            var colors = ['#fff','#ff4444','#ffaa00','#ff6600','#ffffff','#ff0000','#ffd700'];
+            particles.push({
+                x: cx, y: cy,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                size: size,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                life: 1,
+                decay: 0.005 + Math.random() * 0.015
+            });
+        }
+        // Shockwave
+        var shockwave = { r: 0, maxR: Math.max(canvas.width, canvas.height) * 0.7, alpha: 0.6 };
+
+        function drawExplosion() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Shockwave ring
+            if (shockwave.r < shockwave.maxR) {
+                ctx.beginPath();
+                ctx.arc(cx, cy, shockwave.r, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255,255,255,' + shockwave.alpha + ')';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                shockwave.r += 15;
+                shockwave.alpha *= 0.97;
+            }
+            // Particles
+            var alive = false;
+            particles.forEach(function(p) {
+                if (p.life <= 0) return;
+                alive = true;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.05; // gravity
+                p.life -= p.decay;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            });
+            if (alive) requestAnimationFrame(drawExplosion);
+        }
+        drawExplosion();
+
+        // Subliminal flash: "333" big
+        var s333 = document.getElementById('ee333');
+        s333.style.fontSize = '200px';
+        s333.style.color = 'rgba(255,0,0,0.08)';
+        setTimeout(function() { s333.style.color = 'rgba(255,255,255,0.02)'; }, 300);
+    }, 4000);
+
+    // Phase 6: Text fades, second blackout
+    setTimeout(function() {
+        document.getElementById('eeText').style.opacity = '0';
+        document.getElementById('eeText').style.transition = 'opacity 0.8s ease';
+        matrixCanvas.style.opacity = '0';
+    }, 6500);
+
+    // Phase 7: Show contact lightbox
+    setTimeout(function() {
+        canvas.style.display = 'none';
+        matrixCanvas.style.display = 'none';
+        document.getElementById('eeText').style.display = 'none';
+
+        var lb = document.getElementById('eeLightbox');
+        lb.style.display = 'flex';
+        lb.style.opacity = '0';
+        lb.style.transition = 'opacity 0.5s ease';
+        requestAnimationFrame(function() { lb.style.opacity = '1'; });
+
+        // Generate particles for lightbox
+        var pc = document.getElementById('eeLbParticles');
+        pc.innerHTML = '';
+        for (var i = 0; i < 20; i++) {
+            var s = document.createElement('span');
+            var sz = 1 + Math.random() * 3;
+            s.style.cssText = 'position:absolute;width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:rgba(255,255,255,0.3);opacity:0;left:'+(Math.random()*100)+'%;animation:cinFloat '+(2+Math.random()*3)+'s ease-in-out infinite;animation-delay:-'+(Math.random()*4)+'s';
+            pc.appendChild(s);
+        }
+    }, 7500);
+}
+
+window.closeEE = function() {
+    var lb = document.getElementById('eeLightbox');
+    lb.style.opacity = '0';
+
+    setTimeout(function() {
+        lb.style.display = 'none';
+
+        // Subliminal flash: "JASON IS THE GREATEST DEV"
+        var sub = document.getElementById('eeSubliminal');
+        var subText = document.getElementById('eeSubliminalText');
+        sub.style.display = 'flex';
+        subText.textContent = 'JASON IS THE\nGREATEST DEV';
+        subText.style.whiteSpace = 'pre-line';
+
+        var flashCount = 0;
+        var flashTimer = setInterval(function() {
+            subText.style.opacity = subText.style.opacity === '0' ? '1' : '0';
+            flashCount++;
+            if (flashCount >= 6) {
+                clearInterval(flashTimer);
+                sub.style.display = 'none';
+
+                // Technical difficulties screen
+                var td = document.getElementById('eeTechDiff');
+                td.style.display = 'flex';
+
+                setTimeout(function() {
+                    td.style.transition = 'opacity 0.5s ease';
+                    td.style.opacity = '0';
+                    setTimeout(function() {
+                        // Clean up everything
+                        td.style.display = 'none';
+                        td.style.opacity = '1';
+                        document.getElementById('eeBlack').style.opacity = '0';
+                        document.getElementById('ee').style.display = 'none';
+
+                        // Reset all elements for next trigger
+                        document.getElementById('eeCanvas').style.display = '';
+                        document.getElementById('eeMatrix').style.display = '';
+                        document.getElementById('eeMatrix').style.opacity = '0';
+                        document.getElementById('eeText').style.display = '';
+                        document.getElementById('eeText').style.opacity = '0';
+                        document.getElementById('eeText').style.transition = '';
+                        document.getElementById('eeName').style.fontSize = '0px';
+                        document.getElementById('eeName').style.filter = 'blur(20px)';
+                        document.getElementById('eeName').style.textShadow = '';
+                        document.getElementById('eeSubtitle').textContent = '';
+                        document.getElementById('ee333').style.fontSize = '120px';
+                        document.getElementById('ee333').textContent = '';
+                        var canv = document.getElementById('eeCanvas');
+                        canv.getContext('2d').clearRect(0, 0, canv.width, canv.height);
+                        var mcanv = document.getElementById('eeMatrix');
+                        mcanv.getContext('2d').clearRect(0, 0, mcanv.width, mcanv.height);
+
+                        eeActive = false;
+                    }, 500);
+                }, 3000);
+            }
+        }, 250);
+    }, 500);
+};
+})();
+</script>
 </body>
 </html>
