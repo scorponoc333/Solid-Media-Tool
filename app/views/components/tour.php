@@ -8,31 +8,59 @@ $faviconUrl = BASE_URL . '/favicon-48.png';
 
 // Steps: target (CSS selector), title, text, url (page to navigate to), group (accordion 1/2/3)
 $adminSteps = [
-    ['target' => '.nav-item[href*="/dashboard"]', 'title' => 'Dashboard', 'text' => 'Your command center. View real-time stats, weekly trends, quick actions, and recent posts at a glance.', 'url' => '/dashboard', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/generator"]', 'title' => 'Content Generator', 'text' => 'Plan and generate a full week of AI-powered content or create single posts. The AI uses your themes, brand voice, and content memory.', 'url' => '/generator', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/posts"]', 'title' => 'Posts Manager', 'text' => 'Manage all your posts in table or kanban view. Filter by platform, status, or search. Edit, schedule, publish, or delete.', 'url' => '/posts', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/calendar"]', 'title' => 'Content Calendar', 'text' => 'Visual monthly calendar showing all scheduled posts. Color-coded by status. Hover for previews, click for details.', 'url' => '/calendar', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/reporting"]', 'title' => 'Reports & Analytics', 'text' => 'Track performance with interactive stat cards, failed post management, topic distribution, and platform breakdown. Export data as CSV.', 'url' => '/reporting', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/content-strategy"]', 'title' => 'Content Strategy', 'text' => 'Define content themes with copy instructions and sample posts. Assign themes to days of the week. Run AI critique on your copy.', 'url' => '/content-strategy', 'group' => 2, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/art-direction"]', 'title' => 'Art Direction', 'text' => 'Control AI image generation: style, realism, color temperature, mood, watermarks, and quick presets. See a live prompt preview.', 'url' => '/art-direction', 'group' => 2, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/branding"]', 'title' => 'Branding', 'text' => 'Set your company logo, colors, favicon, login background, and API keys. Everything here applies across the entire platform.', 'url' => '/branding', 'group' => 2, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/users"]', 'title' => 'User Management', 'text' => 'Invite team members as Editors or Reviewers. Configure the approval workflow and set minimum approvals needed.', 'url' => '/users', 'group' => 2, 'position' => 'right'],
+    // Dashboard
+    ['target' => '.nav-item[href*="/dashboard"]', 'title' => 'Dashboard', 'text' => 'Your command center. Let\'s take a look at what\'s here.', 'url' => '/dashboard', 'group' => 1, 'position' => 'right'],
+    ['target' => '.stats-grid', 'title' => 'Live Stats', 'text' => 'These cards show your content pipeline at a glance: total posts, scheduled, published, and drafts. Hover any card to see weekly trends.', 'url' => null, 'group' => 0, 'position' => 'bottom'],
+    ['target' => '.quick-actions-grid', 'title' => 'Quick Actions', 'text' => 'Jump straight to the most-used features. Generate content, check the calendar, or view reports — one click away.', 'url' => null, 'group' => 0, 'position' => 'bottom'],
+    // Generator
+    ['target' => '.nav-item[href*="/generator"]', 'title' => 'Content Generator', 'text' => 'This is where the magic happens. AI creates on-brand content for you.', 'url' => '/generator', 'group' => 1, 'position' => 'right'],
+    ['target' => '.main-content .card', 'title' => 'Plan & Generate', 'text' => 'Generate a full week of content or single posts. The AI uses your themes, brand voice, and content memory to create unique posts every time.', 'url' => null, 'group' => 0, 'position' => 'bottom'],
+    // Posts
+    ['target' => '.nav-item[href*="/posts"]', 'title' => 'Posts Manager', 'text' => 'Browse and manage all your content here.', 'url' => '/posts', 'group' => 1, 'position' => 'right'],
+    // Calendar
+    ['target' => '.nav-item[href*="/calendar"]', 'title' => 'Content Calendar', 'text' => 'Visual monthly view of your schedule. Color-coded dots show each post\'s status. Hover for previews, click for details.', 'url' => '/calendar', 'group' => 1, 'position' => 'right'],
+    // Reports
+    ['target' => '.nav-item[href*="/reporting"]', 'title' => 'Reports & Analytics', 'text' => 'Track performance, manage failed posts, and export data. Click the stat cards to instantly filter results.', 'url' => '/reporting', 'group' => 1, 'position' => 'right'],
+    // Strategy
+    ['target' => '.nav-item[href*="/content-strategy"]', 'title' => 'Content Strategy', 'text' => 'Define themes, assign them to days, and give the AI copy instructions and sample posts to follow.', 'url' => '/content-strategy', 'group' => 2, 'position' => 'right'],
+    ['target' => '.theme-grid', 'title' => 'Your Content Themes', 'text' => 'Each theme card defines a content category. The AI follows the copy instructions and required elements you set here when generating posts.', 'url' => null, 'group' => 0, 'position' => 'bottom'],
+    // Art Direction
+    ['target' => '.nav-item[href*="/art-direction"]', 'title' => 'Art Direction', 'text' => 'Control how AI-generated images look: style, realism, mood, watermarks, and quick presets.', 'url' => '/art-direction', 'group' => 2, 'position' => 'right'],
+    // Branding
+    ['target' => '.nav-item[href*="/branding"]', 'title' => 'Branding', 'text' => 'Set your logo, colors, favicon, contact info, and API keys. Everything here applies platform-wide.', 'url' => '/branding', 'group' => 2, 'position' => 'right'],
+    // Users
+    ['target' => '.nav-item[href*="/users"]', 'title' => 'User Management', 'text' => 'Invite Editors and Reviewers, configure the approval workflow, and manage your team.', 'url' => '/users', 'group' => 2, 'position' => 'right'],
+    // Finale
     ['target' => null, 'title' => 'You\'re all set!', 'text' => 'You have full control over ' . $tourCompany . '\'s social media engine. Head to the Generator to create your first batch of content!', 'url' => null, 'group' => 0, 'position' => 'center'],
 ];
 
 $editorSteps = [
-    ['target' => '.nav-item[href*="/dashboard"]', 'title' => 'Dashboard', 'text' => 'Your home base. See post stats, weekly trends, and jump to common tasks.', 'url' => '/dashboard', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/generator"]', 'title' => 'Content Generator', 'text' => 'Create a week of AI content or single posts. The AI uses your brand\'s themes and voice automatically.', 'url' => '/generator', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/posts"]', 'title' => 'Posts Manager', 'text' => 'Browse and edit all posts. Use table or kanban view. Schedule posts or submit for review.', 'url' => '/posts', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/calendar"]', 'title' => 'Content Calendar', 'text' => 'See your content schedule laid out visually. Spot gaps and plan ahead.', 'url' => '/calendar', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/reporting"]', 'title' => 'Reports', 'text' => 'Track which posts went out, spot failures, and analyze content patterns.', 'url' => '/reporting', 'group' => 1, 'position' => 'right'],
+    // Dashboard
+    ['target' => '.nav-item[href*="/dashboard"]', 'title' => 'Dashboard', 'text' => 'Your home base. Let\'s see what\'s here.', 'url' => '/dashboard', 'group' => 1, 'position' => 'right'],
+    ['target' => '.stats-grid', 'title' => 'Your Content Stats', 'text' => 'Track your posts at a glance: how many are scheduled, published, or still in draft. Hover to see weekly trends.', 'url' => null, 'group' => 0, 'position' => 'bottom'],
+    // Generator
+    ['target' => '.nav-item[href*="/generator"]', 'title' => 'Content Generator', 'text' => 'Create AI-powered content. Generate a full week or individual posts.', 'url' => '/generator', 'group' => 1, 'position' => 'right'],
+    ['target' => '.main-content .card', 'title' => 'AI-Powered Creation', 'text' => 'Choose your platforms, pick a topic, and let the AI generate on-brand posts. Edit the results before saving as drafts.', 'url' => null, 'group' => 0, 'position' => 'bottom'],
+    // Posts
+    ['target' => '.nav-item[href*="/posts"]', 'title' => 'Posts Manager', 'text' => 'Browse all posts in table or kanban view. Edit, schedule, or submit for review.', 'url' => '/posts', 'group' => 1, 'position' => 'right'],
+    // Calendar
+    ['target' => '.nav-item[href*="/calendar"]', 'title' => 'Content Calendar', 'text' => 'See your schedule visually. Spot gaps and plan ahead. Color-coded by status.', 'url' => '/calendar', 'group' => 1, 'position' => 'right'],
+    // Reports
+    ['target' => '.nav-item[href*="/reporting"]', 'title' => 'Reports', 'text' => 'Track which posts went out and spot any failures. Filter and export data.', 'url' => '/reporting', 'group' => 1, 'position' => 'right'],
+    // Finale
     ['target' => null, 'title' => 'Ready to create!', 'text' => 'Head to the Generator to start making content for ' . $tourCompany . '. Happy posting!', 'url' => null, 'group' => 0, 'position' => 'center'],
 ];
 
 $reviewerSteps = [
-    ['target' => '.nav-item[href*="/dashboard"]', 'title' => 'Dashboard', 'text' => 'Your overview of the content pipeline. See stats and recent activity.', 'url' => '/dashboard', 'group' => 1, 'position' => 'right'],
-    ['target' => '.nav-item[href*="/reviews"]', 'title' => 'Review Queue', 'text' => 'This is your main workspace. Approve posts or request changes before they go live. Track approval progress.', 'url' => '/reviews', 'group' => 1, 'position' => 'right'],
+    // Dashboard
+    ['target' => '.nav-item[href*="/dashboard"]', 'title' => 'Dashboard', 'text' => 'Your overview of the content pipeline. Let\'s look around.', 'url' => '/dashboard', 'group' => 1, 'position' => 'right'],
+    ['target' => '.stats-grid', 'title' => 'Content Overview', 'text' => 'See the big picture: how many posts are in the pipeline, what\'s scheduled, and what\'s been published.', 'url' => null, 'group' => 0, 'position' => 'bottom'],
+    // Reviews
+    ['target' => '.nav-item[href*="/reviews"]', 'title' => 'Review Queue', 'text' => 'This is your main workspace. Posts needing approval appear here.', 'url' => '/reviews', 'group' => 1, 'position' => 'right'],
+    ['target' => '.main-content', 'title' => 'Approve or Request Changes', 'text' => 'Each post shows its content preview and approval progress. Click Approve to give the green light, or Request Changes to send feedback to the editor.', 'url' => null, 'group' => 0, 'position' => 'bottom'],
+    // Calendar
     ['target' => '.nav-item[href*="/calendar"]', 'title' => 'Content Calendar', 'text' => 'See what\'s scheduled and when posts are going out across all platforms.', 'url' => '/calendar', 'group' => 1, 'position' => 'right'],
+    // Finale
     ['target' => null, 'title' => 'Ready to review!', 'text' => 'Check the Review Queue for posts awaiting your approval. The team is counting on you!', 'url' => null, 'group' => 0, 'position' => 'center'],
 ];
 
@@ -563,17 +591,29 @@ $tourSteps = match ($tourRole) {
                     tooltip.style.display = '';
                     tooltip.style.transform = '';
 
-                    // Position tooltip to the right of the sidebar item
                     var tooltipWidth = 380;
-                    var leftPos = rect.right + 18;
 
-                    // Fallback if tooltip would go off-screen
-                    if (leftPos + tooltipWidth > window.innerWidth - 20) {
-                        leftPos = window.innerWidth - tooltipWidth - 20;
+                    if (step.position === 'bottom') {
+                        // Position below the element (for on-page UI highlights)
+                        var leftPos = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+                        leftPos = Math.max(20, Math.min(leftPos, window.innerWidth - tooltipWidth - 20));
+                        tooltip.style.left = leftPos + 'px';
+                        tooltip.style.top = (rect.bottom + 14) + 'px';
+
+                        // If tooltip would go below viewport, position above instead
+                        if (rect.bottom + 14 + 200 > window.innerHeight) {
+                            tooltip.style.top = Math.max(12, rect.top - 14) + 'px';
+                            tooltip.style.transform = 'translateY(-100%)';
+                        }
+                    } else {
+                        // Position to the right (for sidebar nav items)
+                        var leftPos = rect.right + 18;
+                        if (leftPos + tooltipWidth > window.innerWidth - 20) {
+                            leftPos = window.innerWidth - tooltipWidth - 20;
+                        }
+                        tooltip.style.left = leftPos + 'px';
+                        tooltip.style.top = Math.max(12, rect.top - 10) + 'px';
                     }
-
-                    tooltip.style.left = leftPos + 'px';
-                    tooltip.style.top = Math.max(12, rect.top - 10) + 'px';
 
                     requestAnimationFrame(function() { tooltip.classList.add('visible'); });
                 }, 150);
