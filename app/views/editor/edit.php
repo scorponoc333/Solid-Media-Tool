@@ -731,11 +731,12 @@ const csrfToken = () => document.getElementById('csrf-token').value;
 let currentImageUrl = '<?= htmlspecialchars($post['image_url'] ?? '', ENT_QUOTES) ?>';
 
 // Platform checkbox toggle
-document.querySelectorAll('.platform-option:not(.disabled)').forEach(label => {
+document.querySelectorAll('.platform-option:not(.disabled)').forEach(function(label) {
     label.addEventListener('click', function(e) {
-        // Prevent the native label→checkbox toggle so we control it ourselves
+        // Only handle if the click target is NOT the checkbox itself
+        if (e.target.type === 'checkbox') return;
         e.preventDefault();
-        const cb = this.querySelector('input[type="checkbox"]');
+        var cb = this.querySelector('input[type="checkbox"]');
         cb.checked = !cb.checked;
         this.classList.toggle('selected', cb.checked);
     });
