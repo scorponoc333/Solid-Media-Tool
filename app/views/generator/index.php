@@ -1050,12 +1050,25 @@ function resumeImagePolling() {
             // Show loading overlay if not already there
             var imgWrap = document.getElementById('img-wrap-' + uid);
             if (imgWrap && !imgWrap.querySelector('.img-loading-overlay')) {
-                // Re-add loading overlay
+                // Re-add full atom loading overlay (same as original)
                 var gPrimary = '<?= $primaryColor ?>';
-                imgWrap.innerHTML += '<div class="img-loading-overlay" style="background:linear-gradient(165deg,'+gPrimary+' 0%,#0a0a0a 70%,#000 100%);flex-direction:column;gap:10px">'
-                    + '<div style="width:48px;height:48px;border:2.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.7);border-radius:50%;animation:aiSpin 0.7s linear infinite"></div>'
-                    + '<div style="font-size:11px;color:rgba(255,255,255,0.6);z-index:2">Generating image...</div>'
-                    + '<style>@keyframes aiSpin{to{transform:rotate(360deg)}}</style>'
+                imgWrap.innerHTML += '<div class="img-loading-overlay" id="imgOverlay_'+uid+'" style="background:linear-gradient(165deg,'+gPrimary+' 0%,#0a0a0a 70%,#000 100%);flex-direction:column;gap:10px">'
+                    + '<div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.08),transparent 65%);animation:atomMist 4s ease-in-out infinite"></div>'
+                    + '<div style="position:absolute;width:280px;height:120px;border:1px solid rgba(255,255,255,0.08);border-radius:50%;animation:aiSpin 6s linear infinite;transform-origin:center">'
+                    + '<div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 10px rgba(255,255,255,0.6);opacity:0.75"></div></div>'
+                    + '<div style="position:absolute;width:260px;height:110px;border:1px solid rgba(255,255,255,0.06);border-radius:50%;animation:aiSpin 5s linear infinite reverse;transform:rotate(60deg);transform-origin:center">'
+                    + '<div style="position:absolute;width:4px;height:4px;background:rgba(255,255,255,0.9);border-radius:50%;bottom:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.5);opacity:0.65"></div></div>'
+                    + '<div style="position:absolute;width:100px;height:240px;border:1px solid rgba(255,255,255,0.05);border-radius:50%;animation:aiSpin 7s linear infinite;transform:rotate(30deg);transform-origin:center">'
+                    + '<div style="position:absolute;width:4px;height:4px;background:rgba(255,255,255,0.85);border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.4);opacity:0.55"></div></div>'
+                    + '<div style="width:50px;height:50px;position:relative;display:flex;align-items:center;justify-content:center;z-index:2">'
+                    + '<div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,0.08);border-radius:50%;animation:aiSpin 8s linear infinite"></div>'
+                    + '<div style="position:absolute;inset:6px;border:2px solid rgba(255,255,255,0.06);border-top-color:rgba(255,255,255,0.5);border-radius:50%;animation:aiSpin 2.5s linear infinite;box-shadow:0 0 12px rgba(255,255,255,0.06)"></div>'
+                    + '<div style="width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,0.6)"></div></div>'
+                    + '<div style="padding:4px 12px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);z-index:2">'
+                    + '<span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6)">AI Image Generation</span></div>'
+                    + '<div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:4px;text-align:center;z-index:2" id="imgStatus_'+uid+'">Generating image...</div>'
+                    + '<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;z-index:2">This may take 2\u20133 minutes</div>'
+                    + '<style>@keyframes aiSpin{to{transform:rotate(360deg)}}@keyframes atomMist{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:0.7;transform:scale(1.15)}}</style>'
                     + '</div>';
             }
             pollImageJob(uid, job.job_id, null);
