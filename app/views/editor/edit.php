@@ -332,11 +332,14 @@ $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
         transition: all 0.15s ease;
         flex-shrink: 0;
     }
-    .platform-option.selected .platform-check {
+    /* Support both .selected class AND :checked state */
+    .platform-option.selected .platform-check,
+    .platform-option input[type="checkbox"]:checked ~ .platform-check {
         background: var(--primary);
         border-color: var(--primary);
     }
-    .platform-option.selected .platform-check::after {
+    .platform-option.selected .platform-check::after,
+    .platform-option input[type="checkbox"]:checked ~ .platform-check::after {
         content: '\f00c';
         font-family: 'Font Awesome 6 Free';
         font-weight: 900;
@@ -1465,4 +1468,19 @@ async function critiquePost() {
         btn.innerHTML = '<i class="fas fa-robot"></i> AI Critique';
     }
 }
+
+// Platform checkbox toggle — sync .selected class with checkbox state
+document.querySelectorAll('.platform-option').forEach(function(label) {
+    label.addEventListener('click', function() {
+        var cb = this.querySelector('input[type="checkbox"]');
+        // Small delay to let the browser toggle the checkbox first
+        setTimeout(function() {
+            if (cb.checked) {
+                label.classList.add('selected');
+            } else {
+                label.classList.remove('selected');
+            }
+        }, 10);
+    });
+});
 </script>
