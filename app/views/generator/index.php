@@ -611,7 +611,12 @@ async function generateWeekWithPlan(days, themeIds) {
 <!-- Results Area -->
 <div class="section-header">
     <h3 class="section-title">Generated Content</h3>
-    <span class="text-muted text-small" id="results-count"></span>
+    <div style="display:flex;align-items:center;gap:12px">
+        <span class="text-muted text-small" id="results-count"></span>
+        <button class="btn btn-ghost btn-sm" id="clearAllBtn" style="display:none;color:var(--danger)" onclick="confirmClearAll()">
+            <i class="fas fa-trash-alt" style="margin-right:4px"></i> Clear All
+        </button>
+    </div>
 </div>
 
 <div id="generator-results">
@@ -856,7 +861,9 @@ function renderResults(posts, append = false) {
 
         const card = document.createElement('div');
         card.className = 'result-card card';
+        card.style.position = 'relative';
         card.innerHTML = `
+            <button class="card-delete-x" onclick="confirmDeleteCard('${uid}')" title="Remove post">&times;</button>
             <div class="post-card">
                 <div class="post-card-image-wrap" id="img-wrap-${uid}">
                     ${imageHtml}
@@ -949,6 +956,7 @@ function restoreGeneratedPosts() {
             var card = document.createElement('div');
             card.className = 'result-card card';
             card.id = 'card-' + uid;
+            card.style.position = 'relative';
             card.dataset.imageUrl = post.image_url || '';
             card.dataset.imagePrompt = post.image_prompt || '';
             card.dataset.postType = post.post_type || 'educational';
@@ -956,7 +964,8 @@ function restoreGeneratedPosts() {
             card.dataset.keywords = post.keywords || '';
             card.dataset.angle = post.angle || '';
 
-            card.innerHTML = '<div class="post-card">'
+            card.innerHTML = '<button class="card-delete-x" onclick="confirmDeleteCard(\'' + uid + '\')" title="Remove post">&times;</button>'
+                + '<div class="post-card">'
                 + '<div class="post-card-image-wrap" id="img-wrap-' + uid + '">' + imageHtml + '</div>'
                 + '<div class="post-card-body">'
                 + '<input type="text" class="editable-title" id="title-' + uid + '" value="' + escAttr(post.title || 'Untitled Post') + '">'
@@ -1077,9 +1086,78 @@ function resumeImagePolling() {
 }
 
 function updateResultsCount() {
-    const count = document.querySelectorAll('.result-card').length;
-    const el = document.getElementById('results-count');
+    var count = document.querySelectorAll('.result-card').length;
+    var el = document.getElementById('results-count');
+    var clearBtn = document.getElementById('clearAllBtn');
     el.textContent = count ? count + ' post' + (count !== 1 ? 's' : '') + ' generated' : '';
+    if (clearBtn) clearBtn.style.display = count > 0 ? '' : 'none';
+}
+
+// ── Delete single card ──
+function confirmDeleteCard(uid) {
+    confirmModal('Remove Post', 'Are you sure you want to remove this generated post?', function() {
+        var card = document.getElementById('card-' + uid);
+        if (!card) return;
+        card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+        setTimeout(function() {
+            card.remove();
+            persistGeneratedPosts();
+            updateResultsCount();
+            // Show empty state if no cards left
+            if (!document.querySelectorAll('.result-card').length) {
+                showEmptyGeneratorState();
+            }
+        }, 400);
+    });
+}
+
+// ── Clear all cards ──
+function confirmClearAll() {
+    var count = document.querySelectorAll('.result-card').length;
+    confirmModal('Clear All Posts', 'Are you sure you want to clear all ' + count + ' generated post' + (count > 1 ? 's' : '') + '? This cannot be undone.', function() {
+        // Show clearing overlay
+        var primary = '<?= $primaryColor ?>';
+        var overlay = document.createElement('div');
+        overlay.id = 'clearingOverlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(165deg,' + primary + ' 0%,color-mix(in srgb,' + primary + ' 35%,#0a0a0a) 55%,#0a0a0a 100%);opacity:0;transition:opacity 0.3s ease';
+        overlay.innerHTML = '<div style="width:48px;height:48px;border:2.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.7);border-radius:50%;animation:cinSpin 0.7s linear infinite;margin-bottom:16px"></div>'
+            + '<div style="font-size:16px;font-weight:600;color:rgba(255,255,255,0.7)">Clearing posts...</div>'
+            + '<div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:6px">One moment</div>';
+        document.body.appendChild(overlay);
+        requestAnimationFrame(function() { overlay.style.opacity = '1'; });
+
+        // After 1.5s, fade out overlay, then stagger-remove cards
+        setTimeout(function() {
+            overlay.style.opacity = '0';
+            setTimeout(function() {
+                overlay.remove();
+                // Stagger fade out each card
+                var cards = Array.from(document.querySelectorAll('.result-card'));
+                cards.forEach(function(card, i) {
+                    setTimeout(function() {
+                        card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.9) translateY(-8px)';
+                        setTimeout(function() { card.remove(); }, 300);
+                    }, i * 150);
+                });
+                // After all cards removed, clean up
+                setTimeout(function() {
+                    sessionStorage.removeItem('gen_posts');
+                    sessionStorage.removeItem('gen_image_jobs');
+                    updateResultsCount();
+                    showEmptyGeneratorState();
+                }, cards.length * 150 + 400);
+            }, 300);
+        }, 1500);
+    });
+}
+
+function showEmptyGeneratorState() {
+    var container = document.getElementById('generator-results');
+    container.innerHTML = '<div class="card"><div class="empty-state"><i class="fas fa-wand-magic-sparkles"></i><p>No generated content. Use the controls above to generate posts.</p></div></div>';
 }
 
 async function regenerateText(uid) {
@@ -1402,6 +1480,34 @@ function showImageErrorModal(errorMsg, retryCallback) {
 }
 
 /* Save Lock Overlay for generator cards */
+/* Card delete X button */
+.card-delete-x {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 15;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+}
+.result-card:hover .card-delete-x { opacity: 1; }
+.card-delete-x:hover {
+    background: var(--danger);
+    transform: scale(1.1);
+}
+
 .save-lock-overlay {
     position: absolute;
     inset: 0;
