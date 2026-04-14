@@ -53,6 +53,23 @@ class Controller
         if (!isset($_SESSION['user_id'])) {
             $this->redirect('/login');
         }
+        // Check if user account is still active
+        if (isset($_SESSION['user_id']) && isset($_SESSION['is_active']) && !$_SESSION['is_active']) {
+            session_destroy();
+            $this->redirect('/login');
+        }
+    }
+
+    protected function requireRole(string ...$roles): void
+    {
+        $this->requireAuth();
+        $userRole = $_SESSION['role'] ?? '';
+        if (!in_array($userRole, $roles, true)) {
+            http_response_code(403);
+            echo '<h1>403 — Access Denied</h1><p>You do not have permission to view this page.</p>';
+            echo '<p><a href="' . BASE_URL . '/dashboard">Back to Dashboard</a></p>';
+            exit;
+        }
     }
 
     protected function csrfToken(): string

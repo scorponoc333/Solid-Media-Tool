@@ -14,6 +14,9 @@ $currentPath = $currentPath ?: '/';
 $darkMode = $_COOKIE['darkMode'] ?? 'false';
 $isDark = $darkMode === 'true';
 
+// RBAC — current user role
+$userRole = $_SESSION['role'] ?? 'reviewer';
+
 // Compute RGB values for primary and secondary
 $priR = hexdec(substr(ltrim($primaryColor, '#'), 0, 2));
 $priG = hexdec(substr(ltrim($primaryColor, '#'), 2, 2));
@@ -28,6 +31,10 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle ?? 'Dashboard') ?> — <?= htmlspecialchars($companyName) ?></title>
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= BASE_URL ?>/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= BASE_URL ?>/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= BASE_URL ?>/apple-touch-icon.png">
+    <link rel="shortcut icon" href="<?= BASE_URL ?>/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -48,6 +55,8 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
+            <!-- Constellation effect behind logo -->
+            <canvas class="brand-constellation" id="brand-constellation"></canvas>
             <?php if ($logoUrl): ?>
                 <img src="<?= htmlspecialchars($logoUrl) ?>" alt="<?= htmlspecialchars($companyName) ?>" class="sidebar-logo sidebar-expanded-only">
             <?php else: ?>
@@ -57,57 +66,129 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
         </div>
 
         <nav class="sidebar-nav">
-            <a href="<?= BASE_URL ?>/dashboard" class="nav-item <?= in_array($currentPath, ['/', '/dashboard']) ? 'active' : '' ?>">
-                <i class="fas fa-th-large"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="<?= BASE_URL ?>/generator" class="nav-item <?= str_starts_with($currentPath, '/generator') ? 'active' : '' ?>">
-                <i class="fas fa-magic"></i>
-                <span>Generator</span>
-            </a>
-            <a href="<?= BASE_URL ?>/posts" class="nav-item <?= str_starts_with($currentPath, '/posts') ? 'active' : '' ?>">
-                <i class="fas fa-edit"></i>
-                <span>Posts</span>
-            </a>
-            <a href="<?= BASE_URL ?>/calendar" class="nav-item <?= str_starts_with($currentPath, '/calendar') ? 'active' : '' ?>">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Calendar</span>
-            </a>
-            <a href="<?= BASE_URL ?>/reporting" class="nav-item <?= str_starts_with($currentPath, '/reporting') ? 'active' : '' ?>">
-                <i class="fas fa-chart-bar"></i>
-                <span>Reports</span>
-            </a>
+            <!-- Group 1: Content & Operations (open by default) -->
+            <?php
+            // Determine which group should be open based on current path
+            $group1Paths = ['/', '/dashboard', '/generator', '/posts', '/reviews', '/calendar', '/reporting'];
+            $group2Paths = ['/content-strategy', '/art-direction', '/branding', '/wizard', '/users', '/smtp'];
+            $group3Paths = ['/memory', '/docs'];
+            $g1Open = false;
+            $g2Open = false;
+            $g3Open = false;
+            foreach ($group1Paths as $gp) { if (str_starts_with($currentPath, $gp)) { $g1Open = true; break; } }
+            foreach ($group2Paths as $gp) { if (str_starts_with($currentPath, $gp)) { $g2Open = true; break; } }
+            foreach ($group3Paths as $gp) { if (str_starts_with($currentPath, $gp)) { $g3Open = true; break; } }
+            // Default to Content open if no group matched
+            if (!$g1Open && !$g2Open && !$g3Open) $g1Open = true;
+            ?>
 
-            <div class="nav-divider"></div>
+            <div class="nav-group <?= $g1Open ? 'open' : '' ?>">
+                <button class="nav-group-toggle" onclick="toggleNavGroup(this)">
+                    <span class="nav-group-label">Content</span>
+                    <i class="fas fa-chevron-down nav-group-arrow"></i>
+                </button>
+                <div class="nav-group-items">
+                    <a href="<?= BASE_URL ?>/dashboard" class="nav-item <?= in_array($currentPath, ['/', '/dashboard']) ? 'active' : '' ?>">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <?php if (in_array($userRole, ['admin', 'editor'])): ?>
+                    <a href="<?= BASE_URL ?>/generator" class="nav-item <?= str_starts_with($currentPath, '/generator') ? 'active' : '' ?>">
+                        <i class="fas fa-magic"></i>
+                        <span>Generator</span>
+                    </a>
+                    <?php endif; ?>
+                    <a href="<?= BASE_URL ?>/posts" class="nav-item <?= str_starts_with($currentPath, '/posts') ? 'active' : '' ?>">
+                        <i class="fas fa-edit"></i>
+                        <span>Posts</span>
+                    </a>
+                    <?php if (in_array($userRole, ['admin', 'reviewer'])): ?>
+                    <a href="<?= BASE_URL ?>/reviews" class="nav-item <?= str_starts_with($currentPath, '/reviews') ? 'active' : '' ?>">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Reviews</span>
+                    </a>
+                    <?php endif; ?>
+                    <a href="<?= BASE_URL ?>/calendar" class="nav-item <?= str_starts_with($currentPath, '/calendar') ? 'active' : '' ?>">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Calendar</span>
+                    </a>
+                    <?php if (in_array($userRole, ['admin', 'editor'])): ?>
+                    <a href="<?= BASE_URL ?>/reporting" class="nav-item <?= str_starts_with($currentPath, '/reporting') ? 'active' : '' ?>">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </a>
+                    <?php endif; ?>
+                </div>
+            </div>
 
-            <a href="<?= BASE_URL ?>/branding" class="nav-item <?= str_starts_with($currentPath, '/branding') ? 'active' : '' ?>">
-                <i class="fas fa-palette"></i>
-                <span>Branding</span>
-            </a>
-            <a href="<?= BASE_URL ?>/memory" class="nav-item <?= str_starts_with($currentPath, '/memory') ? 'active' : '' ?>">
-                <i class="fas fa-brain"></i>
-                <span>Memory</span>
-            </a>
-            <a href="<?= BASE_URL ?>/docs" class="nav-item <?= str_starts_with($currentPath, '/docs') ? 'active' : '' ?>">
-                <i class="fas fa-book"></i>
-                <span>Docs</span>
-            </a>
+            <?php if ($userRole === 'admin'): ?>
+            <!-- Group 2: Settings & Configuration -->
+            <div class="nav-group <?= $g2Open ? 'open' : '' ?>">
+                <button class="nav-group-toggle" onclick="toggleNavGroup(this)">
+                    <span class="nav-group-label">Settings</span>
+                    <i class="fas fa-chevron-down nav-group-arrow"></i>
+                </button>
+                <div class="nav-group-items">
+                    <a href="<?= BASE_URL ?>/content-strategy" class="nav-item <?= str_starts_with($currentPath, '/content-strategy') ? 'active' : '' ?>">
+                        <i class="fas fa-chess"></i>
+                        <span>Strategy</span>
+                    </a>
+                    <a href="<?= BASE_URL ?>/art-direction" class="nav-item <?= str_starts_with($currentPath, '/art-direction') ? 'active' : '' ?>">
+                        <i class="fas fa-camera"></i>
+                        <span>Art Direction</span>
+                    </a>
+                    <a href="<?= BASE_URL ?>/branding" class="nav-item <?= str_starts_with($currentPath, '/branding') || str_starts_with($currentPath, '/wizard') ? 'active' : '' ?>">
+                        <i class="fas fa-palette"></i>
+                        <span>Branding</span>
+                    </a>
+                    <a href="<?= BASE_URL ?>/users" class="nav-item <?= str_starts_with($currentPath, '/users') ? 'active' : '' ?>">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Users</span>
+                    </a>
+                    <a href="<?= BASE_URL ?>/smtp" class="nav-item <?= str_starts_with($currentPath, '/smtp') ? 'active' : '' ?>">
+                        <i class="fas fa-envelope-open-text"></i>
+                        <span>Email</span>
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Group 3: Resources -->
+            <div class="nav-group <?= $g3Open ? 'open' : '' ?>">
+                <button class="nav-group-toggle" onclick="toggleNavGroup(this)">
+                    <span class="nav-group-label">Resources</span>
+                    <i class="fas fa-chevron-down nav-group-arrow"></i>
+                </button>
+                <div class="nav-group-items">
+                    <?php if (in_array($userRole, ['admin', 'editor'])): ?>
+                    <a href="<?= BASE_URL ?>/memory" class="nav-item <?= str_starts_with($currentPath, '/memory') ? 'active' : '' ?>">
+                        <i class="fas fa-brain"></i>
+                        <span>Memory</span>
+                    </a>
+                    <?php endif; ?>
+                    <a href="<?= BASE_URL ?>/docs" class="nav-item <?= str_starts_with($currentPath, '/docs') ? 'active' : '' ?>">
+                        <i class="fas fa-book"></i>
+                        <span>Docs</span>
+                    </a>
+                </div>
+            </div>
         </nav>
 
         <div class="sidebar-footer">
-            <div class="sidebar-user">
-                <div class="user-avatar">
-                    <?= strtoupper(substr($_SESSION['first_name'] ?? $_SESSION['username'] ?? 'U', 0, 1)) ?>
+            <div class="sidebar-user-card">
+                <div class="sidebar-user-card-inner">
+                    <div class="user-monogram" style="background:linear-gradient(135deg, <?= $primaryColor ?>, color-mix(in srgb, <?= $primaryColor ?> 60%, #000))">
+                        <?= strtoupper(substr($_SESSION['first_name'] ?? $_SESSION['username'] ?? 'U', 0, 1)) ?>
+                    </div>
+                    <div class="user-identity">
+                        <span class="user-identity-name"><?= htmlspecialchars($_SESSION['first_name'] ?: ($_SESSION['username'] ?? 'User')) ?></span>
+                        <span class="user-identity-role"><?= htmlspecialchars(ucfirst($_SESSION['role'] ?? 'admin')) ?></span>
+                    </div>
                 </div>
-                <div class="user-info">
-                    <span class="user-name"><?= htmlspecialchars($_SESSION['first_name'] ?: ($_SESSION['username'] ?? 'User')) ?></span>
-                    <span class="user-role"><?= htmlspecialchars(ucfirst($_SESSION['role'] ?? 'admin')) ?></span>
-                </div>
+                <a href="<?= BASE_URL ?>/logout" class="sidebar-logout-btn" title="Sign out">
+                    <i class="fas fa-arrow-right-from-bracket"></i>
+                </a>
             </div>
-            <a href="<?= BASE_URL ?>/logout" class="nav-item logout-btn">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
         </div>
     </aside>
 
@@ -119,11 +200,22 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
                 <i class="fas fa-bars"></i>
             </button>
             <h2 class="topbar-title"><?= htmlspecialchars($pageTitle ?? 'Dashboard') ?></h2>
-            <div class="topbar-actions">
-                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
-                    <i class="fas fa-moon" id="theme-icon"></i>
+            <div class="topbar-actions" style="display:flex;align-items:center;gap:10px">
+                <!-- Global Generation Status Pill -->
+                <div id="genStatusPill" style="display:none;padding:6px 14px;border-radius:20px;background:linear-gradient(135deg,<?= $primaryColor ?>,color-mix(in srgb, <?= $primaryColor ?> 60%, #000));font-size:11px;font-weight:600;color:#fff;cursor:pointer;white-space:nowrap;animation:genPillGlow 2s ease-in-out infinite;transition:all 0.3s ease" onclick="onGenPillClick()">
+                    <i class="fas fa-spinner fa-spin" style="margin-right:5px;font-size:10px"></i>
+                    <span id="genStatusText">Generating...</span>
+                </div>
+                <button class="theme-toggle-branded" onclick="toggleTheme()" title="Toggle dark mode" id="themeToggleBtn" style="background:<?= $isDark ? 'rgba(255,255,255,0.1)' : $primaryColor ?>">
+                    <i class="fas <?= $isDark ? 'fa-sun' : 'fa-moon' ?>" id="theme-icon" style="color:#fff"></i>
                 </button>
             </div>
+            <style>
+            @keyframes genPillGlow {
+                0%,100% { box-shadow: 0 0 8px rgba(<?= "$priR,$priG,$priB" ?>, 0.3); }
+                50% { box-shadow: 0 0 20px rgba(<?= "$priR,$priG,$priB" ?>, 0.6), 0 0 40px rgba(<?= "$priR,$priG,$priB" ?>, 0.2); }
+            }
+            </style>
         </header>
 
         <!-- Page Content -->
@@ -139,6 +231,297 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
 <!-- Toast Container -->
 <div id="toast-container"></div>
 
+<!-- Forced Password Change Lightbox -->
+<?php if (!empty($_SESSION['must_change_password'])): ?>
+<div id="pwChangeOverlay" style="position:fixed;inset:0;z-index:99990;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center">
+    <div style="background:var(--bg-card);border-radius:24px;max-width:420px;width:92%;padding:32px;box-shadow:0 24px 80px rgba(0,0,0,0.4);animation:wizSlideUp 0.5s cubic-bezier(0.34,1.56,0.64,1)">
+        <div style="text-align:center;margin-bottom:20px">
+            <div style="width:56px;height:56px;border-radius:50%;background:<?= $primaryColor ?>;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+                <i class="fas fa-lock" style="color:#fff;font-size:22px"></i>
+            </div>
+            <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px">Change Your Password</h3>
+            <p style="font-size:13px;color:var(--text-muted)">You must set a new password before continuing</p>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="pw_new">New Password</label>
+            <input type="password" id="pw_new" class="form-input" placeholder="Min 8 characters" minlength="8">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="pw_confirm">Confirm Password</label>
+            <input type="password" id="pw_confirm" class="form-input" placeholder="Re-enter password">
+        </div>
+        <button class="btn btn-primary w-full" id="pwChangeBtn" onclick="submitPasswordChange()" style="margin-top:8px">
+            <i class="fas fa-check"></i> Set New Password
+        </button>
+    </div>
+</div>
+<style>@keyframes wizSlideUp { from { transform: translateY(40px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }</style>
+<script>
+function submitPasswordChange() {
+    var newPw = document.getElementById('pw_new').value;
+    var confirm = document.getElementById('pw_confirm').value;
+    if (newPw.length < 8) { showToast('Password must be at least 8 characters', 'warning'); return; }
+    if (newPw !== confirm) { showToast('Passwords do not match', 'warning'); return; }
+
+    var btn = document.getElementById('pwChangeBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+    fetch('<?= BASE_URL ?>/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ new_password: newPw, confirm_password: confirm, csrf_token: '<?= $_SESSION['csrf_token'] ?? '' ?>' })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            document.getElementById('pwChangeOverlay').style.display = 'none';
+            showToast('Password updated!', 'success');
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Set New Password';
+            showToast(data.error || 'Failed to update password', 'error');
+        }
+    })
+    .catch(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i> Set New Password';
+        showToast('Network error', 'error');
+    });
+}
+</script>
+<?php endif; ?>
+
+<!-- Onboarding Tour -->
+<?php if (!empty($_SESSION['needs_tour']) && empty($_SESSION['must_change_password'])): ?>
+<?php include APP_ROOT . '/app/views/components/tour.php'; ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(startTour, 800);
+});
+</script>
+<?php endif; ?>
+
 <script src="<?= BASE_URL ?>/js/app.js"></script>
+<script>
+// Animate stat numbers counting up on page load
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.stat-value').forEach(function(el, index) {
+        var target = parseInt(el.textContent.replace(/[^0-9]/g, ''));
+        if (isNaN(target) || target === 0) return;
+        var suffix = el.textContent.replace(/[0-9,]/g, '').trim();
+        var duration = 1500; // 1.5 seconds for the count-up
+        el.textContent = '0' + suffix;
+
+        // Stagger start: each card waits a bit longer
+        var startDelay = 600 + (index * 200);
+
+        setTimeout(function() {
+            var start = performance.now();
+            function tick(now) {
+                var elapsed = now - start;
+                var progress = Math.min(elapsed / duration, 1);
+                // Ease-out quart for a satisfying deceleration
+                var eased = 1 - Math.pow(1 - progress, 4);
+                var current = Math.round(target * eased);
+                el.textContent = current.toLocaleString() + suffix;
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }, startDelay);
+    });
+});
+
+// ---- Global Generation Status Tracking ----
+var GenTracker = {
+    KEY: 'solidgen_active',
+    pill: null,
+    pillText: null,
+
+    init: function() {
+        this.pill = document.getElementById('genStatusPill');
+        this.pillText = document.getElementById('genStatusText');
+        // Check if there are active tasks on page load
+        var tasks = this.getTasks();
+        if (tasks.length > 0) {
+            this.showPill();
+            this.pollTasks();
+        }
+    },
+
+    getTasks: function() {
+        try { return JSON.parse(localStorage.getItem(this.KEY) || '[]'); } catch(e) { return []; }
+    },
+
+    addTask: function(postId, label) {
+        var tasks = this.getTasks();
+        tasks.push({ postId: postId, label: label || 'image', startedAt: Date.now() });
+        localStorage.setItem(this.KEY, JSON.stringify(tasks));
+        this.showPill();
+    },
+
+    removeTask: function(postId) {
+        var tasks = this.getTasks().filter(function(t) { return t.postId != postId; });
+        localStorage.setItem(this.KEY, JSON.stringify(tasks));
+        if (tasks.length === 0) {
+            this.showDone(postId);
+        }
+    },
+
+    clearAll: function() {
+        localStorage.removeItem(this.KEY);
+        if (this.pill) this.pill.style.display = 'none';
+    },
+
+    showPill: function() {
+        if (!this.pill) return;
+        var tasks = this.getTasks();
+        if (tasks.length === 0) return;
+        var count = tasks.length;
+        this.pillText.textContent = count > 1 ? count + ' images generating...' : 'Generating image...';
+        this.pill.style.display = '';
+        this.pill.querySelector('i').className = 'fas fa-spinner fa-spin';
+        this.pill.querySelector('i').style.marginRight = '5px';
+    },
+
+    showDone: function(postId) {
+        if (!this.pill) return;
+        this.pill.querySelector('i').className = 'fas fa-check-circle';
+        this.pillText.textContent = 'Image ready — click to view';
+        this.pill.style.animation = 'none';
+        this.pill.style.boxShadow = '0 0 12px rgba(34,197,94,0.4)';
+        this.pill.style.background = 'var(--success)';
+        this.pill.dataset.donePostId = postId;
+
+        // Auto-hide after 15 seconds
+        setTimeout(function() {
+            GenTracker.pill.style.display = 'none';
+            GenTracker.pill.style.animation = '';
+            GenTracker.pill.style.boxShadow = '';
+            GenTracker.pill.style.background = '';
+            delete GenTracker.pill.dataset.donePostId;
+        }, 15000);
+    },
+
+    pollTasks: function() {
+        // Simple heartbeat — checks if tasks are still tracked
+        // In a full implementation this would poll the server for Kie.ai task status
+        var self = this;
+        setInterval(function() {
+            var tasks = self.getTasks();
+            if (tasks.length > 0) {
+                // Check if any task has been running too long (> 5 min)
+                var now = Date.now();
+                tasks.forEach(function(t) {
+                    if (now - t.startedAt > 300000) {
+                        self.removeTask(t.postId);
+                    }
+                });
+                self.showPill();
+            }
+        }, 5000);
+    }
+};
+
+function onGenPillClick() {
+    var postId = GenTracker.pill.dataset.donePostId;
+    if (postId) {
+        // Navigate to the post with transition
+        window.location.href = '<?= BASE_URL ?>/posts/edit/' + postId;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() { GenTracker.init(); });
+</script>
+
+<!-- Keyboard Shortcuts -->
+<div id="kbShortcutsModal" style="display:none;position:fixed;inset:0;z-index:99980;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center" onclick="if(event.target===this)this.style.display='none'">
+    <div style="background:rgba(15,23,42,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:16px;max-width:380px;width:92%;padding:28px 32px;box-shadow:0 24px 80px rgba(0,0,0,0.5);animation:kbModalIn 0.2s ease">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <h3 style="font-size:16px;font-weight:700;color:#f1f5f9;margin:0">Keyboard Shortcuts</h3>
+            <button onclick="document.getElementById('kbShortcutsModal').style.display='none'" style="background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;padding:0;line-height:1">&times;</button>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px">
+            <kbd style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;font-family:inherit;font-size:12px;font-weight:600;color:#e2e8f0;text-align:center;min-width:28px">N</kbd>
+            <span style="color:#cbd5e1;line-height:28px">New post (Generator)</span>
+            <kbd style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;font-family:inherit;font-size:12px;font-weight:600;color:#e2e8f0;text-align:center;min-width:28px">G</kbd>
+            <span style="color:#cbd5e1;line-height:28px">Generator</span>
+            <kbd style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;font-family:inherit;font-size:12px;font-weight:600;color:#e2e8f0;text-align:center;min-width:28px">P</kbd>
+            <span style="color:#cbd5e1;line-height:28px">Posts</span>
+            <kbd style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;font-family:inherit;font-size:12px;font-weight:600;color:#e2e8f0;text-align:center;min-width:28px">C</kbd>
+            <span style="color:#cbd5e1;line-height:28px">Calendar</span>
+            <kbd style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;font-family:inherit;font-size:12px;font-weight:600;color:#e2e8f0;text-align:center;min-width:28px">R</kbd>
+            <span style="color:#cbd5e1;line-height:28px">Reports</span>
+            <kbd style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;font-family:inherit;font-size:12px;font-weight:600;color:#e2e8f0;text-align:center;min-width:28px">/</kbd>
+            <span style="color:#cbd5e1;line-height:28px">Focus search</span>
+            <kbd style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;font-family:inherit;font-size:12px;font-weight:600;color:#e2e8f0;text-align:center;min-width:28px">?</kbd>
+            <span style="color:#cbd5e1;line-height:28px">Show this help</span>
+            <kbd style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;font-family:inherit;font-size:12px;font-weight:600;color:#e2e8f0;text-align:center;min-width:28px">Esc</kbd>
+            <span style="color:#cbd5e1;line-height:28px">Dismiss modal</span>
+        </div>
+    </div>
+</div>
+<style>
+@keyframes kbModalIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+</style>
+<script>
+(function() {
+    var BASE = '<?= BASE_URL ?>';
+    document.addEventListener('keydown', function(e) {
+        // Ignore when typing in inputs
+        var tag = (e.target.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) {
+            // Only handle Escape inside inputs (to dismiss modal)
+            if (e.key === 'Escape') {
+                var modal = document.getElementById('kbShortcutsModal');
+                if (modal.style.display === 'flex') { modal.style.display = 'none'; }
+            }
+            return;
+        }
+        // Skip if modifier keys are held (Ctrl, Alt, Meta) — allow Shift for ?
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+        var modal = document.getElementById('kbShortcutsModal');
+
+        switch (e.key) {
+            case 'n':
+            case 'N':
+            case 'g':
+            case 'G':
+                e.preventDefault();
+                window.location.href = BASE + '/generator';
+                break;
+            case 'p':
+            case 'P':
+                e.preventDefault();
+                window.location.href = BASE + '/posts';
+                break;
+            case 'c':
+            case 'C':
+                e.preventDefault();
+                window.location.href = BASE + '/calendar';
+                break;
+            case 'r':
+            case 'R':
+                e.preventDefault();
+                window.location.href = BASE + '/reporting';
+                break;
+            case '/':
+                e.preventDefault();
+                var searchEl = document.querySelector('#filter-search') ||
+                               document.querySelector('.form-input[placeholder*="Search"]');
+                if (searchEl) { searchEl.focus(); searchEl.select(); }
+                break;
+            case '?':
+                e.preventDefault();
+                modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+                break;
+            case 'Escape':
+                if (modal.style.display === 'flex') { modal.style.display = 'none'; }
+                break;
+        }
+    });
+})();
+</script>
 </body>
 </html>

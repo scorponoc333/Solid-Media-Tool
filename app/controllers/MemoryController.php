@@ -5,6 +5,7 @@ class MemoryController extends Controller
     public function index(): void
     {
         $this->requireAuth();
+        $this->requireRole('admin', 'editor');
 
         $memoryService = new ContentMemoryService();
         $memoryModel = new ContentMemory();

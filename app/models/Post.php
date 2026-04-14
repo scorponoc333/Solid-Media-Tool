@@ -42,8 +42,9 @@ class Post extends Model
         $scheduled = $this->count("client_id = :cid AND status = 'scheduled'", ['cid' => $clientId]);
         $published = $this->count("client_id = :cid AND status = 'published'", ['cid' => $clientId]);
         $draft = $this->count("client_id = :cid AND status = 'draft'", ['cid' => $clientId]);
+        $failed = $this->count("client_id = :cid AND status = 'failed'", ['cid' => $clientId]);
 
-        return compact('total', 'scheduled', 'published', 'draft');
+        return compact('total', 'scheduled', 'published', 'draft', 'failed');
     }
 
     public function getRecent(int $clientId, int $limit = 5): array

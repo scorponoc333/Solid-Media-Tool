@@ -18,13 +18,259 @@ if (empty($selectedPlatforms) && !empty($post['platform'])) {
 $brandingService = new BrandingService();
 $branding = $brandingService->get($GLOBALS['client_id']);
 $companyName = htmlspecialchars($branding['company_name'] ?? 'Your Company');
+$primaryColor = htmlspecialchars($branding['primary_color'] ?? '#6366f1');
+$secondaryColor = htmlspecialchars($branding['secondary_color'] ?? '#8b5cf6');
+$logoUrl = $branding['logo_url'] ?? '';
+$defaultFirstComment = $branding['first_comment'] ?? '';
+$postFirstComment = $post['first_comment'] ?? '';
 $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
 ?>
 
 <input type="hidden" id="csrf-token" value="<?= htmlspecialchars($csrfToken) ?>">
 <input type="hidden" id="post-id" value="<?= $postId ?>">
+<input type="hidden" id="original-content" value="<?= htmlspecialchars($post['content'] ?? '') ?>">
+
+<!-- Posting Lightbox -->
+<div id="posting-lightbox" class="posting-lightbox">
+    <div class="posting-lightbox-content">
+        <!-- Orbiting ring behind the logo -->
+        <div class="posting-orbit-ring">
+            <div class="posting-orbit-dot"></div>
+            <div class="posting-orbit-dot" style="animation-delay:-1.2s"></div>
+            <div class="posting-orbit-dot" style="animation-delay:-2.4s"></div>
+        </div>
+
+        <!-- Logo -->
+        <div class="posting-lightbox-logo">
+            <?php if ($logoUrl): ?>
+                <img src="<?= htmlspecialchars($logoUrl) ?>" alt="<?= $companyName ?>">
+            <?php else: ?>
+                <div class="posting-logo-fallback"><?= strtoupper(substr($branding['company_name'] ?? 'S', 0, 1)) ?></div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Pulse rings -->
+        <div class="posting-pulse-ring"></div>
+        <div class="posting-pulse-ring" style="animation-delay:0.6s"></div>
+
+        <!-- Status text -->
+        <h3 class="posting-lightbox-title" id="posting-lightbox-title">Publishing your post</h3>
+        <p class="posting-lightbox-subtitle" id="posting-lightbox-subtitle">Connecting to Facebook...</p>
+
+        <!-- Progress bar -->
+        <div class="posting-progress-track">
+            <div class="posting-progress-bar" id="posting-progress-bar"></div>
+        </div>
+
+        <!-- Floating particles -->
+        <div class="posting-particles">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+    </div>
+</div>
 
 <style>
+    /* ---- Posting Lightbox ---- */
+    .posting-lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.65);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    .posting-lightbox.visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+    .posting-lightbox-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 60px 48px 48px;
+        border-radius: 24px;
+        background: linear-gradient(165deg, <?= $primaryColor ?> 0%, color-mix(in srgb, <?= $primaryColor ?> 50%, #0a0a0a) 100%);
+        box-shadow:
+            0 0 0 1px rgba(0,0,0,0.1),
+            0 24px 80px rgba(0,0,0,0.3),
+            0 0 120px -20px <?= $primaryColor ?>88;
+        max-width: 440px;
+        width: 90%;
+        overflow: hidden;
+    }
+    .posting-lightbox-content::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.5), rgba(255,255,255,0.1));
+        background-size: 200% 100%;
+        animation: posting-stripe 2.4s ease infinite;
+    }
+    @keyframes posting-stripe {
+        0%,100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .posting-lightbox-logo {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(4px);
+        margin-bottom: 12px;
+        z-index: 2;
+    }
+    .posting-lightbox-logo img {
+        max-width: 68px;
+        max-height: 68px;
+        object-fit: contain;
+        border-radius: 8px;
+        filter: brightness(0) invert(1);
+    }
+    .posting-logo-fallback {
+        font-size: 40px;
+        font-weight: 800;
+        color: #fff;
+    }
+
+    .posting-orbit-ring {
+        position: absolute;
+        top: 60px;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.15);
+        animation: posting-orbit-spin 3.6s linear infinite;
+        z-index: 1;
+    }
+    @keyframes posting-orbit-spin { to { transform: rotate(360deg); } }
+    .posting-orbit-dot {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #fff;
+        top: -5px;
+        left: calc(50% - 5px);
+        box-shadow: 0 0 12px rgba(255,255,255,0.6);
+        animation: posting-orbit-glow 1.2s ease-in-out infinite alternate;
+    }
+    .posting-orbit-dot:nth-child(2) { top: auto; bottom: -5px; }
+    .posting-orbit-dot:nth-child(3) { top: calc(50% - 5px); left: -5px; }
+    @keyframes posting-orbit-glow {
+        0% { opacity: 0.5; transform: scale(0.8); }
+        100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .posting-pulse-ring {
+        position: absolute;
+        top: 60px;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.5);
+        opacity: 0;
+        z-index: 0;
+        animation: posting-pulse 2.4s ease-out infinite;
+        pointer-events: none;
+    }
+    @keyframes posting-pulse {
+        0%   { transform: scale(1); opacity: 0.5; }
+        100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    .posting-lightbox-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff;
+        margin: 20px 0 8px;
+        letter-spacing: -0.3px;
+    }
+    .posting-lightbox-subtitle {
+        font-size: 14px;
+        color: rgba(255,255,255,0.75);
+        margin: 0 0 28px;
+        line-height: 1.5;
+    }
+
+    .posting-progress-track {
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: rgba(0,0,0,0.2);
+        overflow: hidden;
+        position: relative;
+        z-index: 2;
+    }
+    .posting-progress-bar {
+        height: 100%;
+        width: 0%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, rgba(255,255,255,0.8), #fff);
+        transition: width 0.4s ease;
+        position: relative;
+    }
+    .posting-progress-bar::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+        animation: posting-shimmer 1.8s ease infinite;
+    }
+    @keyframes posting-shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .posting-particles {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .posting-particles span {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.7);
+        opacity: 0;
+        animation: posting-float 4s ease-in-out infinite;
+    }
+    .posting-particles span:nth-child(1)  { left:10%; animation-delay:0s; }
+    .posting-particles span:nth-child(2)  { left:20%; animation-delay:0.5s; }
+    .posting-particles span:nth-child(3)  { left:35%; animation-delay:1s; }
+    .posting-particles span:nth-child(4)  { left:50%; animation-delay:1.5s; }
+    .posting-particles span:nth-child(5)  { left:65%; animation-delay:2s; }
+    .posting-particles span:nth-child(6)  { left:75%; animation-delay:0.3s; }
+    .posting-particles span:nth-child(7)  { left:85%; animation-delay:0.8s; }
+    .posting-particles span:nth-child(8)  { left:45%; animation-delay:1.2s; }
+    .posting-particles span:nth-child(9)  { left:58%; animation-delay:1.8s; }
+    .posting-particles span:nth-child(10) { left:90%; animation-delay:2.2s; }
+    @keyframes posting-float {
+        0%   { bottom: -10px; opacity: 0; transform: scale(0.5); }
+        20%  { opacity: 0.6; }
+        80%  { opacity: 0.3; }
+        100% { bottom: 110%; opacity: 0; transform: scale(1.2); }
+    }
+
     .editor-layout { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; }
     .editor-image-preview {
         width: 100%;
@@ -184,15 +430,26 @@ $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
                     </div>
                 <?php endif; ?>
             </div>
+            <div style="margin-bottom:16px">
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-regen-image" onclick="regenerateImage()">
+                    <i class="fas fa-sync-alt"></i> Regenerate Image
+                </button>
+            </div>
 
             <div class="form-group">
                 <label class="form-label" for="edit-title">Title</label>
                 <input type="text" id="edit-title" class="form-input" value="<?= htmlspecialchars($post['title'] ?? '') ?>" placeholder="Post title">
             </div>
 
-            <div class="form-group" style="margin-bottom:0">
+            <div class="form-group" style="margin-bottom:8px">
                 <label class="form-label" for="edit-content">Caption / Content</label>
-                <textarea id="edit-content" class="form-textarea" rows="8" placeholder="Write your post content..."><?= htmlspecialchars($post['content'] ?? '') ?></textarea>
+                <textarea id="edit-content" class="form-textarea" rows="12" style="white-space:pre-wrap;line-height:1.7" placeholder="Write your post content..."><?= htmlspecialchars($post['content'] ?? '') ?></textarea>
+            </div>
+            <div style="margin-bottom:0">
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-critique" onclick="critiquePost()">
+                    <i class="fas fa-robot"></i> AI Critique
+                </button>
+                <div id="critique-results" style="display:none;margin-top:12px;padding:16px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md)"></div>
             </div>
         </div>
     </div>
@@ -220,7 +477,8 @@ $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
                         <i class="fab fa-linkedin platform-icon" style="color:#0A66C2"></i>
                         <span class="platform-label">LinkedIn</span>
                     </label>
-                    <label class="platform-option disabled" data-platform="instagram" title="Coming soon">
+                    <!-- Instagram & X/Twitter — hidden until platform integration is ready -->
+                    <!-- <label class="platform-option disabled" data-platform="instagram" title="Coming soon">
                         <input type="checkbox" name="platforms[]" value="instagram" disabled>
                         <div class="platform-check"></div>
                         <i class="fab fa-instagram platform-icon" style="color:#E4405F"></i>
@@ -231,7 +489,7 @@ $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
                         <div class="platform-check"></div>
                         <i class="fab fa-x-twitter platform-icon" style="color:var(--text)"></i>
                         <span class="platform-label">X / Twitter</span>
-                    </label>
+                    </label> -->
                 </div>
             </div>
 
@@ -287,15 +545,169 @@ $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
     </div>
 </div>
 
+<!-- First Comment -->
+<div class="card" style="margin-top:24px">
+    <div class="card-header">
+        <div>
+            <h3 class="card-title"><i class="fas fa-comment-dots" style="margin-right:8px;color:var(--primary)"></i>First Comment</h3>
+            <p class="card-subtitle">This comment will be posted automatically when the post is published</p>
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom:0">
+        <textarea id="edit-first-comment" class="form-textarea" rows="3" placeholder="e.g. 📞 587-557-1234&#10;🌐 https://solidtech.ca"><?= htmlspecialchars($postFirstComment ?: $defaultFirstComment) ?></textarea>
+        <?php if ($defaultFirstComment && !$postFirstComment): ?>
+            <div class="text-small text-muted" style="margin-top:4px">Using default from Branding settings. Edit above to override for this post only.</div>
+        <?php endif; ?>
+    </div>
+</div>
+
 <!-- Action Bar -->
+<style>
+.btn-shine {
+    position: relative;
+    overflow: hidden;
+}
+.btn-shine::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 40%;
+    height: 200%;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0.1) 50%, transparent 55%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+.btn-shine:hover::after {
+    opacity: 1;
+    animation: btnShine 0.7s ease forwards;
+}
+@keyframes btnShine {
+    0% { left: -60%; }
+    100% { left: 120%; }
+}
+
+/* Save Transition Portal */
+.save-portal {
+    position: fixed;
+    inset: 0;
+    z-index: 99995;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0);
+    backdrop-filter: blur(0px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, background 0.5s ease, backdrop-filter 0.5s ease;
+}
+.save-portal.visible {
+    opacity: 1;
+    visibility: visible;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(10px);
+}
+.save-portal-content {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.6);
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+}
+.save-portal.visible .save-portal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+.save-portal.closing .save-portal-content {
+    transform: scale(0.7);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.6, -0.28, 0.74, 0.05), opacity 0.3s ease;
+}
+
+/* Vortex rings */
+.vortex-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid;
+}
+.vortex-ring-1 { width:280px;height:280px;border-color:rgba(255,255,255,0.08);animation:vortexSpin 8s linear infinite; }
+.vortex-ring-2 { width:220px;height:220px;border-color:rgba(255,255,255,0.12);animation:vortexSpin 5s linear infinite reverse; }
+.vortex-ring-3 { width:160px;height:160px;border-color:rgba(255,255,255,0.18);border-top-color:rgba(255,255,255,0.5);animation:vortexSpin 3s linear infinite;box-shadow:0 0 30px rgba(255,255,255,0.08); }
+.vortex-ring-4 { width:100px;height:100px;border-color:rgba(255,255,255,0.25);border-top-color:#fff;animation:vortexSpin 2s linear infinite reverse;box-shadow:0 0 20px rgba(255,255,255,0.15); }
+@keyframes vortexSpin { to { transform: rotate(360deg); } }
+
+/* Sparks */
+.save-spark {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(255,255,255,0.8);
+}
+
+/* Logo in center */
+.save-portal-logo {
+    position: relative;
+    z-index: 5;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.save-portal-logo img { max-width:46px;max-height:46px;filter:brightness(0) invert(1);object-fit:contain; }
+.save-portal-logo-text { font-size:28px;font-weight:800;color:#fff; }
+
+.save-portal-status {
+    position: relative;
+    z-index: 5;
+    margin-top: 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    min-height: 22px;
+}
+</style>
+
+<!-- Save Transition Portal -->
+<div class="save-portal" id="savePortal">
+    <div class="save-portal-content">
+        <div class="vortex-ring vortex-ring-1"></div>
+        <div class="vortex-ring vortex-ring-2"></div>
+        <div class="vortex-ring vortex-ring-3"></div>
+        <div class="vortex-ring vortex-ring-4"></div>
+        <div class="save-portal-logo">
+            <?php if ($logoUrl): ?>
+                <img src="<?= htmlspecialchars($logoUrl) ?>" alt="">
+            <?php else: ?>
+                <div class="save-portal-logo-text"><?= strtoupper(substr($branding['company_name'] ?? 'S', 0, 1)) ?></div>
+            <?php endif; ?>
+        </div>
+        <div class="save-portal-status" id="savePortalStatus">Saving your changes...</div>
+        <!-- Sparks container populated by JS -->
+        <div id="saveSparkContainer" style="position:absolute;inset:0;overflow:hidden;pointer-events:none"></div>
+    </div>
+</div>
+
 <div class="editor-action-bar">
-    <button class="btn btn-primary" id="btn-save" onclick="savePost()">
+    <button class="btn btn-primary btn-shine" id="btn-save" onclick="savePost()">
         <i class="fas fa-save"></i> Save Changes
     </button>
-    <button class="btn btn-ghost" id="btn-schedule" onclick="schedulePost()">
+    <button class="btn btn-ghost btn-shine" id="btn-schedule" onclick="schedulePost()">
         <i class="fas fa-clock"></i> Schedule
     </button>
-    <button class="btn btn-primary" id="btn-post-now" onclick="postNow()" style="background:var(--success);border-color:var(--success)">
+    <button class="btn btn-primary btn-shine" id="btn-post-now" onclick="postNow()" style="background:var(--success);border-color:var(--success)">
         <i class="fas fa-paper-plane"></i> Post Now
     </button>
     <?php if (($post['status'] ?? '') === 'failed'): ?>
@@ -312,6 +724,7 @@ $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
 const BASE = '<?= rtrim(BASE_URL, '/') ?>';
 const postId = document.getElementById('post-id').value;
 const csrfToken = () => document.getElementById('csrf-token').value;
+let currentImageUrl = '<?= htmlspecialchars($post['image_url'] ?? '', ENT_QUOTES) ?>';
 
 // Platform checkbox toggle
 document.querySelectorAll('.platform-option:not(.disabled)').forEach(label => {
@@ -334,7 +747,7 @@ function getPostData() {
     return {
         title: document.getElementById('edit-title').value,
         content: document.getElementById('edit-content').value,
-        image_url: '<?= htmlspecialchars($post['image_url'] ?? '', ENT_QUOTES) ?>',
+        image_url: currentImageUrl,
         platform: platforms[0] || 'facebook',
         platforms: JSON.stringify(platforms),
         post_type: document.getElementById('edit-post-type').value,
@@ -343,6 +756,7 @@ function getPostData() {
         topic: document.getElementById('edit-topic').value,
         keywords: document.getElementById('edit-keywords').value,
         angle: document.getElementById('edit-angle').value,
+        first_comment: document.getElementById('edit-first-comment').value,
     };
 }
 
@@ -359,9 +773,76 @@ function setLoading(btn, loading, label) {
     }
 }
 
+// ---- Save Portal Animation ----
+function showSavePortal(statusText) {
+    var portal = document.getElementById('savePortal');
+    var status = document.getElementById('savePortalStatus');
+    status.textContent = statusText || 'Saving your changes...';
+
+    // Generate sparks
+    var sparkContainer = document.getElementById('saveSparkContainer');
+    sparkContainer.innerHTML = '';
+    for (var i = 0; i < 20; i++) {
+        var spark = document.createElement('div');
+        spark.className = 'save-spark';
+        var angle = (i / 20) * 360;
+        var radius = 60 + Math.random() * 80;
+        var duration = 1.5 + Math.random() * 2;
+        var delay = Math.random() * 2;
+        var size = 2 + Math.random() * 3;
+        spark.style.cssText = 'width:'+size+'px;height:'+size+'px;left:50%;top:50%;'
+            + 'animation:sparkOrbit '+duration+'s linear infinite;'
+            + 'animation-delay:-'+delay+'s;'
+            + 'transform:rotate('+angle+'deg) translateX('+radius+'px);'
+            + 'opacity:'+(0.3+Math.random()*0.7);
+        sparkContainer.appendChild(spark);
+    }
+
+    // Add spark keyframe if not exists
+    if (!document.getElementById('sparkStyle')) {
+        var s = document.createElement('style');
+        s.id = 'sparkStyle';
+        s.textContent = '@keyframes sparkOrbit{0%{transform:rotate(0deg) translateX(70px);opacity:0.8}50%{opacity:0.3}100%{transform:rotate(360deg) translateX(70px);opacity:0.8}}';
+        document.head.appendChild(s);
+    }
+
+    portal.classList.remove('closing');
+    portal.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+
+    // Cycle status messages
+    var msgs = [statusText || 'Saving your changes...', 'Updating content...', 'Almost there...'];
+    var mi = 0;
+    window._savePortalMsgInterval = setInterval(function() {
+        mi = (mi + 1) % msgs.length;
+        status.style.opacity = '0';
+        setTimeout(function() {
+            status.textContent = msgs[mi];
+            status.style.opacity = '1';
+        }, 200);
+    }, 1200);
+    status.style.transition = 'opacity 0.2s ease';
+}
+
+function hideSavePortal(redirectUrl) {
+    clearInterval(window._savePortalMsgInterval);
+    var portal = document.getElementById('savePortal');
+    portal.classList.add('closing');
+
+    setTimeout(function() {
+        if (redirectUrl) {
+            window.location.href = redirectUrl;
+        } else {
+            portal.classList.remove('visible', 'closing');
+            document.body.style.overflow = '';
+        }
+    }, 500);
+}
+
 async function savePost() {
     const btn = document.getElementById('btn-save');
     setLoading(btn, true, 'Saving...');
+    showSavePortal('Saving your changes...');
 
     try {
         const data = getPostData();
@@ -376,8 +857,11 @@ async function savePost() {
         const result = await res.json();
         if (!res.ok || result.error) throw new Error(result.error || 'Save failed');
 
-        showToast('Post saved successfully!', 'success');
+        // Wait for the animation to play out (min 2.5s)
+        await new Promise(r => setTimeout(r, 2500));
+        hideSavePortal(BASE + '/posts?highlight=' + postId);
     } catch (err) {
+        hideSavePortal();
         showToast(err.message, 'error');
     } finally {
         setLoading(btn, false);
@@ -409,10 +893,9 @@ async function schedulePost() {
 
     const btn = document.getElementById('btn-schedule');
     setLoading(btn, true, 'Scheduling...');
+    showSavePortal('Scheduling your post...');
 
     try {
-        // Save the post with status=scheduled — the cron job will handle
-        // posting it to the platform(s) when the scheduled time arrives.
         const data = getPostData();
         data.status = 'scheduled';
         const formData = new FormData();
@@ -426,18 +909,80 @@ async function schedulePost() {
         const saveResult = await saveRes.json();
         if (!saveRes.ok || saveResult.error) throw new Error(saveResult.error || 'Save failed');
 
-        document.getElementById('edit-status').value = 'scheduled';
-
-        const dateStr = scheduledDate.toLocaleDateString('en-US', {
-            month: 'short', day: 'numeric', year: 'numeric',
-            hour: 'numeric', minute: '2-digit'
-        });
-        showToast('Scheduled for ' + platforms.join(' & ') + ' on ' + dateStr, 'success');
+        await new Promise(r => setTimeout(r, 2500));
+        hideSavePortal(BASE + '/posts?highlight=' + postId);
     } catch (err) {
+        hideSavePortal();
         showToast(err.message, 'error');
     } finally {
         setLoading(btn, false);
     }
+}
+
+// --- Posting Lightbox helpers ---
+const postingLightbox = document.getElementById('posting-lightbox');
+const postingProgressBar = document.getElementById('posting-progress-bar');
+const postingTitle = document.getElementById('posting-lightbox-title');
+const postingSubtitle = document.getElementById('posting-lightbox-subtitle');
+let postingProgressInterval = null;
+
+const platformLabels = {
+    facebook: 'Facebook',
+    linkedin: 'LinkedIn',
+    instagram: 'Instagram',
+    twitter: 'X / Twitter'
+};
+
+function showPostingLightbox(platforms) {
+    // Build the subtitle with platform names
+    const names = platforms.map(p => platformLabels[p] || p);
+    const platformText = names.join(' & ');
+
+    postingTitle.textContent = 'Publishing your post';
+    postingSubtitle.textContent = 'Connecting to ' + platformText + '...';
+    postingProgressBar.style.width = '0%';
+    void postingLightbox.offsetWidth;
+    postingLightbox.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+
+    // Status messages that cycle through
+    const messages = [
+        'Connecting to ' + platformText + '...',
+        'Uploading your content...',
+        'Delivering to ' + platformText + '...',
+        'Finalizing your post...',
+    ];
+
+    let progress = 0;
+    let msgIndex = 0;
+    postingProgressInterval = setInterval(() => {
+        const remaining = 90 - progress;
+        progress += remaining * 0.06 + Math.random() * 2;
+        if (progress > 90) progress = 90;
+        postingProgressBar.style.width = progress + '%';
+
+        if (progress > (msgIndex + 1) * (85 / messages.length) && msgIndex < messages.length - 1) {
+            msgIndex++;
+            postingSubtitle.textContent = messages[msgIndex];
+        }
+    }, 250);
+}
+
+function hidePostingLightbox(success, platformText) {
+    clearInterval(postingProgressInterval);
+    postingProgressBar.style.width = '100%';
+    if (success) {
+        postingTitle.textContent = 'Posted successfully!';
+        postingSubtitle.textContent = 'Your post is now live on ' + platformText;
+    } else {
+        postingTitle.textContent = 'Posting failed';
+        postingSubtitle.textContent = 'Something went wrong. Please try again.';
+    }
+
+    setTimeout(() => {
+        postingLightbox.classList.remove('visible');
+        document.body.style.overflow = '';
+    }, 1200);
 }
 
 async function postNow() {
@@ -453,12 +998,13 @@ async function postNow() {
         return;
     }
 
+    const platformText = platforms.map(p => platformLabels[p] || p).join(' & ');
+
     confirmModal(
         'Post Now',
-        'This will immediately publish to <strong>' + platforms.join(' &amp; ') + '</strong>. Are you sure?',
+        'This will immediately publish to <strong>' + platforms.map(p => platformLabels[p] || p).join(' &amp; ') + '</strong>. Are you sure?',
         async () => {
-            const btn = document.getElementById('btn-post-now');
-            setLoading(btn, true, 'Posting...');
+            showPostingLightbox(platforms);
 
             try {
                 // Save first to ensure latest content is stored
@@ -484,27 +1030,27 @@ async function postNow() {
 
                 if (result.success) {
                     document.getElementById('edit-status').value = result.new_status || 'published';
-                    let msg = 'Posted successfully to ' + platforms.join(' & ') + '!';
+                    let msg = 'Posted successfully to ' + platformText + '!';
+                    let allGood = true;
                     if (result.results) {
                         const failed = Object.entries(result.results).filter(([k, v]) => !v.success);
                         if (failed.length > 0) {
                             msg = 'Posted to some platforms. ' + failed.length + ' failed.';
-                            showToast(msg, 'warning');
-                        } else {
-                            showToast(msg, 'success');
+                            allGood = false;
                         }
-                    } else {
-                        showToast(msg, 'success');
                     }
+                    hidePostingLightbox(allGood, platformText);
+                    // Redirect to posts table after a moment
+                    setTimeout(() => { window.location.href = BASE + '/posts?highlight=' + postId; }, 2000);
                 } else {
-                    throw new Error(result.error || 'Posting failed');
+                    hidePostingLightbox(false, platformText);
+                    setTimeout(() => showToast(result.error || 'Posting failed', 'error'), 1300);
                 }
 
                 loadPostLogs();
             } catch (err) {
-                showToast(err.message, 'error');
-            } finally {
-                setLoading(btn, false);
+                hidePostingLightbox(false, platformText);
+                setTimeout(() => showToast(err.message, 'error'), 1300);
             }
         }
     );
@@ -563,6 +1109,204 @@ function deletePost() {
     });
 }
 
+// Regenerate image
+async function regenerateImage() {
+    const content = document.getElementById('edit-content').value.trim();
+    if (!content) {
+        showToast('Add some content first so the AI knows what image to generate.', 'warning');
+        return;
+    }
+
+    // Register with global tracker
+    if (typeof GenTracker !== 'undefined') GenTracker.addTask(postId, 'image');
+    var _genTrackerCleanup = function(success) {
+        if (typeof GenTracker !== 'undefined') {
+            if (success) GenTracker.removeTask(postId);
+            else GenTracker.clearAll();
+        }
+    };
+    }
+
+    const btn = document.getElementById('btn-regen-image');
+    const preview = document.getElementById('image-preview');
+    setLoading(btn, true, 'Generating...');
+
+    // Branded AI image generation overlay
+    var brandPrimary = '<?= $primaryColor ?>';
+    var brandLogo = '<?= addslashes($logoUrl) ?>';
+
+    preview.innerHTML = ''
+        + '<div id="portalLoader" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:inherit;overflow:hidden;background:linear-gradient(165deg,' + brandPrimary + ' 0%,#0a0a0a 60%,#000 100%);z-index:10">'
+        // Animated shimmer stripe at top
+        + '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,rgba(255,255,255,0.05),rgba(255,255,255,0.4),rgba(255,255,255,0.05));background-size:200% 100%;animation:aiShimmer 2.4s ease infinite"></div>'
+        // Floating particles layer
+        + '<div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">'
+        + Array.from({length:14}, function(_,i) {
+            var x = 5 + Math.random()*90, d = 3+Math.random()*5, del = (Math.random()*3).toFixed(1), sz = 2+Math.random()*3;
+            return '<div style="position:absolute;left:'+x+'%;width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:rgba(255,255,255,0.5);animation:aiParticle '+d+'s ease-in-out infinite;animation-delay:-'+del+'s;opacity:0"></div>';
+          }).join('')
+        + '</div>'
+        // Misty ambient glow
+        + '<div style="position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.07),transparent 60%);animation:atomMist 4s ease-in-out infinite"></div>'
+        // Atom orbit 1 — wide ellipse
+        + '<div style="position:absolute;width:380px;height:140px;border:1px solid rgba(255,255,255,0.07);border-radius:50%;animation:aiSpin 7s linear infinite">'
+        + '<div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 12px rgba(255,255,255,0.6);opacity:0.65"></div></div>'
+        // Atom orbit 2 — tilted
+        + '<div style="position:absolute;width:350px;height:130px;border:1px solid rgba(255,255,255,0.06);border-radius:50%;animation:aiSpin 5.5s linear infinite reverse;transform:rotate(55deg)">'
+        + '<div style="position:absolute;width:4px;height:4px;background:rgba(255,255,255,0.9);border-radius:50%;bottom:-2px;left:calc(50% - 2px);box-shadow:0 0 10px rgba(255,255,255,0.5);opacity:0.55"></div></div>'
+        // Atom orbit 3 — steep angle
+        + '<div style="position:absolute;width:120px;height:340px;border:1px solid rgba(255,255,255,0.05);border-radius:50%;animation:aiSpin 8s linear infinite;transform:rotate(20deg)">'
+        + '<div style="position:absolute;width:4px;height:4px;background:rgba(255,255,255,0.8);border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.4);opacity:0.5"></div></div>'
+        // Orbiting rings (existing)
+        + '<div style="position:absolute;width:200px;height:200px;border:1px solid rgba(255,255,255,0.06);border-radius:50%;animation:aiSpin 10s linear infinite"></div>'
+        + '<div style="position:absolute;width:150px;height:150px;border:1px dashed rgba(255,255,255,0.08);border-radius:50%;animation:aiSpin 7s linear infinite reverse"></div>'
+        + '<div style="position:absolute;width:110px;height:110px;border:2px solid rgba(255,255,255,0.06);border-top-color:rgba(255,255,255,0.5);border-radius:50%;animation:aiSpin 3s linear infinite;box-shadow:0 0 24px rgba(255,255,255,0.06)"></div>'
+        // Orbiting dot
+        + '<div style="position:absolute;width:170px;height:170px;animation:aiSpin 5s linear infinite">'
+        + '<div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 10px rgba(255,255,255,0.7)"></div></div>'
+        // Logo in center
+        + '<div style="position:relative;z-index:5;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(255,255,255,0.05)">'
+        + (brandLogo
+            ? '<img src="'+brandLogo+'" style="max-width:52px;max-height:52px;object-fit:contain;filter:brightness(0) invert(1)" alt="">'
+            : '<div style="font-size:30px;font-weight:800;color:#fff"><?= strtoupper(substr($branding['company_name'] ?? 'S', 0, 1)) ?></div>')
+        + '</div>'
+        // Title badge
+        + '<div style="position:relative;z-index:5;margin-top:20px;padding:6px 16px;border-radius:20px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(4px)">'
+        + '<span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7)">AI Image Generation</span>'
+        + '</div>'
+        // Status text
+        + '<div style="position:relative;z-index:5;margin-top:14px;text-align:center">'
+        + '<div style="font-size:15px;font-weight:600;color:#fff;transition:opacity 0.2s ease" id="portalStatus">Initializing...</div>'
+        + '<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">This may take 2–3 minutes</div>'
+        + '</div>'
+        + '</div>'
+        + '<style>'
+        + '@keyframes aiSpin{to{transform:rotate(360deg)}}'
+        + '@keyframes aiShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}'
+        + '@keyframes aiParticle{0%{bottom:-10px;opacity:0;transform:scale(.4)}15%{opacity:.6}85%{opacity:.2}100%{bottom:110%;opacity:0;transform:scale(1)}}'
+        + '@keyframes atomMist{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:0.7;transform:scale(1.15)}}'
+        + '</style>';
+
+    // Cycle status messages — more messages for longer waits
+    var portalMsgs = [
+        'Connecting to AI server...',
+        'Queuing image generation task...',
+        'AI is composing the scene...',
+        'Rendering visual elements...',
+        'Applying lighting & color grading...',
+        'Building composition...',
+        'Processing art direction settings...',
+        'Refining textures & details...',
+        'Enhancing image resolution...',
+        'Applying brand watermark...',
+        'Running final quality checks...',
+        'Almost ready — finalizing...',
+        'Still working — complex images take longer...',
+        'Hang tight — rendering in progress...',
+    ];
+    var pmIdx = 0;
+    var portalInterval = setInterval(function() {
+        pmIdx = (pmIdx + 1) % portalMsgs.length;
+        var el = document.getElementById('portalStatus');
+        if (el) {
+            el.style.opacity = '0';
+            setTimeout(function() {
+                el.textContent = portalMsgs[pmIdx];
+                el.style.opacity = '1';
+            }, 200);
+        }
+    }, 5000);
+
+    try {
+        // Build a clean image prompt from title + topic, not the full post body
+        const title = document.getElementById('edit-title').value.trim();
+        const topic = document.getElementById('edit-topic') ? document.getElementById('edit-topic').value.trim() : '';
+        var imagePrompt = 'Professional social media image for: ' + (title || topic || content.substring(0, 100));
+
+        const formData = new FormData();
+        formData.append('csrf_token', csrfToken());
+        formData.append('prompt', imagePrompt);
+
+        const res = await fetch(BASE + '/generator/regenerate-image', {
+            method: 'POST',
+            body: formData
+        });
+
+        const text = await res.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            throw new Error('Image generation timed out. Please try again.');
+        }
+        if (!res.ok) throw new Error(data.error || 'Image generation failed');
+
+        clearInterval(portalInterval);
+        if (data.image_url) {
+            // Check if it's a placeholder/failure URL (not a real generated image)
+            if (data.image_url.includes('placehold.co') || data.image_url.includes('Image+')) {
+                throw new Error('Image generation failed or timed out. Please try again.');
+            }
+
+            currentImageUrl = data.image_url;
+            preview.innerHTML = '<img src="' + data.image_url + '" alt="Post image" id="preview-img">';
+
+            // Auto-save the new image URL to the post
+            const saveFormData = new FormData();
+            saveFormData.append('csrf_token', csrfToken());
+            const postData = getPostData();
+            Object.entries(postData).forEach(([k, v]) => saveFormData.append(k, v));
+            await fetch(BASE + '/posts/update/' + postId, { method: 'POST', body: saveFormData });
+
+            _genTrackerCleanup(true);
+            showToast('Image regenerated and saved!', 'success');
+        } else {
+            throw new Error('No image was returned');
+        }
+    } catch (err) {
+        clearInterval(portalInterval);
+        _genTrackerCleanup(false);
+        preview.innerHTML = '<div class="placeholder-icon"><i class="fas fa-image"></i><span>Image generation failed</span></div>';
+        showImageErrorModal(err.message, function() { regenerateImage(); });
+    } finally {
+        setLoading(btn, false);
+    }
+}
+
+function showImageErrorModal(errorMsg, retryCallback) {
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;animation:imgErrFadeIn 0.3s ease';
+    overlay.innerHTML = '<div style="background:var(--bg-card);border-radius:20px;max-width:440px;width:90%;padding:32px;box-shadow:0 24px 80px rgba(0,0,0,0.3);animation:imgErrSlideUp 0.4s cubic-bezier(0.34,1.56,0.64,1)">'
+        + '<div style="text-align:center;margin-bottom:20px">'
+        + '<div style="width:52px;height:52px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><i class="fas fa-exclamation-triangle" style="color:var(--danger);font-size:22px"></i></div>'
+        + '<h3 style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px">Image Generation Failed</h3>'
+        + '<p style="font-size:13px;color:var(--text-secondary);line-height:1.6">' + (errorMsg || 'An unknown error occurred.').replace(/</g,'&lt;') + '</p>'
+        + '</div>'
+        + '<div style="background:var(--bg-input);border-radius:var(--radius-sm);padding:14px;margin-bottom:20px">'
+        + '<div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">What you can do:</div>'
+        + '<div style="font-size:12px;color:var(--text-secondary);line-height:1.6">'
+        + '1. Click <strong>Try Again</strong> to regenerate the image<br>'
+        + '2. The AI service may be busy — wait a moment and retry<br>'
+        + '3. If the issue persists, try simplifying the post title'
+        + '</div></div>'
+        + '<div style="display:flex;gap:10px;justify-content:flex-end">'
+        + '<button class="btn btn-ghost" id="imgErrDismiss">Dismiss</button>'
+        + '<button class="btn btn-primary" id="imgErrRetry"><i class="fas fa-redo" style="margin-right:4px"></i> Try Again</button>'
+        + '</div></div>';
+
+    // Add keyframes if needed
+    if (!document.getElementById('imgErrStyles')) {
+        var s = document.createElement('style');
+        s.id = 'imgErrStyles';
+        s.textContent = '@keyframes imgErrFadeIn{from{opacity:0}to{opacity:1}}@keyframes imgErrSlideUp{from{transform:translateY(30px) scale(0.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}';
+        document.head.appendChild(s);
+    }
+
+    document.body.appendChild(overlay);
+    overlay.querySelector('#imgErrDismiss').onclick = function() { overlay.remove(); };
+    overlay.querySelector('#imgErrRetry').onclick = function() { overlay.remove(); if (retryCallback) retryCallback(); };
+}
+
 // Load posting logs
 async function loadPostLogs() {
     try {
@@ -592,4 +1336,133 @@ async function loadPostLogs() {
 
 // Load logs on page load
 loadPostLogs();
+
+// AI Critique
+function getContentChangePercent() {
+    var original = (document.getElementById('original-content').value || '').trim();
+    var current = (document.getElementById('edit-content').value || '').trim();
+    if (!original || !current) return 100; // No original = treat as fully custom
+    if (original === current) return 0;
+
+    // Simple Levenshtein-like distance approximation using word comparison
+    var origWords = original.toLowerCase().split(/\s+/);
+    var currWords = current.toLowerCase().split(/\s+/);
+    var maxLen = Math.max(origWords.length, currWords.length);
+    if (maxLen === 0) return 0;
+
+    var matches = 0;
+    var used = {};
+    origWords.forEach(function(w) {
+        for (var i = 0; i < currWords.length; i++) {
+            if (!used[i] && currWords[i] === w) {
+                matches++;
+                used[i] = true;
+                break;
+            }
+        }
+    });
+
+    var similarity = matches / maxLen;
+    return Math.round((1 - similarity) * 100);
+}
+
+async function critiquePost() {
+    var content = document.getElementById('edit-content').value.trim();
+    if (!content) { showToast('Enter some content first', 'warning'); return; }
+
+    var btn = document.getElementById('btn-critique');
+    var panel = document.getElementById('critique-results');
+
+    // Check if content has changed enough from the AI-generated original
+    var changePercent = getContentChangePercent();
+    if (changePercent < 30) {
+        // Post is still mostly AI-generated — bubbly "optimized" message with robot
+        panel.style.display = 'block';
+        var primaryColor = '<?= $primaryColor ?>';
+        panel.innerHTML = '<div style="animation:criOptBounce 0.5s cubic-bezier(0.34,1.56,0.64,1) both">'
+            + '<div style="display:flex;align-items:flex-start;gap:14px;padding:6px">'
+            + '<div style="width:48px;height:48px;border-radius:50%;background:' + primaryColor + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:criRobotPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;animation-delay:0.1s;box-shadow:0 4px 16px rgba(var(--primary-rgb),0.3)">'
+            + '<i class="fas fa-robot" style="color:#fff;font-size:20px"></i>'
+            + '</div>'
+            + '<div style="animation:criTextSlide 0.4s ease both;animation-delay:0.2s">'
+            + '<div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px">Looking good! <span style="font-size:16px">&#x1F44D;</span></div>'
+            + '<div style="font-size:13px;color:var(--text-secondary);line-height:1.6">This post was crafted by AI and is already optimized for maximum engagement. Make changes to the copy if you\'d like a fresh critique!</div>'
+            + '</div></div></div>'
+            + '<style>'
+            + '@keyframes criOptBounce{0%{opacity:0;transform:scale(0.85) translateY(10px)}100%{opacity:1;transform:scale(1) translateY(0)}}'
+            + '@keyframes criRobotPop{0%{opacity:0;transform:scale(0) rotate(-15deg)}100%{opacity:1;transform:scale(1) rotate(0)}}'
+            + '@keyframes criTextSlide{0%{opacity:0;transform:translateX(10px)}100%{opacity:1;transform:translateX(0)}}'
+            + '</style>';
+        return;
+    }
+
+    btn.disabled = true;
+
+    // Show the posting lightbox as an analysis animation
+    showPostingLightbox(['Analysis']);
+    postingTitle.textContent = 'Analyzing your post';
+    postingSubtitle.textContent = 'Running AI-powered content analysis...';
+
+    var analysisMsgs = ['Scanning content structure...', 'Evaluating tone & messaging...', 'Checking engagement elements...', 'Crafting improved version...'];
+    var amIdx = 0;
+    var amInterval = setInterval(function() {
+        amIdx++;
+        if (amIdx < analysisMsgs.length) {
+            postingSubtitle.textContent = analysisMsgs[amIdx];
+        }
+    }, 900);
+
+    try {
+        var res = await fetch(BASE + '/content-strategy/critique', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: content, csrf_token: csrfToken() })
+        });
+        var data = await res.json();
+
+        clearInterval(amInterval);
+
+        // Keep lightbox for at least 2.5s
+        await new Promise(function(resolve) { setTimeout(resolve, 2500); });
+        hidePostingLightbox(true, 'Analysis');
+
+        await new Promise(function(resolve) { setTimeout(resolve, 600); });
+
+        panel.style.display = 'block';
+        var html = '';
+        if (data.strengths && data.strengths.length) {
+            html += '<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:700;color:var(--success);margin-bottom:6px"><i class="fas fa-check-circle" style="margin-right:4px"></i> Strengths</div>';
+            data.strengths.forEach(function(s) { html += '<div style="font-size:13px;color:var(--text);padding:2px 0 2px 16px">' + s + '</div>'; });
+            html += '</div>';
+        }
+        if (data.suggestions && data.suggestions.length) {
+            html += '<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:700;color:var(--warning);margin-bottom:6px"><i class="fas fa-lightbulb" style="margin-right:4px"></i> Suggestions</div>';
+            data.suggestions.forEach(function(s) { html += '<div style="font-size:13px;color:var(--text);padding:2px 0 2px 16px">' + s + '</div>'; });
+            html += '</div>';
+        }
+        if (data.revised) {
+            var formattedRevised = data.revised
+                .replace(/</g, '&lt;')
+                .replace(/\n/g, '<br>')
+                .replace(/(#\w+)/g, '<span style="color:var(--primary);font-weight:500">$1</span>');
+
+            html += '<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px"><i class="fas fa-magic" style="margin-right:4px"></i> AI-Revised Version</div>'
+                + '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;font-size:13px;line-height:1.8;color:var(--text)">' + formattedRevised + '</div>'
+                + '<div style="margin-top:10px;display:flex;gap:8px">'
+                + '<button class="btn btn-primary btn-sm" onclick="document.getElementById(\'edit-content\').value=this.dataset.rev;document.getElementById(\'critique-results\').style.display=\'none\';showToast(\'AI revision applied\',\'success\')" data-rev="' + data.revised.replace(/"/g,'&quot;').replace(/'/g,'&#39;') + '"><i class="fas fa-check"></i> Use AI Version</button>'
+                + '<button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'critique-results\').style.display=\'none\'">Dismiss</button>'
+                + '</div></div>';
+        }
+        panel.innerHTML = html || '<div style="color:var(--text-muted)">No feedback available.</div>';
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (err) {
+        clearInterval(amInterval);
+        hidePostingLightbox(false, 'Analysis');
+        panel.style.display = 'block';
+        panel.innerHTML = '<div style="color:var(--danger)">Analysis failed. Try again.</div>';
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-robot"></i> AI Critique';
+    }
+}
 </script>

@@ -17,12 +17,17 @@ require_once APP_ROOT . '/core/Database.php';
 require_once APP_ROOT . '/core/Controller.php';
 require_once APP_ROOT . '/core/Model.php';
 require_once APP_ROOT . '/app/models/Post.php';
+require_once APP_ROOT . '/app/models/BrandingSetting.php';
+require_once APP_ROOT . '/app/services/BrandingService.php';
 require_once APP_ROOT . '/app/services/ZernioService.php';
 
 // Prevent web access
 if (php_sapi_name() !== 'cli' && !defined('CRON_RUNNING')) {
     die('This script can only be run from the command line.');
 }
+
+// Set client_id for BrandingService/ZernioService (used outside of a session context)
+$GLOBALS['client_id'] = defined('CLIENT_ID') ? CLIENT_ID : 1;
 
 $logFile = APP_ROOT . '/storage/cron.log';
 $logDir = dirname($logFile);
@@ -92,7 +97,8 @@ try {
                 $imageUrl = BASE_URL . '/' . ltrim($imageUrl, '/');
             }
 
-            $result = $zernio->postNow($platform, $post['content'], $imageUrl);
+            $firstComment = !empty($post['first_comment']) ? $post['first_comment'] : null;
+            $result = $zernio->postNow($platform, $post['content'], $imageUrl, $firstComment);
 
             if ($result['success']) {
                 $zernioPostId = $result['zernio_post_id'] ?? null;

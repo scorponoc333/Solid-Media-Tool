@@ -3,6 +3,7 @@ $firstName = $_SESSION['first_name'] ?? '';
 $brand = (new BrandingService())->get($GLOBALS['client_id']);
 $companyName = htmlspecialchars($brand['company_name'] ?? 'Your Company');
 $nameGreet = $firstName ? htmlspecialchars($firstName) : 'there';
+$userRole = $_SESSION['role'] ?? 'reviewer';
 ?>
 
 <style>
@@ -58,9 +59,7 @@ $nameGreet = $firstName ? htmlspecialchars($firstName) : 'there';
 .docs-toc .toc-section-label:first-child { padding-top: 0; }
 
 /* ---- Content ---- */
-.docs-content section {
-    scroll-margin-top: 96px;
-}
+.docs-content section { scroll-margin-top: 96px; }
 .docs-section {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -79,8 +78,7 @@ $nameGreet = $firstName ? htmlspecialchars($firstName) : 'there';
     gap: 10px;
 }
 .docs-section h2 .doc-icon {
-    width: 34px;
-    height: 34px;
+    width: 34px; height: 34px;
     border-radius: 8px;
     background: rgba(var(--primary-rgb), 0.1);
     color: var(--primary);
@@ -160,6 +158,17 @@ $nameGreet = $firstName ? htmlspecialchars($firstName) : 'there';
     line-height: 1.6;
 }
 .doc-tip strong { color: var(--primary); }
+.doc-warn {
+    background: rgba(239,68,68,0.05);
+    border-left: 3px solid var(--danger);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+.doc-warn strong { color: var(--danger); }
 
 /* Workflow diagram */
 .workflow-diagram {
@@ -176,7 +185,7 @@ $nameGreet = $firstName ? htmlspecialchars($firstName) : 'there';
 
 /* Hero banner */
 .docs-hero {
-    background: var(--sidebar-gradient, linear-gradient(180deg, var(--primary) 0%, #0a0a0a 60%, #000 100%));
+    background: linear-gradient(165deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 40%, #1a1a2e) 60%, #1a1a2e 100%);
     border-radius: var(--radius-lg);
     padding: 40px 36px;
     margin-bottom: 28px;
@@ -184,30 +193,18 @@ $nameGreet = $firstName ? htmlspecialchars($firstName) : 'there';
     position: relative;
     overflow: hidden;
 }
-.docs-hero h1 {
-    font-size: 26px;
-    font-weight: 800;
-    margin-bottom: 6px;
-}
-.docs-hero .hero-sub {
-    font-size: 15px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.6;
-    max-width: 600px;
-}
+.docs-hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+.docs-hero .hero-sub { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.6; max-width: 600px; }
 .docs-hero .hero-version {
     position: absolute;
-    top: 20px;
-    right: 24px;
+    top: 20px; right: 24px;
     background: rgba(255,255,255,0.12);
     padding: 4px 12px;
     border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 12px; font-weight: 600;
     color: rgba(255,255,255,0.7);
 }
 
-/* Keyboard shortcut badge */
 kbd {
     background: var(--bg-input);
     border: 1px solid var(--border);
@@ -218,11 +215,34 @@ kbd {
     font-weight: 600;
     color: var(--text);
 }
+
+/* Doc illustration */
+.doc-illustration {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin: 16px 0;
+    border: 1px solid var(--border);
+}
+
+/* Role badge in docs */
+.doc-role {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 4px;
+}
+.doc-role-admin { background: rgba(var(--primary-rgb),0.1); color: var(--primary); }
+.doc-role-editor { background: rgba(59,130,246,0.1); color: #3b82f6; }
+.doc-role-reviewer { background: rgba(34,197,94,0.1); color: #22c55e; }
 </style>
 
 <!-- Hero -->
 <div class="docs-hero">
-    <span class="hero-version">v1.0</span>
+    <span class="hero-version">v2.0</span>
     <h1><?= $companyName ?> Social — Documentation</h1>
     <p class="hero-sub">Welcome, <?= $nameGreet ?>. Everything you need to know about creating, scheduling, and managing social media content for <?= $companyName ?>.</p>
 </div>
@@ -233,23 +253,33 @@ kbd {
         <ul class="docs-toc" id="docsToc">
             <li><span class="toc-section-label">Getting Started</span></li>
             <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#roles">Roles &amp; Permissions</a></li>
             <li><a href="#workflow">How It Works</a></li>
+            <li><a href="#wizard">Setup Wizard</a></li>
 
-            <li><span class="toc-section-label">Pages</span></li>
+            <li><span class="toc-section-label">Content</span></li>
             <li><a href="#dashboard">Dashboard</a></li>
             <li><a href="#generator">Content Generator</a></li>
             <li><a href="#posts">Posts Manager</a></li>
             <li><a href="#editor">Post Editor</a></li>
             <li><a href="#calendar">Calendar</a></li>
             <li><a href="#reporting">Reports</a></li>
+            <li><a href="#reviews">Reviews &amp; Approvals</a></li>
 
-            <li><span class="toc-section-label">Settings</span></li>
-            <li><a href="#branding">Branding</a></li>
+            <li><span class="toc-section-label">Strategy &amp; Design</span></li>
+            <li><a href="#strategy">Content Strategy</a></li>
+            <li><a href="#art-direction">Art Direction</a></li>
             <li><a href="#memory">Content Memory</a></li>
+
+            <li><span class="toc-section-label">Administration</span></li>
+            <li><a href="#branding">Branding</a></li>
+            <li><a href="#users">User Management</a></li>
+            <li><a href="#smtp">Email Settings</a></li>
 
             <li><span class="toc-section-label">Reference</span></li>
             <li><a href="#statuses">Post Statuses</a></li>
             <li><a href="#platforms">Platforms</a></li>
+            <li><a href="#shortcuts">Keyboard Shortcuts</a></li>
             <li><a href="#dark-mode">Dark Mode</a></li>
         </ul>
     </div>
@@ -261,27 +291,52 @@ kbd {
         <section id="introduction" class="docs-section">
             <h2><span class="doc-icon"><i class="fas fa-rocket"></i></span> Introduction</h2>
             <p class="section-lead">A quick overview of what this platform does and who it's built for.</p>
-            <p><?= $companyName ?> Social is an AI-powered content management system designed to streamline the way <?= $companyName ?> creates, schedules, and publishes social media content. Instead of spending hours drafting posts, you can generate an entire week of on-brand content in seconds, review and edit each post, then schedule them to go live across your platforms.</p>
+            <p><?= $companyName ?> Social is an AI-powered social media content management system. It streamlines the entire content lifecycle: from AI-driven generation and brand-consistent image creation, through team review and approval, to scheduled cross-platform publishing.</p>
             <h3>Key Capabilities</h3>
             <ul>
-                <li><strong>AI Content Generation</strong> — Create full weeks or individual posts with a single click. The AI crafts varied, on-brand copy for <?= $companyName ?>.</li>
-                <li><strong>Post Editor</strong> — Review, edit, and fine-tune every post before it goes out. Adjust captions, swap images, and set scheduling times.</li>
-                <li><strong>Calendar View</strong> — See your entire content schedule laid out on a monthly calendar with color-coded status indicators.</li>
-                <li><strong>Content Memory</strong> — The system tracks every topic, keyword, and angle used so your content stays fresh and never repeats.</li>
-                <li><strong>Branding Control</strong> — Customize colors, logo, and personalization so the platform feels like it belongs to <?= $companyName ?>.</li>
-                <li><strong>Scheduling &amp; Publishing</strong> — Connect to Zernio to schedule posts for automatic publishing at the perfect time.</li>
+                <li><strong>AI Content Generation</strong> — Create a full week of on-brand posts or individual posts with a single click. The AI uses your content themes and brand voice.</li>
+                <li><strong>AI Image Generation</strong> — Generate photorealistic images styled to your art direction settings, automatically watermarked with your logo.</li>
+                <li><strong>Content Strategy</strong> — Define recurring content themes with copy instructions. Assign themes to days of the week for consistent scheduling.</li>
+                <li><strong>Approval Workflow</strong> — Optionally require team review before posts can be published. Configurable approval thresholds.</li>
+                <li><strong>Multi-Platform Publishing</strong> — Publish to Facebook and LinkedIn simultaneously via Zernio integration.</li>
+                <li><strong>Content Memory</strong> — Automatic deduplication ensures your content never repeats the same topic or angle.</li>
+                <li><strong>Team Management</strong> — Invite editors and reviewers with role-based access controls.</li>
+                <li><strong>Full Branding</strong> — Customize colors, logo, login background, and favicon to match your company identity.</li>
             </ul>
         </section>
 
-        <!-- Workflow Diagram -->
+        <!-- Roles & Permissions -->
+        <section id="roles" class="docs-section">
+            <h2><span class="doc-icon"><i class="fas fa-user-shield"></i></span> Roles &amp; Permissions</h2>
+            <p class="section-lead">Three roles control what each team member can see and do.</p>
+
+            <table class="field-table">
+                <thead><tr><th>Feature</th><th><span class="doc-role doc-role-admin">Admin</span></th><th><span class="doc-role doc-role-editor">Editor</span></th><th><span class="doc-role doc-role-reviewer">Reviewer</span></th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Dashboard</strong></td><td>Full access</td><td>Full access</td><td>View only</td></tr>
+                    <tr><td><strong>Generator</strong></td><td>Yes</td><td>Yes</td><td>No</td></tr>
+                    <tr><td><strong>Posts</strong> (create/edit)</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+                    <tr><td><strong>Posts</strong> (approve/reject)</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+                    <tr><td><strong>Calendar</strong></td><td>Full</td><td>Full</td><td>View only</td></tr>
+                    <tr><td><strong>Reports</strong></td><td>Full</td><td>Full</td><td>View only</td></tr>
+                    <tr><td><strong>Content Strategy</strong></td><td>Yes</td><td>No</td><td>No</td></tr>
+                    <tr><td><strong>Art Direction</strong></td><td>Yes</td><td>No</td><td>No</td></tr>
+                    <tr><td><strong>Branding / Wizard</strong></td><td>Yes</td><td>No</td><td>No</td></tr>
+                    <tr><td><strong>User Management</strong></td><td>Yes</td><td>No</td><td>No</td></tr>
+                    <tr><td><strong>SMTP Settings</strong></td><td>Yes</td><td>No</td><td>No</td></tr>
+                    <tr><td><strong>Reviews Queue</strong></td><td>Yes</td><td>No</td><td>Yes</td></tr>
+                    <tr><td><strong>Memory</strong></td><td>Yes</td><td>Yes</td><td>No</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Workflow -->
         <section id="workflow" class="docs-section">
             <h2><span class="doc-icon"><i class="fas fa-project-diagram"></i></span> How It Works</h2>
             <p class="section-lead">The high-level content workflow from idea to published post.</p>
 
             <div class="workflow-diagram">
                 <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" fill="none">
-                    <!-- Step boxes -->
-                    <!-- 1. Generate -->
                     <rect x="10" y="80" width="140" height="120" rx="14" fill="rgba(var(--primary-rgb),0.08)" stroke="var(--primary)" stroke-width="1.5"/>
                     <text x="80" y="125" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="var(--text)">Generate</text>
                     <text x="80" y="145" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">AI creates posts</text>
@@ -289,54 +344,46 @@ kbd {
                     <circle cx="80" cy="60" r="18" fill="var(--primary)"/>
                     <text x="80" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#fff">1</text>
 
-                    <!-- Arrow 1-2 -->
                     <line x1="155" y1="140" x2="195" y2="140" stroke="var(--primary)" stroke-width="2" stroke-dasharray="6,3"/>
                     <polygon points="195,135 205,140 195,145" fill="var(--primary)"/>
 
-                    <!-- 2. Review -->
                     <rect x="210" y="80" width="140" height="120" rx="14" fill="rgba(var(--primary-rgb),0.08)" stroke="var(--primary)" stroke-width="1.5"/>
                     <text x="280" y="125" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="var(--text)">Review &amp; Edit</text>
                     <text x="280" y="145" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">Refine copy, swap</text>
-                    <text x="280" y="160" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">images, set type</text>
+                    <text x="280" y="160" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">images, AI critique</text>
                     <circle cx="280" cy="60" r="18" fill="var(--primary)"/>
                     <text x="280" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#fff">2</text>
 
-                    <!-- Arrow 2-3 -->
                     <line x1="355" y1="140" x2="395" y2="140" stroke="var(--primary)" stroke-width="2" stroke-dasharray="6,3"/>
                     <polygon points="395,135 405,140 395,145" fill="var(--primary)"/>
 
-                    <!-- 3. Schedule -->
                     <rect x="410" y="80" width="140" height="120" rx="14" fill="rgba(var(--primary-rgb),0.08)" stroke="var(--primary)" stroke-width="1.5"/>
-                    <text x="480" y="125" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="var(--text)">Schedule</text>
-                    <text x="480" y="145" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">Set date, time,</text>
-                    <text x="480" y="160" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">and platform</text>
+                    <text x="480" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="var(--text)">Approve</text>
+                    <text x="480" y="140" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">Team reviews</text>
+                    <text x="480" y="155" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">(if workflow</text>
+                    <text x="480" y="170" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">enabled)</text>
                     <circle cx="480" cy="60" r="18" fill="var(--primary)"/>
                     <text x="480" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#fff">3</text>
 
-                    <!-- Arrow 3-4 -->
                     <line x1="555" y1="140" x2="595" y2="140" stroke="var(--primary)" stroke-width="2" stroke-dasharray="6,3"/>
                     <polygon points="595,135 605,140 595,145" fill="var(--primary)"/>
 
-                    <!-- 4. Publish -->
                     <rect x="610" y="80" width="140" height="120" rx="14" fill="rgba(var(--primary-rgb),0.08)" stroke="var(--primary)" stroke-width="1.5"/>
-                    <text x="680" y="125" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="var(--text)">Publish</text>
-                    <text x="680" y="145" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">Goes live via</text>
-                    <text x="680" y="160" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">Zernio integration</text>
+                    <text x="680" y="125" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="var(--text)">Schedule</text>
+                    <text x="680" y="145" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">Set date &amp; time</text>
+                    <text x="680" y="160" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">or publish now</text>
                     <circle cx="680" cy="60" r="18" fill="var(--primary)"/>
                     <text x="680" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#fff">4</text>
 
-                    <!-- Arrow 4-5 -->
                     <line x1="755" y1="140" x2="795" y2="140" stroke="var(--primary)" stroke-width="2" stroke-dasharray="6,3"/>
                     <polygon points="795,135 805,140 795,145" fill="var(--primary)"/>
 
-                    <!-- 5. Track -->
                     <rect x="810" y="80" width="80" height="120" rx="14" fill="rgba(var(--primary-rgb),0.08)" stroke="var(--primary)" stroke-width="1.5"/>
                     <text x="850" y="130" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="var(--text)">Track</text>
                     <text x="850" y="150" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--text-muted)">Reports</text>
                     <circle cx="850" cy="60" r="18" fill="var(--primary)"/>
                     <text x="850" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#fff">5</text>
 
-                    <!-- Memory feedback loop -->
                     <path d="M 680 205 L 680 250 Q 680 260 670 260 L 90 260 Q 80 260 80 250 L 80 205" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="5,4" fill="none"/>
                     <polygon points="75,208 80,198 85,208" fill="var(--text-muted)"/>
                     <text x="380" y="255" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="var(--text-muted)">Content Memory feeds back to keep content fresh</text>
@@ -344,6 +391,25 @@ kbd {
             </div>
 
             <p>Each time content is generated, the <strong>Content Memory</strong> engine logs the topic, keywords, and angle used. This feedback loop ensures that future posts cover new ground and avoid repetition.</p>
+
+            <?php if (file_exists(APP_ROOT . '/public/uploads/docs/docs-workflow.jpg')): ?>
+            <img src="<?= BASE_URL ?>/uploads/docs/docs-workflow.jpg" alt="Content workflow illustration" class="doc-illustration">
+            <?php endif; ?>
+        </section>
+
+        <!-- Setup Wizard -->
+        <section id="wizard" class="docs-section">
+            <h2><span class="doc-icon"><i class="fas fa-hat-wizard"></i></span> Setup Wizard</h2>
+            <p class="section-lead">Get up and running in minutes with guided onboarding.</p>
+            <p>The Setup Wizard walks you through five steps to configure your account:</p>
+            <ol>
+                <li><strong>Company Basics</strong> — Enter your company name, website URL, phone number, and a brief description of your business.</li>
+                <li><strong>Website Scan</strong> — The AI scans your website to automatically extract company details, services, and brand information.</li>
+                <li><strong>Brand Identity</strong> — Upload your logo, set your brand colors (primary and secondary), and configure your visual identity.</li>
+                <li><strong>Content Themes</strong> — The AI suggests content themes tailored to your business. Select the ones you want to use.</li>
+                <li><strong>Review &amp; Complete</strong> — Review all your settings and apply them with one click.</li>
+            </ol>
+            <div class="doc-tip"><strong>Tip:</strong> The wizard can be re-run at any time from the Settings menu. Your existing values will be shown as defaults.</div>
         </section>
 
         <!-- Dashboard -->
@@ -353,83 +419,85 @@ kbd {
             <p>The Dashboard is the first screen you see after logging in. It provides a real-time summary of your content pipeline and quick links to the most common tasks.</p>
 
             <h3>Stat Cards</h3>
-            <p>Four cards at the top display your key metrics:</p>
+            <p>Five cards at the top display your key metrics. Each shows a weekly trend on hover:</p>
             <table class="field-table">
                 <thead><tr><th>Card</th><th>What It Shows</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Total Posts</strong></td><td>The total number of posts created for <?= $companyName ?>, regardless of status.</td></tr>
-                    <tr><td><strong>Scheduled</strong></td><td>Posts that have a date and time set and are waiting to be published.</td></tr>
-                    <tr><td><strong>Published</strong></td><td>Posts that have been successfully published to a social platform.</td></tr>
-                    <tr><td><strong>Drafts</strong></td><td>Posts saved as drafts that still need review or scheduling.</td></tr>
+                    <tr><td><strong>Total Posts</strong></td><td>The total number of posts created, regardless of status.</td></tr>
+                    <tr><td><strong>Scheduled</strong></td><td>Posts with a future date waiting to be published.</td></tr>
+                    <tr><td><strong>Published</strong></td><td>Posts successfully published to a social platform.</td></tr>
+                    <tr><td><strong>Drafts</strong></td><td>Posts saved as drafts still needing review or scheduling.</td></tr>
+                    <tr><td><strong>Failed</strong></td><td>Posts where publishing failed. Click to jump to the Reports page for details.</td></tr>
                 </tbody>
             </table>
 
             <h3>Quick Actions</h3>
-            <p>Three shortcut cards let you jump directly to the most-used features: the Content Generator, the Calendar, and Reports.</p>
+            <p>Three shortcut cards let you jump directly to: the Content Generator, the Calendar, and Reports.</p>
 
             <h3>Recent Posts</h3>
-            <p>A table of the most recently created posts, showing title, platform, type, status, and scheduled date. Click the edit icon on any row to open that post in the editor.</p>
+            <p>A table of the most recently created posts. Click the edit icon on any row to open that post in the editor.</p>
 
-            <div class="doc-tip"><strong>Tip:</strong> If you've just started and have no posts yet, the Dashboard will show a prompt to generate your first post — click it to go straight to the Generator.</div>
+            <div class="doc-tip"><strong>Tip:</strong> If you've just started and have no posts yet, the Dashboard shows a prompt to generate your first post.</div>
         </section>
 
         <!-- Content Generator -->
         <section id="generator" class="docs-section">
             <h2><span class="doc-icon"><i class="fas fa-magic"></i></span> Content Generator</h2>
-            <p class="section-lead">Create on-brand content for <?= $companyName ?> using AI — one post or a full week at a time.</p>
+            <p class="section-lead">Create on-brand content using AI — one post or a full week at a time.</p>
 
-            <h3>Generate Full Week</h3>
-            <p>Click <strong>Generate Full Week</strong> to create seven days of varied social media content in one action. The AI considers <?= $companyName ?>'s brand voice and consults the Content Memory to ensure no topic is repeated.</p>
+            <h3>Plan &amp; Generate (Full Week)</h3>
+            <p>The left panel lets you generate a full week of content. The AI uses your content themes and weekly schedule to create varied posts for each day.</p>
             <ul>
-                <li>Posts are generated as drafts — nothing is published automatically.</li>
-                <li>Each post gets a unique topic, angle, and post type (educational, promotional, engagement, etc.).</li>
-                <li>Results appear as editable cards below the controls.</li>
+                <li>Posts are generated as <strong>drafts</strong> — nothing is published automatically.</li>
+                <li>Each post gets a unique topic, angle, and type based on your theme schedule.</li>
+                <li>The Content Memory prevents any topic or angle from being repeated.</li>
+                <li>Results appear as editable cards with inline title and content editing.</li>
             </ul>
 
-            <h3>Generate Single Post</h3>
-            <p>For more control, use the single-post form to specify exactly what you want:</p>
-            <table class="field-table">
-                <thead><tr><th>Field</th><th>Description</th></tr></thead>
-                <tbody>
-                    <tr><td><strong>Topic</strong></td><td>The subject of the post (e.g., "Benefits of cloud computing"). Be specific for better results.</td></tr>
-                    <tr><td><strong>Post Type</strong></td><td>The tone and format: <code>Educational</code>, <code>Promotional</code>, <code>Engagement</code>, <code>Storytelling</code>, or <code>Behind the Scenes</code>.</td></tr>
-                </tbody>
-            </table>
+            <h3>Single Post Generation</h3>
+            <p>For more control, specify a topic and post type to generate exactly what you need.</p>
 
             <h3>Working with Results</h3>
-            <p>Each generated post appears as an editable card with these actions:</p>
+            <p>Each generated post card offers these actions:</p>
             <ul>
-                <li><strong>Edit title &amp; content</strong> — Click directly on the title or text area to make changes inline.</li>
-                <li><strong>Regenerate Text</strong> — Ask the AI to rewrite the copy with a fresh angle while keeping the same topic.</li>
-                <li><strong>Regenerate Image</strong> — Generate a new image based on the post content.</li>
-                <li><strong>Save as Draft</strong> — Saves the post to your library as a draft, ready for scheduling.</li>
+                <li><strong>Edit title &amp; content</strong> — Click directly to modify inline.</li>
+                <li><strong>Generate Image</strong> — Create an AI image styled to your Art Direction settings, automatically watermarked.</li>
+                <li><strong>Save as Draft</strong> — Saves the post to your library for scheduling.</li>
             </ul>
-            <div class="doc-tip"><strong>Tip:</strong> You can edit the title and content before saving. Tweak the AI's output to match <?= $companyName ?>'s exact voice, then save.</div>
+
+            <div class="doc-warn"><strong>Required:</strong> Company Name, Phone, and Website must be set in Branding before the generator will work. You'll be prompted to complete your profile if any are missing.</div>
+
+            <?php if (file_exists(APP_ROOT . '/public/uploads/docs/docs-ai-gen.jpg')): ?>
+            <img src="<?= BASE_URL ?>/uploads/docs/docs-ai-gen.jpg" alt="AI content generation illustration" class="doc-illustration">
+            <?php endif; ?>
         </section>
 
         <!-- Posts Manager -->
         <section id="posts" class="docs-section">
             <h2><span class="doc-icon"><i class="fas fa-edit"></i></span> Posts Manager</h2>
-            <p class="section-lead">Browse, filter, and manage all of <?= $companyName ?>'s posts in one table.</p>
+            <p class="section-lead">Browse, filter, and manage all posts in one place.</p>
 
-            <p>The Posts page shows every post in your library, with columns for title, platform, type, status, and scheduled date.</p>
+            <h3>Two Views</h3>
+            <p>Toggle between <strong>Table View</strong> (default list) and <strong>Kanban View</strong> (cards organized by platform) using the buttons at the top.</p>
 
             <h3>Filtering</h3>
-            <p>Use the filter bar at the top to narrow results:</p>
             <table class="field-table">
                 <thead><tr><th>Filter</th><th>What It Does</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Status</strong></td><td>Show only posts in a specific state (Draft, Scheduled, Published, or Failed).</td></tr>
-                    <tr><td><strong>Platform</strong></td><td>Filter by social network (Instagram, Facebook, LinkedIn, Twitter).</td></tr>
-                    <tr><td><strong>Search</strong></td><td>Type to search by post title in real time.</td></tr>
+                    <tr><td><strong>Platform</strong></td><td>Show posts for a specific social network.</td></tr>
+                    <tr><td><strong>Status</strong></td><td>Filter by Draft, Pending Review, Scheduled, Published, or Failed.</td></tr>
+                    <tr><td><strong>Search</strong></td><td>Real-time search by post title.</td></tr>
                 </tbody>
             </table>
 
+            <h3>Kanban View</h3>
+            <p>Posts are displayed as cards in platform columns (Facebook, LinkedIn). Each card shows the title, scheduled date, and status. Hover for details, click to edit.</p>
+
             <h3>Actions</h3>
             <ul>
-                <li><strong>New Post</strong> — Takes you to the Generator to create a new post.</li>
-                <li><strong>Edit</strong> (pencil icon) — Opens the Post Editor for that post.</li>
-                <li><strong>Delete</strong> (trash icon) — Removes the post after confirmation.</li>
+                <li><strong>New Post</strong> — Opens the Generator.</li>
+                <li><strong>Edit</strong> — Opens the Post Editor.</li>
+                <li><strong>Delete</strong> — Removes the post after confirmation.</li>
             </ul>
         </section>
 
@@ -438,15 +506,14 @@ kbd {
             <h2><span class="doc-icon"><i class="fas fa-pen-fancy"></i></span> Post Editor</h2>
             <p class="section-lead">Fine-tune every detail of a post before it goes live.</p>
 
-            <p>The editor opens with a two-column layout: the content preview on the left, and settings on the right.</p>
-
             <h3>Content Panel (Left)</h3>
             <table class="field-table">
                 <thead><tr><th>Field</th><th>Description</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Image Preview</strong></td><td>Shows the current post image. If no image exists, a placeholder is displayed.</td></tr>
-                    <tr><td><strong>Title</strong></td><td>The headline or hook for the post. Editable directly.</td></tr>
-                    <tr><td><strong>Content</strong></td><td>The full post body/caption. Supports multi-line text editing.</td></tr>
+                    <tr><td><strong>Image Preview</strong></td><td>Shows the current post image. Click to regenerate.</td></tr>
+                    <tr><td><strong>Title</strong></td><td>The headline. Editable directly.</td></tr>
+                    <tr><td><strong>Content</strong></td><td>The full post body/caption. Supports multi-line editing.</td></tr>
+                    <tr><td><strong>First Comment</strong></td><td>Optional first comment posted alongside the main content (e.g., for LinkedIn hashtags).</td></tr>
                 </tbody>
             </table>
 
@@ -454,35 +521,41 @@ kbd {
             <table class="field-table">
                 <thead><tr><th>Field</th><th>Description</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Platform</strong></td><td>Which social network this post is for (Instagram, Facebook, LinkedIn, Twitter).</td></tr>
-                    <tr><td><strong>Post Type</strong></td><td>The content category (Educational, Promotional, Engagement, etc.).</td></tr>
-                    <tr><td><strong>Status</strong></td><td>Current state of the post: Draft, Scheduled, Published, or Failed.</td></tr>
-                    <tr><td><strong>Schedule Date/Time</strong></td><td>When the post should go live. Uses a date-time picker.</td></tr>
-                    <tr><td><strong>Topic</strong></td><td>The subject matter — recorded by the Content Memory engine.</td></tr>
-                    <tr><td><strong>Keywords</strong></td><td>Comma-separated keywords relevant to the post. Used for memory tracking.</td></tr>
-                    <tr><td><strong>Angle</strong></td><td>The specific perspective or hook used (e.g., "customer success story").</td></tr>
+                    <tr><td><strong>Platforms</strong></td><td>Select one or more social networks (Facebook, LinkedIn).</td></tr>
+                    <tr><td><strong>Post Type</strong></td><td>Content category: Educational, Promotional, Engagement, Storytelling, Behind the Scenes.</td></tr>
+                    <tr><td><strong>Schedule Date/Time</strong></td><td>When the post should go live. Date-time picker.</td></tr>
+                    <tr><td><strong>Topic / Keywords / Angle</strong></td><td>Metadata tracked by Content Memory for deduplication.</td></tr>
                 </tbody>
             </table>
 
-            <h3>Editor Actions</h3>
+            <h3>AI Tools</h3>
             <ul>
-                <li><strong>Save</strong> — Saves all changes without scheduling.</li>
-                <li><strong>Schedule</strong> — Saves changes and submits the post for scheduled publishing via Zernio.</li>
-                <li><strong>Delete</strong> — Permanently removes the post after confirmation.</li>
+                <li><strong>Regenerate Text</strong> — Rewrite the copy with a custom instruction while keeping the topic.</li>
+                <li><strong>Regenerate Image</strong> — Generate a new AI image from a custom prompt.</li>
+                <li><strong>AI Critique</strong> — Get AI-powered feedback on your post content with strengths, suggestions, and a revised version. Only triggers when you've changed 30% or more of the AI-generated original.</li>
             </ul>
+
+            <h3>Publishing Actions</h3>
+            <ul>
+                <li><strong>Save</strong> — Saves all changes as a draft.</li>
+                <li><strong>Schedule</strong> — Sets the post for future automatic publishing.</li>
+                <li><strong>Post Now</strong> — Publishes immediately to selected platforms.</li>
+                <li><strong>Submit for Review</strong> — Sends the post to the review queue (when approval workflow is enabled).</li>
+            </ul>
+
+            <h3>Publishing Logs</h3>
+            <p>After a post is published (or fails), a log section appears showing each platform attempt with its timestamp, status, and any error messages.</p>
         </section>
 
         <!-- Calendar -->
         <section id="calendar" class="docs-section">
             <h2><span class="doc-icon"><i class="fas fa-calendar-alt"></i></span> Calendar</h2>
-            <p class="section-lead">A visual overview of <?= $companyName ?>'s content schedule.</p>
+            <p class="section-lead">A visual overview of your content schedule.</p>
 
             <p>The Calendar displays a month-at-a-glance view of all posts, plotted on their scheduled dates.</p>
-
-            <h3>How to Use</h3>
             <ul>
-                <li><strong>Navigate months</strong> — Use the left/right arrows or the "Today" button in the header.</li>
-                <li><strong>Color-coded dots</strong> — Each post appears as a small dot on its scheduled day. Colors indicate status:
+                <li><strong>Navigate months</strong> — Use the arrows or the "Today" button.</li>
+                <li><strong>Color-coded dots</strong> — Each post appears as a dot. Colors indicate status:
                     <ul>
                         <li><span style="color:var(--text-muted)">Grey</span> = Draft</li>
                         <li><span style="color:var(--info)">Blue</span> = Scheduled</li>
@@ -490,83 +563,148 @@ kbd {
                         <li><span style="color:var(--danger)">Red</span> = Failed</li>
                     </ul>
                 </li>
-                <li><strong>Hover</strong> — Hover over a dot to see a tooltip with the post's thumbnail, title, and platform.</li>
-                <li><strong>Click</strong> — Click a dot to open a modal with full post details and a link to the editor.</li>
+                <li><strong>Hover</strong> — Shows a tooltip with the post thumbnail, title, time, and platform.</li>
+                <li><strong>Click</strong> — Opens a modal with full post details and a link to the editor.</li>
             </ul>
-            <div class="doc-tip"><strong>Tip:</strong> The calendar is a great way to spot gaps in your schedule. If you see empty days, head to the Generator to fill them in.</div>
+            <div class="doc-tip"><strong>Tip:</strong> Spot gaps in your schedule? Head to the Generator to fill them in.</div>
+
+            <?php if (file_exists(APP_ROOT . '/public/uploads/docs/docs-calendar.jpg')): ?>
+            <img src="<?= BASE_URL ?>/uploads/docs/docs-calendar.jpg" alt="Calendar planning illustration" class="doc-illustration">
+            <?php endif; ?>
         </section>
 
         <!-- Reporting -->
         <section id="reporting" class="docs-section">
             <h2><span class="doc-icon"><i class="fas fa-chart-bar"></i></span> Reports</h2>
-            <p class="section-lead">Track content performance and patterns for <?= $companyName ?>.</p>
+            <p class="section-lead">Track content performance and patterns.</p>
 
-            <p>The Reports page gives you an analytical view of your content library.</p>
+            <h3>Interactive Stat Cards</h3>
+            <p>The five stat cards at the top are <strong>clickable filters</strong>. Click any card to automatically filter the posts table to that status and scroll down to the results.</p>
 
-            <h3>Summary Cards</h3>
-            <p>The same four stat cards as the Dashboard (Total, Scheduled, Published, Drafts) are displayed at the top for context.</p>
+            <h3>Failed Posts</h3>
+            <p>If any posts have failed to publish, a dedicated red-themed section appears at the top showing the post title, platform, error message, and date. You can retry or delete failed posts directly.</p>
 
             <h3>Filters</h3>
-            <table class="field-table">
-                <thead><tr><th>Filter</th><th>Description</th></tr></thead>
-                <tbody>
-                    <tr><td><strong>Date Range</strong></td><td>Filter posts by their scheduled date (start and end).</td></tr>
-                    <tr><td><strong>Platform</strong></td><td>Narrow to a specific social network.</td></tr>
-                    <tr><td><strong>Status</strong></td><td>Show only posts in a particular state.</td></tr>
-                    <tr><td><strong>Post Type</strong></td><td>Filter by content category.</td></tr>
-                </tbody>
-            </table>
+            <p>Use the filter bar to narrow results by date range, platform, status, or post type. Click <strong>Apply</strong> to filter, or <strong>Download CSV</strong> to export all data.</p>
 
-            <h3>Topic Distribution</h3>
-            <p>A visual breakdown of which topics have been covered and how many times, shown as pill badges with counts. Useful for ensuring <?= $companyName ?>'s content covers a healthy variety of subjects.</p>
-
-            <h3>Platform Breakdown</h3>
-            <p>Horizontal bar chart showing how many posts are planned or published per platform, helping you balance your social presence.</p>
-        </section>
-
-        <!-- Branding -->
-        <section id="branding" class="docs-section">
-            <h2><span class="doc-icon"><i class="fas fa-palette"></i></span> Branding</h2>
-            <p class="section-lead">Customize the platform to look and feel like it belongs to <?= $companyName ?>.</p>
-
-            <p>Everything set on this page applies globally across the app — the sidebar gradient, button colors, stat cards, login screen, and more.</p>
-
-            <h3>Brand Identity</h3>
-            <table class="field-table">
-                <thead><tr><th>Setting</th><th>What It Controls</th></tr></thead>
-                <tbody>
-                    <tr><td><strong>Company Name</strong></td><td>Displayed in the browser tab, login screen (when no logo), and personalized copy throughout the app.</td></tr>
-                    <tr><td><strong>Tagline</strong></td><td>A short slogan. Currently stored for future use in exports and templates.</td></tr>
-                    <tr><td><strong>Primary Color</strong></td><td>The main brand color. Drives the sidebar gradient, stat cards, buttons, icon backgrounds, and all accent elements.</td></tr>
-                    <tr><td><strong>Secondary Color</strong></td><td>A complementary color. Used for secondary accents and future theming options.</td></tr>
-                    <tr><td><strong>Particles Effect</strong></td><td>Toggle the animated particle constellation on the login screen on or off.</td></tr>
-                </tbody>
-            </table>
-
-            <h3>Logo &amp; Background</h3>
+            <h3>Analytics</h3>
             <ul>
-                <li><strong>Logo</strong> — Upload your company logo. When set, it replaces the company name text in the sidebar and login screen. Accepted formats: JPG, PNG, GIF, WebP, SVG (max 2 MB).</li>
-                <li><strong>Login Background</strong> — Upload a background image for the login page. When set, it replaces the primary-color gradient. Recommended: 1920x1080 or larger.</li>
+                <li><strong>Topic Distribution</strong> — Visual tag cloud showing which topics have been covered and how many times.</li>
+                <li><strong>Platform Breakdown</strong> — Horizontal bar chart showing post distribution across platforms.</li>
             </ul>
 
-            <h3>Personalization</h3>
-            <p>Enter your first name and it will appear in greetings and messages throughout the app (e.g., "Good morning, <?= $nameGreet ?>").</p>
+            <?php if (file_exists(APP_ROOT . '/public/uploads/docs/docs-analytics.jpg')): ?>
+            <img src="<?= BASE_URL ?>/uploads/docs/docs-analytics.jpg" alt="Analytics dashboard illustration" class="doc-illustration">
+            <?php endif; ?>
+        </section>
 
-            <h3>Live Preview</h3>
-            <p>The preview card at the bottom of the page shows exactly how your login screen will look with the current settings. Changes to color and company name update in real time.</p>
+        <!-- Reviews & Approvals -->
+        <section id="reviews" class="docs-section">
+            <h2><span class="doc-icon"><i class="fas fa-clipboard-check"></i></span> Reviews &amp; Approvals</h2>
+            <p class="section-lead">Team-based content review before publishing.</p>
+            <p>When the approval workflow is enabled (configured in User Management), posts must be reviewed before they can be scheduled or published.</p>
+
+            <h3>How It Works</h3>
+            <ol>
+                <li>An editor creates a post and clicks <strong>Submit for Review</strong>.</li>
+                <li>The post enters <code>pending_review</code> status and appears in the Reviews Queue.</li>
+                <li>Reviewers (and admins) can <strong>Approve</strong> or <strong>Request Changes</strong> with feedback comments.</li>
+                <li>Once the required number of approvals is reached, the post moves back to <code>draft</code> status, ready for scheduling.</li>
+                <li>If changes are requested, the editor revises the post and resubmits.</li>
+            </ol>
+
+            <h3>Review Queue</h3>
+            <p>Each pending post is displayed as a card showing:</p>
+            <ul>
+                <li>Post thumbnail and content preview</li>
+                <li>Approval progress bar (e.g., "1 of 2 approvals")</li>
+                <li>Review chips showing who approved or requested changes</li>
+                <li>Action buttons: Approve, Request Changes, View Post</li>
+            </ul>
+
+            <?php if (file_exists(APP_ROOT . '/public/uploads/docs/docs-team.jpg')): ?>
+            <img src="<?= BASE_URL ?>/uploads/docs/docs-team.jpg" alt="Team collaboration illustration" class="doc-illustration">
+            <?php endif; ?>
+
+            <h3>Configuration</h3>
+            <p>Go to <strong>Users &rarr; Approval Workflow</strong> to:</p>
+            <ul>
+                <li>Enable or disable the approval requirement</li>
+                <li>Set the minimum number of approvals needed (1-5)</li>
+            </ul>
+        </section>
+
+        <!-- Content Strategy -->
+        <section id="strategy" class="docs-section">
+            <h2><span class="doc-icon"><i class="fas fa-chess"></i></span> Content Strategy</h2>
+            <p class="section-lead">Define content themes and weekly schedules to guide AI generation.</p>
+
+            <h3>Content Themes</h3>
+            <p>Themes are reusable content categories that instruct the AI on what to write about and how. Each theme includes:</p>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Name</strong></td><td>Theme title (e.g., "Cybersecurity Tips", "Cloud & Digital Transformation").</td></tr>
+                    <tr><td><strong>Description</strong></td><td>What this theme covers and its intended audience.</td></tr>
+                    <tr><td><strong>Copy Instructions</strong></td><td>Detailed writing guidelines the AI follows when generating posts for this theme.</td></tr>
+                    <tr><td><strong>Required Elements</strong></td><td>Checkboxes for: Website, CTA, Hashtags, Emojis. These are enforced in generated content.</td></tr>
+                    <tr><td><strong>Default Hashtags</strong></td><td>Hashtags automatically appended to posts using this theme.</td></tr>
+                    <tr><td><strong>Sample Posts</strong></td><td>Example posts the AI uses as style references.</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Weekly Schedule</h3>
+            <p>Assign a theme to each day of the week. When the Generator creates a full week of content, it uses this schedule to decide which theme applies to each day.</p>
+
+            <h3>AI Copy Critique</h3>
+            <p>Click the <strong>Analyze</strong> button on any theme's sample post to get AI-powered feedback. The critique includes strengths, suggestions, and a rewritten version.</p>
+        </section>
+
+        <!-- Art Direction -->
+        <section id="art-direction" class="docs-section">
+            <h2><span class="doc-icon"><i class="fas fa-camera"></i></span> Art Direction</h2>
+            <p class="section-lead">Control how AI-generated images look and feel.</p>
+
+            <h3>Image Style Settings</h3>
+            <table class="field-table">
+                <thead><tr><th>Setting</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Default Style</strong></td><td>Photorealistic, Mixed (Photo + Graphics), or Technical Diagram.</td></tr>
+                    <tr><td><strong>Realism Level</strong></td><td>Slider from Stylized (1) to Hyper-Real (10).</td></tr>
+                    <tr><td><strong>Color Temperature</strong></td><td>Cold (blue undertones), Neutral, or Warm (golden tones).</td></tr>
+                    <tr><td><strong>Contrast</strong></td><td>Subtle, Balanced, Punchy, or Maximum.</td></tr>
+                    <tr><td><strong>Mood</strong></td><td>Professional, Dramatic, Moody Dark, or Clean Bright.</td></tr>
+                    <tr><td><strong>Brand Color Bleed</strong></td><td>How much your brand color influences the image palette (0-100%).</td></tr>
+                    <tr><td><strong>Avoid List</strong></td><td>Comma-separated styles to never use (e.g., "cartoon, childish, flat").</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Quick Presets</h3>
+            <p>Four one-click presets: <strong>Corporate IT</strong>, <strong>Tech Magazine</strong>, <strong>Dark &amp; Dramatic</strong>, <strong>Clean Professional</strong>. Each loads optimized values for all settings.</p>
+
+            <h3>Watermark &amp; Overlay</h3>
+            <p>When enabled, all generated images are automatically watermarked with:</p>
+            <ul>
+                <li>Your company logo (positioned bottom-left or bottom-right)</li>
+                <li>Your website URL</li>
+                <li>A gradient overlay for text legibility (adjustable opacity)</li>
+            </ul>
+
+            <h3>Prompt Preview</h3>
+            <p>A live preview shows the exact prompt that will be sent to the AI image generator, updated in real-time as you change settings.</p>
         </section>
 
         <!-- Content Memory -->
         <section id="memory" class="docs-section">
             <h2><span class="doc-icon"><i class="fas fa-brain"></i></span> Content Memory</h2>
-            <p class="section-lead">The engine that keeps <?= $companyName ?>'s content fresh and varied.</p>
+            <p class="section-lead">The engine that keeps your content fresh and varied.</p>
 
-            <p>Every time content is generated or saved, the Content Memory logs three pieces of data:</p>
+            <p>Every time content is generated or saved, the Content Memory logs three data points:</p>
             <table class="field-table">
                 <thead><tr><th>Data Point</th><th>Purpose</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Topic</strong></td><td>The subject matter (e.g., "cloud security"). Prevents the same topic from being overused.</td></tr>
-                    <tr><td><strong>Keywords</strong></td><td>Specific terms and phrases used. Helps diversify the vocabulary across posts.</td></tr>
+                    <tr><td><strong>Topic</strong></td><td>The subject matter. Prevents overuse of the same topic.</td></tr>
+                    <tr><td><strong>Keywords</strong></td><td>Specific terms used. Helps diversify vocabulary.</td></tr>
                     <tr><td><strong>Angle</strong></td><td>The creative approach (e.g., "myth-busting", "customer testimonial"). Ensures varied perspectives.</td></tr>
                 </tbody>
             </table>
@@ -576,25 +714,114 @@ kbd {
                 <li><strong>Stat Cards</strong> — Total memories, unique topics, and total angles used.</li>
                 <li><strong>Topic Pills</strong> — Visual list of every topic with usage counts.</li>
                 <li><strong>Recent Angles</strong> — The latest creative approaches used.</li>
-                <li><strong>Memory Log</strong> — A table showing every memory entry with its linked post.</li>
+                <li><strong>Memory Log</strong> — A table showing every entry with its linked post.</li>
             </ul>
 
-            <div class="doc-tip"><strong>How it works:</strong> When the AI generates new content, it checks the memory log first. If a topic or angle has been used recently, the AI avoids it and chooses a fresh direction. This happens automatically — no action needed on your part.</div>
+            <div class="doc-tip"><strong>How it works:</strong> When the AI generates new content, it checks memory first. If a topic or angle was recently used, it avoids it and chooses a fresh direction. This happens automatically.</div>
+        </section>
+
+        <!-- Branding -->
+        <section id="branding" class="docs-section">
+            <h2><span class="doc-icon"><i class="fas fa-palette"></i></span> Branding</h2>
+            <p class="section-lead">Customize the platform to match your company identity.</p>
+
+            <p>Everything set here applies globally: sidebar colors, buttons, login screen, stat cards, and more.</p>
+
+            <h3>Brand Identity</h3>
+            <table class="field-table">
+                <thead><tr><th>Setting</th><th>What It Controls</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Company Name</strong></td><td>Browser tab, login screen, greetings, and generated content.</td></tr>
+                    <tr><td><strong>Phone / Website</strong></td><td>Included in every AI-generated post for contact information.</td></tr>
+                    <tr><td><strong>Primary Color</strong></td><td>Main brand color. Drives the sidebar, buttons, icons, and accent elements.</td></tr>
+                    <tr><td><strong>Secondary Color</strong></td><td>Complementary color for secondary accents.</td></tr>
+                    <tr><td><strong>Particles Effect</strong></td><td>Toggle the animated constellation on the login screen.</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Uploads</h3>
+            <ul>
+                <li><strong>Logo</strong> — Appears in the sidebar and login screen. Formats: JPG, PNG, GIF, WebP, SVG (max 2 MB).</li>
+                <li><strong>Favicon</strong> — Browser tab icon. Formats: PNG, ICO (max 1 MB).</li>
+                <li><strong>Login Background</strong> — Replaces the gradient on the login page. Recommended: 1920x1080+.</li>
+            </ul>
+
+            <h3>API Keys</h3>
+            <p>Configure your API credentials for:</p>
+            <ul>
+                <li><strong>OpenRouter</strong> — Powers AI text generation and content critique.</li>
+                <li><strong>Kie.ai</strong> — Powers AI image generation.</li>
+                <li><strong>Zernio</strong> — Social media publishing to Facebook and LinkedIn.</li>
+            </ul>
+            <p>Use the <strong>Test Connection</strong> button to verify each API key is working.</p>
+
+            <h3>Live Preview</h3>
+            <p>The preview card shows how your login screen will look with current settings. Colors and company name update in real time.</p>
+
+            <?php if (file_exists(APP_ROOT . '/public/uploads/docs/docs-branding.jpg')): ?>
+            <img src="<?= BASE_URL ?>/uploads/docs/docs-branding.jpg" alt="Brand identity illustration" class="doc-illustration">
+            <?php endif; ?>
+        </section>
+
+        <!-- User Management -->
+        <section id="users" class="docs-section">
+            <h2><span class="doc-icon"><i class="fas fa-users-cog"></i></span> User Management</h2>
+            <p class="section-lead">Manage your team and control who can do what.</p>
+
+            <h3>Inviting Users</h3>
+            <ol>
+                <li>Click <strong>Invite User</strong> and enter their email, name, and role.</li>
+                <li>If SMTP is configured, a branded invitation email is sent with login credentials.</li>
+                <li>If SMTP is not configured, a temporary password is displayed for you to share manually.</li>
+                <li>On first login, the invited user is prompted to change their password.</li>
+            </ol>
+
+            <h3>Managing Users</h3>
+            <ul>
+                <li><strong>Edit</strong> — Change a user's name, email, or role.</li>
+                <li><strong>Deactivate</strong> — Disables the account (prevents login). Can be reactivated later.</li>
+                <li><strong>Resend Invite</strong> — Generates a new temporary password and resends the invitation email.</li>
+            </ul>
+
+            <h3>Approval Workflow</h3>
+            <p>At the bottom of the page, toggle the approval workflow on or off and set the minimum number of approvals required (1-5) before a post can be published.</p>
+        </section>
+
+        <!-- SMTP -->
+        <section id="smtp" class="docs-section">
+            <h2><span class="doc-icon"><i class="fas fa-envelope"></i></span> Email Settings</h2>
+            <p class="section-lead">Configure email delivery for user invitations and notifications.</p>
+
+            <p>Choose from three email providers:</p>
+            <table class="field-table">
+                <thead><tr><th>Provider</th><th>Configuration</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>SMTP</strong></td><td>Host, port, username, password, encryption (TLS/SSL/None), from name/email.</td></tr>
+                    <tr><td><strong>SendGrid</strong></td><td>API key, from name/email.</td></tr>
+                    <tr><td><strong>Mailgun</strong></td><td>API key, domain, from name/email.</td></tr>
+                </tbody>
+            </table>
+
+            <p>Use <strong>Test Connection</strong> to verify your configuration before saving. A test email will be sent to confirm delivery.</p>
         </section>
 
         <!-- Post Statuses -->
         <section id="statuses" class="docs-section">
             <h2><span class="doc-icon"><i class="fas fa-tags"></i></span> Post Statuses</h2>
-            <p class="section-lead">Understanding what each status means.</p>
+            <p class="section-lead">Understanding the post lifecycle.</p>
             <table class="field-table">
                 <thead><tr><th>Status</th><th>Color</th><th>Meaning</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Draft</strong></td><td><span style="color:var(--text-muted)">Grey</span></td><td>Saved but not yet scheduled. Still being worked on.</td></tr>
-                    <tr><td><strong>Scheduled</strong></td><td><span style="color:var(--info)">Blue</span></td><td>Has a scheduled date and time. Waiting to be published via Zernio.</td></tr>
-                    <tr><td><strong>Published</strong></td><td><span style="color:var(--success)">Green</span></td><td>Successfully posted to the target social platform.</td></tr>
-                    <tr><td><strong>Failed</strong></td><td><span style="color:var(--danger)">Red</span></td><td>The publishing attempt failed. Check Zernio integration settings and retry.</td></tr>
+                    <tr><td><strong>Draft</strong></td><td><span style="color:var(--text-muted)">Grey</span></td><td>Saved but not scheduled. Still being worked on.</td></tr>
+                    <tr><td><strong>Pending Review</strong></td><td><span style="color:#f59e0b">Orange</span></td><td>Submitted for team approval. Cannot be scheduled until approved.</td></tr>
+                    <tr><td><strong>Scheduled</strong></td><td><span style="color:var(--info)">Blue</span></td><td>Has a date and time. Will be published automatically by the cron job.</td></tr>
+                    <tr><td><strong>Published</strong></td><td><span style="color:var(--success)">Green</span></td><td>Successfully posted to the target platform(s).</td></tr>
+                    <tr><td><strong>Failed</strong></td><td><span style="color:var(--danger)">Red</span></td><td>Publishing failed. Check the error in Reports and retry.</td></tr>
                 </tbody>
             </table>
+
+            <h3>Status Flow</h3>
+            <p><code>Draft</code> &rarr; <code>Pending Review</code> (if approval enabled) &rarr; <code>Draft</code> (after approved) &rarr; <code>Scheduled</code> &rarr; <code>Published</code> or <code>Failed</code></p>
         </section>
 
         <!-- Platforms -->
@@ -604,10 +831,28 @@ kbd {
             <table class="field-table">
                 <thead><tr><th>Platform</th><th>Notes</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Instagram</strong></td><td>Image-focused posts. Best with square or portrait images.</td></tr>
-                    <tr><td><strong>Facebook</strong></td><td>Supports longer captions and link previews.</td></tr>
-                    <tr><td><strong>LinkedIn</strong></td><td>Professional tone. Works well with educational and thought-leadership content.</td></tr>
-                    <tr><td><strong>Twitter</strong></td><td>Keep it concise. Character limits apply.</td></tr>
+                    <tr><td><strong>Facebook</strong></td><td>Supports longer captions, images, and link previews. Connected via Zernio.</td></tr>
+                    <tr><td><strong>LinkedIn</strong></td><td>Professional tone. Ideal for educational and thought-leadership content. Connected via Zernio.</td></tr>
+                </tbody>
+            </table>
+            <p>Posts can target one or both platforms simultaneously. Each platform is published independently, so a post can succeed on one and fail on another.</p>
+        </section>
+
+        <!-- Keyboard Shortcuts -->
+        <section id="shortcuts" class="docs-section">
+            <h2><span class="doc-icon"><i class="fas fa-keyboard"></i></span> Keyboard Shortcuts</h2>
+            <p class="section-lead">Navigate faster with keyboard shortcuts.</p>
+            <p>Press <kbd>?</kbd> anywhere in the app to open the shortcuts modal.</p>
+            <table class="field-table">
+                <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+                <tbody>
+                    <tr><td><kbd>N</kbd></td><td>New post (opens Generator)</td></tr>
+                    <tr><td><kbd>G</kbd></td><td>Go to Generator</td></tr>
+                    <tr><td><kbd>P</kbd></td><td>Go to Posts</td></tr>
+                    <tr><td><kbd>C</kbd></td><td>Go to Calendar</td></tr>
+                    <tr><td><kbd>R</kbd></td><td>Go to Reports</td></tr>
+                    <tr><td><kbd>/</kbd></td><td>Focus search (on Posts page)</td></tr>
+                    <tr><td><kbd>Esc</kbd></td><td>Close any open modal</td></tr>
                 </tbody>
             </table>
         </section>
@@ -616,8 +861,8 @@ kbd {
         <section id="dark-mode" class="docs-section">
             <h2><span class="doc-icon"><i class="fas fa-moon"></i></span> Dark Mode</h2>
             <p class="section-lead">Easy on the eyes, any time of day.</p>
-            <p>Click the moon/sun icon in the top-right corner of the navigation bar to toggle between light and dark mode. Your preference is saved automatically and persists across sessions — even after logging out and back in.</p>
-            <p>The sidebar and stat cards maintain <?= $companyName ?>'s brand colors in both modes.</p>
+            <p>Click the moon/sun icon in the top-right corner to toggle between light and dark mode. Your preference is saved automatically and persists across sessions.</p>
+            <p>All brand colors are maintained in both modes — the sidebar, stat cards, and accent elements reflect <?= $companyName ?>'s identity regardless of theme.</p>
         </section>
 
     </div>
@@ -626,33 +871,32 @@ kbd {
 <!-- TOC Active Tracking -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const tocLinks = document.querySelectorAll('.docs-toc a');
-    const sections = [];
+    var tocLinks = document.querySelectorAll('.docs-toc a');
+    var sections = [];
 
-    tocLinks.forEach(link => {
-        const id = link.getAttribute('href').replace('#', '');
-        const section = document.getElementById(id);
-        if (section) sections.push({ id, el: section, link });
+    tocLinks.forEach(function(link) {
+        var id = link.getAttribute('href').replace('#', '');
+        var section = document.getElementById(id);
+        if (section) sections.push({ id: id, el: section, link: link });
     });
 
     function updateActive() {
-        let current = sections[0];
-        const offset = 120;
-        for (const s of sections) {
-            if (s.el.getBoundingClientRect().top <= offset) {
-                current = s;
+        var current = sections[0];
+        var offset = 120;
+        for (var i = 0; i < sections.length; i++) {
+            if (sections[i].el.getBoundingClientRect().top <= offset) {
+                current = sections[i];
             }
         }
-        tocLinks.forEach(l => l.classList.remove('active'));
+        tocLinks.forEach(function(l) { l.classList.remove('active'); });
         if (current) current.link.classList.add('active');
     }
 
-    // Smooth scroll
-    tocLinks.forEach(link => {
+    tocLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            const id = this.getAttribute('href').replace('#', '');
-            const target = document.getElementById(id);
+            var id = this.getAttribute('href').replace('#', '');
+            var target = document.getElementById(id);
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 history.replaceState(null, '', '#' + id);

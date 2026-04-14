@@ -3,6 +3,7 @@ $b = $branding ?? [];
 $companyName = htmlspecialchars($b['company_name'] ?? '');
 $tagline = htmlspecialchars($b['tagline'] ?? '');
 $website = htmlspecialchars($b['website'] ?? '');
+$firstComment = htmlspecialchars($b['first_comment'] ?? '');
 $primaryColor = htmlspecialchars($b['primary_color'] ?? '#6366f1');
 $secondaryColor = htmlspecialchars($b['secondary_color'] ?? '#8b5cf6');
 $logoUrl = $b['logo_url'] ?? '';
@@ -101,6 +102,10 @@ $csrfToken = $_SESSION['csrf_token'];
     border-color: var(--primary);
     background: rgba(var(--primary-rgb), 0.04);
 }
+.file-upload-area.logo-upload-area:hover {
+    border-color: transparent;
+    filter: brightness(1.15);
+}
 .file-upload-area input[type="file"] {
     position: absolute;
     inset: 0;
@@ -139,6 +144,27 @@ $csrfToken = $_SESSION['csrf_token'];
     margin: 0 auto;
     object-fit: cover;
 }
+.file-upload-preview { position: relative; }
+.file-remove-btn {
+    position: absolute;
+    top: -6px;
+    right: calc(50% - 46px);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: var(--danger, #ef4444);
+    color: #fff;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 5;
+    transition: transform 0.15s ease;
+}
+.file-remove-btn:hover { transform: scale(1.15); }
 
 /* Live Preview */
 .login-preview-wrapper {
@@ -217,6 +243,83 @@ $csrfToken = $_SESSION['csrf_token'];
 }
 </style>
 
+<div style="margin-bottom:28px">
+    <a href="<?= BASE_URL ?>/wizard?rerun=1" class="wizard-cta-btn">
+        <div class="wizard-cta-inner">
+            <div class="wizard-cta-icon"><i class="fas fa-magic"></i></div>
+            <div class="wizard-cta-text">
+                <span class="wizard-cta-title">Run Setup Wizard</span>
+                <span class="wizard-cta-desc">Scan your website, set up branding, and generate content themes with AI</span>
+            </div>
+            <i class="fas fa-arrow-right wizard-cta-arrow"></i>
+        </div>
+    </a>
+</div>
+<style>
+.wizard-cta-btn {
+    display: block;
+    text-decoration: none;
+    padding: 22px 28px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, <?= $primaryColor ?> 0%, color-mix(in srgb, <?= $primaryColor ?> 55%, #0a0a0a) 100%);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    animation: wizCtaBreath 3s ease-in-out infinite;
+}
+.wizard-cta-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -75%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.06) 50%, transparent 55%);
+    animation: wizCtaSweep 4s ease-in-out infinite;
+    pointer-events: none;
+}
+.wizard-cta-btn:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    animation: none;
+}
+.wizard-cta-inner {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+    z-index: 1;
+}
+.wizard-cta-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    backdrop-filter: blur(4px);
+}
+.wizard-cta-text { flex: 1; }
+.wizard-cta-title { display: block; font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+.wizard-cta-desc { display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 3px; line-height: 1.4; }
+.wizard-cta-arrow { font-size: 16px; opacity: 0.5; transition: all 0.3s ease; flex-shrink: 0; }
+.wizard-cta-btn:hover .wizard-cta-arrow { opacity: 1; transform: translateX(4px); }
+@keyframes wizCtaBreath {
+    0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    50% { box-shadow: 0 6px 28px rgba(0,0,0,0.22), 0 0 12px rgba(var(--primary-rgb), 0.15); }
+}
+@keyframes wizCtaSweep {
+    0%,70% { left: -75%; opacity: 0; }
+    75% { opacity: 1; }
+    100% { left: 125%; opacity: 0; }
+}
+</style>
+
 <form method="POST" action="<?= BASE_URL ?>/branding/save" enctype="multipart/form-data" id="brandingForm">
     <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
 
@@ -243,6 +346,12 @@ $csrfToken = $_SESSION['csrf_token'];
                 <div class="form-group">
                     <label class="form-label" for="website">Website</label>
                     <input type="text" id="website" name="website" class="form-input" value="<?= $website ?>" placeholder="e.g. solidtech.ca">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="first_comment">Default First Comment</label>
+                    <textarea id="first_comment" name="first_comment" class="form-textarea" rows="3" placeholder="This comment will be automatically posted on every new post. e.g. &#x1F4DE; 587-557-1234&#10;&#x1F310; https://solidtech.ca"><?= $firstComment ?></textarea>
+                    <div class="text-small text-muted" style="margin-top:4px">Applied to all posts unless overridden on the individual post.</div>
                 </div>
 
                 <div class="form-group">
@@ -279,32 +388,38 @@ $csrfToken = $_SESSION['csrf_token'];
             <div>
                 <div class="form-group">
                     <label class="form-label">Logo</label>
-                    <div class="file-upload-area" onclick="this.querySelector('input[type=file]').click()">
+                    <input type="hidden" name="remove_logo" id="remove_logo" value="0">
+                    <div class="file-upload-area logo-upload-area" id="logoUploadArea" style="background: linear-gradient(135deg, <?= $primaryColor ?> 0%, <?= $secondaryColor ?> 100%); border-color: transparent;">
                         <?php if ($logoUrl): ?>
-                            <div class="file-upload-preview">
+                            <div class="file-upload-preview" id="logoPreviewWrap">
+                                <button type="button" class="file-remove-btn" onclick="removeUpload('logo')" title="Remove logo"><i class="fas fa-times"></i></button>
                                 <img src="<?= htmlspecialchars($logoUrl) ?>" alt="Current logo" id="logoPreview">
                             </div>
                         <?php else: ?>
                             <div class="file-upload-preview" id="logoPreviewWrap" style="display:none">
+                                <button type="button" class="file-remove-btn" onclick="removeUpload('logo')" title="Remove logo"><i class="fas fa-times"></i></button>
                                 <img src="" alt="Logo preview" id="logoPreview">
                             </div>
                         <?php endif; ?>
-                        <div class="file-upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                        <div class="file-upload-text">Click to upload logo</div>
-                        <div class="file-upload-hint">JPG, PNG, GIF, WebP or SVG (max 2MB)</div>
+                        <div class="file-upload-icon" style="color: rgba(255,255,255,0.7)"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <div class="file-upload-text" style="color: rgba(255,255,255,0.9)">Click to upload logo</div>
+                        <div class="file-upload-hint" style="color: rgba(255,255,255,0.5)">JPG, PNG, GIF, WebP or SVG (max 2MB)</div>
                         <input type="file" name="logo" accept="image/*" onchange="previewFile(this, 'logoPreview', 'logoPreviewWrap')">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Login Background</label>
-                    <div class="file-upload-area" onclick="this.querySelector('input[type=file]').click()">
+                    <input type="hidden" name="remove_login_bg" id="remove_login_bg" value="0">
+                    <div class="file-upload-area">
                         <?php if ($loginBgUrl): ?>
-                            <div class="file-upload-preview file-upload-preview-bg">
+                            <div class="file-upload-preview file-upload-preview-bg" id="bgPreviewWrap">
+                                <button type="button" class="file-remove-btn" onclick="removeUpload('login_bg')" title="Remove background"><i class="fas fa-times"></i></button>
                                 <img src="<?= htmlspecialchars($loginBgUrl) ?>" alt="Current background" id="bgPreview">
                             </div>
                         <?php else: ?>
                             <div class="file-upload-preview file-upload-preview-bg" id="bgPreviewWrap" style="display:none">
+                                <button type="button" class="file-remove-btn" onclick="removeUpload('login_bg')" title="Remove background"><i class="fas fa-times"></i></button>
                                 <img src="" alt="Background preview" id="bgPreview">
                             </div>
                         <?php endif; ?>
@@ -312,6 +427,28 @@ $csrfToken = $_SESSION['csrf_token'];
                         <div class="file-upload-text">Click to upload background</div>
                         <div class="file-upload-hint">Recommended: 1920x1080 or larger</div>
                         <input type="file" name="login_bg" accept="image/*" onchange="previewFile(this, 'bgPreview', 'bgPreviewWrap')">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Favicon</label>
+                    <input type="hidden" name="remove_favicon" id="remove_favicon" value="0">
+                    <div class="file-upload-area">
+                        <?php $faviconUrl = $b['favicon_url'] ?? ''; if ($faviconUrl): ?>
+                            <div class="file-upload-preview" id="faviconPreviewWrap">
+                                <button type="button" class="file-remove-btn" onclick="removeUpload('favicon')" title="Remove favicon"><i class="fas fa-times"></i></button>
+                                <img src="<?= htmlspecialchars($faviconUrl) ?>" alt="Current favicon" id="faviconPreview" style="max-height:48px;image-rendering:pixelated">
+                            </div>
+                        <?php else: ?>
+                            <div class="file-upload-preview" id="faviconPreviewWrap" style="display:none">
+                                <button type="button" class="file-remove-btn" onclick="removeUpload('favicon')" title="Remove favicon"><i class="fas fa-times"></i></button>
+                                <img src="" alt="Favicon preview" id="faviconPreview" style="max-height:48px;image-rendering:pixelated">
+                            </div>
+                        <?php endif; ?>
+                        <div class="file-upload-icon"><i class="fas fa-globe"></i></div>
+                        <div class="file-upload-text">Click to upload favicon</div>
+                        <div class="file-upload-hint">PNG or ICO, square image (auto-resized to 16/32/48px)</div>
+                        <input type="file" name="favicon" accept="image/png,image/x-icon,image/svg+xml,image/jpeg" onchange="previewFile(this, 'faviconPreview', 'faviconPreviewWrap')">
                     </div>
                 </div>
             </div>
@@ -334,9 +471,7 @@ $csrfToken = $_SESSION['csrf_token'];
         </div>
     </div>
 
-    <!-- API Settings (outside main form — saved separately) -->
-    </form>
-
+    <!-- API Settings (saved separately via JS) -->
     <div class="card" style="margin-bottom:28px">
         <div class="card-header">
             <div>
@@ -408,10 +543,6 @@ $csrfToken = $_SESSION['csrf_token'];
             </div>
         </div>
     </div>
-
-    <form action="<?= BASE_URL ?>/branding/save" method="POST" enctype="multipart/form-data" style="display:none">
-        <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
-    </form>
 
     <!-- Live Preview -->
     <div class="card" style="margin-bottom:28px">
@@ -496,6 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updatePreview() {
         var color = primaryPicker.value;
+        var color2 = secondaryPicker.value;
         document.getElementById('previewBtn').style.background = color;
         document.getElementById('previewWrapper').style.background =
             'linear-gradient(180deg, ' + color + ' 0%, #0a0a0a 60%, #000000 100%)';
@@ -503,8 +635,50 @@ document.addEventListener('DOMContentLoaded', function() {
         if (placeholder) {
             placeholder.style.background = color;
         }
+        // Update logo upload area gradient
+        var logoArea = document.getElementById('logoUploadArea');
+        if (logoArea) {
+            logoArea.style.background = 'linear-gradient(135deg, ' + color + ' 0%, ' + color2 + ' 100%)';
+        }
     }
 });
+
+function removeUpload(field) {
+    // Map field names to their elements
+    var map = {
+        'logo': { preview: 'logoPreviewWrap', img: 'logoPreview', input: 'logo', hidden: 'remove_logo' },
+        'login_bg': { preview: 'bgPreviewWrap', img: 'bgPreview', input: 'login_bg', hidden: 'remove_login_bg' },
+        'favicon': { preview: 'faviconPreviewWrap', img: 'faviconPreview', input: 'favicon', hidden: 'remove_favicon' },
+    };
+    var m = map[field];
+    if (!m) return;
+
+    // Hide the preview
+    var wrap = document.getElementById(m.preview);
+    if (wrap) wrap.style.display = 'none';
+
+    // Clear the image src
+    var img = document.getElementById(m.img);
+    if (img) img.src = '';
+
+    // Clear the file input
+    var fileInput = document.querySelector('input[name="' + m.input + '"]');
+    if (fileInput) fileInput.value = '';
+
+    // Set the hidden removal flag
+    var hidden = document.getElementById(m.hidden);
+    if (hidden) hidden.value = '1';
+
+    // Update live preview if logo was removed
+    if (field === 'logo') {
+        var previewLogo = document.getElementById('previewLogo');
+        var compName = document.getElementById('company_name').value || 'Your Company';
+        previewLogo.innerHTML = '<div class="preview-logo-placeholder" id="previewLogoPlaceholder" style="background:' + document.getElementById('primary_color').value + '">' + compName.charAt(0).toUpperCase() + '</div>';
+        document.getElementById('previewCompanyName').style.display = '';
+    }
+
+    showToast(field.replace('_', ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); }) + ' removed. Save to apply.', 'info');
+}
 
 function previewFile(input, imgId, wrapId) {
     if (input.files && input.files[0]) {

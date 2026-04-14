@@ -8,9 +8,13 @@ $nameGreet = $firstName ? htmlspecialchars($firstName) . ', you' : 'You';
 $logoUrl = $brand['logo_url'] ?? '';
 $primaryColor = $brand['primary_color'] ?? '#6366f1';
 $secondaryColor = $brand['secondary_color'] ?? '#8b5cf6';
+$themes = $themes ?? [];
+$schedule = $schedule ?? [];
+$missingBranding = $brandingService->isProfileComplete($GLOBALS['client_id']);
 ?>
 
 <input type="hidden" id="csrf-token" value="<?= htmlspecialchars($csrfToken) ?>">
+<script>var MISSING_BRANDING = <?= json_encode($missingBranding) ?>;</script>
 
 <!-- AI Generation Lightbox -->
 <div id="ai-lightbox" class="ai-lightbox">
@@ -52,7 +56,292 @@ $secondaryColor = $brand['secondary_color'] ?? '#8b5cf6';
     </div>
 </div>
 
+<!-- Plan Lightbox (multi-step before generation) -->
 <style>
+/* Plan lightbox entrance */
+.plan-modal { transform: scale(0.85) translateY(30px); opacity: 0; transition: transform 0.7s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease; }
+.plan-modal.visible { transform: scale(1) translateY(0); opacity: 1; }
+
+/* Step transitions */
+.plan-step { display:none; }
+.plan-step.active { display:block; animation: stepAssemble 0.6s cubic-bezier(0.23,1,0.32,1) both; }
+.plan-step.exiting { display:block; animation: stepDissolve 0.35s ease forwards; pointer-events:none; }
+@keyframes stepAssemble {
+    0% { opacity:0; transform:perspective(800px) rotateY(-4deg) translateX(40px) scale(0.95); filter:blur(6px); }
+    60% { filter:blur(0); }
+    100% { opacity:1; transform:perspective(800px) rotateY(0) translateX(0) scale(1); filter:blur(0); }
+}
+@keyframes stepDissolve {
+    0% { opacity:1; transform:perspective(800px) rotateY(0) translateX(0) scale(1); filter:blur(0); }
+    100% { opacity:0; transform:perspective(800px) rotateY(4deg) translateX(-40px) scale(0.95); filter:blur(6px); }
+}
+@keyframes stepAssembleReverse {
+    0% { opacity:0; transform:perspective(800px) rotateY(4deg) translateX(-40px) scale(0.95); filter:blur(6px); }
+    60% { filter:blur(0); }
+    100% { opacity:1; transform:perspective(800px) rotateY(0) translateX(0) scale(1); filter:blur(0); }
+}
+.plan-step.active-reverse { display:block; animation: stepAssembleReverse 0.6s cubic-bezier(0.23,1,0.32,1) both; }
+.plan-step.exiting-forward { display:block; animation: stepDissolve 0.35s ease forwards; pointer-events:none; }
+
+/* Elements within steps cascade in */
+.plan-step.active .plan-el, .plan-step.active-reverse .plan-el { animation: planElIn 0.4s cubic-bezier(0.23,1,0.32,1) both; }
+.plan-el:nth-child(1) { animation-delay: 0.15s !important; }
+.plan-el:nth-child(2) { animation-delay: 0.25s !important; }
+.plan-el:nth-child(3) { animation-delay: 0.35s !important; }
+.plan-el:nth-child(4) { animation-delay: 0.45s !important; }
+@keyframes planElIn { from { opacity:0; transform:translateY(12px); filter:blur(3px); } to { opacity:1; transform:translateY(0); filter:blur(0); } }
+
+/* Step indicator dots */
+.plan-dots { display:flex; gap:8px; }
+.plan-dot { width:8px; height:8px; border-radius:50%; background:var(--border); transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+.plan-dot.active { background:var(--primary); transform:scale(1.4); box-shadow:0 0 8px rgba(var(--primary-rgb),0.4); }
+.plan-dot.done { background:var(--primary); opacity:0.4; }
+</style>
+
+<div id="plan-lightbox" class="ai-lightbox">
+    <div class="plan-modal" id="planModal" style="background:var(--bg-card);border-radius:24px;max-width:520px;width:92%;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-xl);padding:28px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <div>
+                <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px">Plan Your Content</h3>
+                <div class="plan-dots">
+                    <div class="plan-dot active" id="planDot1"></div>
+                    <div class="plan-dot" id="planDot2"></div>
+                    <div class="plan-dot" id="planDot3"></div>
+                </div>
+            </div>
+            <button onclick="closePlanLightbox()" style="width:32px;height:32px;border-radius:8px;border:none;background:var(--bg-input);color:var(--text-muted);cursor:pointer;transition:all 0.2s"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Step 1: How many -->
+        <div id="planStep1" class="plan-step active">
+            <div class="plan-el" style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">How many posts do you want to generate?</div>
+            <div class="plan-el" style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+                <button type="button" class="btn btn-ghost btn-sm" onclick="adjustCount(-1)"><i class="fas fa-minus"></i></button>
+                <input type="number" id="planCount" min="1" max="7" value="3" style="width:60px;text-align:center;font-size:20px;font-weight:700;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text);padding:8px">
+                <button type="button" class="btn btn-ghost btn-sm" onclick="adjustCount(1)"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="plan-el" style="display:flex;justify-content:flex-end">
+                <button class="btn btn-primary btn-shine" onclick="planNext(1)">Next <i class="fas fa-arrow-right" style="margin-left:4px"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 2: Which days -->
+        <div id="planStep2" class="plan-step">
+            <div class="plan-el" style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">Select <span id="planDayCountLabel">3</span> days to publish:</div>
+            <div class="plan-el" id="planDaysGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px">
+                <?php
+                $dayAbbr = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+                for ($d = 1; $d <= 6; $d++): ?>
+                <label style="display:flex;align-items:center;gap:6px;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:600;color:var(--text);transition:all 0.2s">
+                    <input type="checkbox" class="plan-day-cb" value="<?= $d ?>" data-day="<?= $dayAbbr[$d] ?>day" style="accent-color:var(--primary)"> <?= $dayAbbr[$d] ?>
+                </label>
+                <?php endfor; ?>
+                <label style="display:flex;align-items:center;gap:6px;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:600;color:var(--text);transition:all 0.2s">
+                    <input type="checkbox" class="plan-day-cb" value="0" data-day="Sunday" style="accent-color:var(--primary)"> Sun
+                </label>
+            </div>
+            <div class="plan-el" style="display:flex;justify-content:space-between">
+                <button class="btn btn-ghost" onclick="planBack(2)"><i class="fas fa-arrow-left" style="margin-right:4px"></i> Back</button>
+                <button class="btn btn-primary btn-shine" onclick="planNext(2)">Next <i class="fas fa-arrow-right" style="margin-left:4px"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 3: Which themes -->
+        <div id="planStep3" class="plan-step">
+            <div class="plan-el" style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">Assign a theme to each day:</div>
+            <div class="plan-el" id="planThemeAssign" style="margin-bottom:20px"></div>
+            <div class="plan-el" style="display:flex;justify-content:space-between">
+                <button class="btn btn-ghost" onclick="planBack(3)"><i class="fas fa-arrow-left" style="margin-right:4px"></i> Back</button>
+                <button class="btn btn-primary btn-shine" onclick="startGeneration()" id="planGenerateBtn"><i class="fas fa-bolt" style="margin-right:4px"></i> Generate</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var GEN_THEMES = <?= json_encode($themes) ?>;
+var GEN_SCHEDULE = <?= json_encode($schedule) ?>;
+var DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+function checkBrandingComplete() {
+    if (MISSING_BRANDING && MISSING_BRANDING.length > 0) {
+        var list = MISSING_BRANDING.join(', ');
+        alertModal(
+            'Complete Your Profile First',
+            'Before generating posts, please set up the following in your branding settings: <strong>' + list + '</strong>.<br><br>This ensures every post includes your company contact information.<br><br><a href="' + BASE + '/branding" class="btn btn-primary btn-sm" style="margin-top:8px"><i class="fas fa-palette" style="margin-right:4px"></i> Go to Branding</a>',
+            'warning'
+        );
+        return false;
+    }
+    return true;
+}
+
+var planCurrentStep = 1;
+
+function openPlanLightbox() {
+    if (!checkBrandingComplete()) return;
+
+    planCurrentStep = 1;
+
+    // Reset all steps
+    document.querySelectorAll('.plan-step').forEach(function(s) {
+        s.className = 'plan-step';
+    });
+    document.getElementById('planStep1').className = 'plan-step active';
+    updatePlanDots(1);
+
+    // Pre-check scheduled days
+    var scheduledDays = Object.keys(GEN_SCHEDULE).map(Number);
+    document.querySelectorAll('.plan-day-cb').forEach(function(cb) {
+        cb.checked = scheduledDays.indexOf(parseInt(cb.value)) !== -1;
+    });
+
+    document.getElementById('plan-lightbox').classList.add('visible');
+    document.body.style.overflow = 'hidden';
+
+    // Animate modal in
+    setTimeout(function() {
+        document.getElementById('planModal').classList.add('visible');
+    }, 50);
+}
+
+function closePlanLightbox() {
+    var modal = document.getElementById('planModal');
+    modal.classList.remove('visible');
+    setTimeout(function() {
+        document.getElementById('plan-lightbox').classList.remove('visible');
+        document.body.style.overflow = '';
+    }, 400);
+}
+
+function transitionPlanStep(fromStep, toStep, direction) {
+    var fromEl = document.getElementById('planStep' + fromStep);
+    var toEl = document.getElementById('planStep' + toStep);
+    var isForward = direction === 'forward';
+
+    // Dissolve out current step
+    fromEl.className = 'plan-step ' + (isForward ? 'exiting-forward' : 'exiting');
+
+    setTimeout(function() {
+        fromEl.className = 'plan-step';
+        // Assemble in next step
+        toEl.className = 'plan-step ' + (isForward ? 'active' : 'active-reverse');
+        planCurrentStep = toStep;
+        updatePlanDots(toStep);
+    }, 350);
+}
+
+function updatePlanDots(step) {
+    for (var i = 1; i <= 3; i++) {
+        var dot = document.getElementById('planDot' + i);
+        dot.className = 'plan-dot' + (i === step ? ' active' : (i < step ? ' done' : ''));
+    }
+}
+
+function adjustCount(delta) {
+    var el = document.getElementById('planCount');
+    var val = parseInt(el.value) + delta;
+    if (val < 1) val = 1;
+    if (val > 7) val = 7;
+    el.value = val;
+}
+
+function planNext(step) {
+    if (step === 1) {
+        var count = parseInt(document.getElementById('planCount').value);
+        document.getElementById('planDayCountLabel').textContent = count;
+        transitionPlanStep(1, 2, 'forward');
+    } else if (step === 2) {
+        var checked = document.querySelectorAll('.plan-day-cb:checked');
+        var count = parseInt(document.getElementById('planCount').value);
+        if (checked.length !== count) {
+            showToast('Select exactly ' + count + ' day(s)', 'warning');
+            return;
+        }
+        buildThemeAssignment();
+        transitionPlanStep(2, 3, 'forward');
+    }
+}
+
+function planBack(step) {
+    if (step === 2) {
+        transitionPlanStep(2, 1, 'back');
+    } else if (step === 3) {
+        transitionPlanStep(3, 2, 'back');
+    }
+}
+
+function buildThemeAssignment() {
+    var container = document.getElementById('planThemeAssign');
+    container.innerHTML = '';
+    var checked = document.querySelectorAll('.plan-day-cb:checked');
+    checked.forEach(function(cb) {
+        var dayNum = parseInt(cb.value);
+        var dayName = DAY_NAMES[dayNum];
+        var schedTheme = GEN_SCHEDULE[dayNum] ? GEN_SCHEDULE[dayNum].theme_id : '';
+
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:10px';
+        row.innerHTML = '<span style="min-width:80px;font-size:13px;font-weight:600;color:var(--text)">' + dayName + '</span>'
+            + '<select class="form-input plan-theme-select" data-day="' + dayNum + '" style="flex:1;padding:8px 12px;font-size:13px">'
+            + '<option value="">General (no theme)</option>'
+            + GEN_THEMES.map(function(t) {
+                return '<option value="' + t.id + '"' + (t.id == schedTheme ? ' selected' : '') + '>' + escHtml(t.name) + '</option>';
+              }).join('')
+            + '</select>';
+        container.appendChild(row);
+    });
+}
+
+function startGeneration() {
+    var days = [];
+    var themeIds = [];
+    document.querySelectorAll('.plan-theme-select').forEach(function(sel) {
+        days.push(DAY_NAMES[parseInt(sel.dataset.day)]);
+        themeIds.push(sel.value || null);
+    });
+
+    closePlanLightbox();
+    generateWeekWithPlan(days, themeIds);
+}
+
+async function generateWeekWithPlan(days, themeIds) {
+    var btn = document.getElementById('btn-generate-week');
+    setLoading(btn, true, 'Generating...');
+    showAILightbox(
+        'AI is generating your content',
+        'Crafting ' + days.length + ' posts for <?= addslashes($companyName) ?>'
+    );
+
+    try {
+        var res = await fetch(BASE + '/generator/week', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                csrf_token: csrfToken(),
+                days: days,
+                theme_ids: themeIds
+            })
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Generation failed');
+
+        hideAILightbox();
+        setTimeout(function() {
+            renderResults(data.posts || []);
+            showToast('Content generated!', 'success');
+        }, 800);
+    } catch (err) {
+        hideAILightbox();
+        showToast(err.message, 'error');
+    } finally {
+        setLoading(btn, false);
+    }
+}
+</script>
+
+<style>
+@keyframes wizSlideUp { from { transform: translateY(40px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
 /* ---- AI Generation Lightbox ---- */
 .ai-lightbox {
     position: fixed;
@@ -85,7 +374,7 @@ $secondaryColor = $brand['secondary_color'] ?? '#8b5cf6';
     background: linear-gradient(
         165deg,
         <?= htmlspecialchars($primaryColor) ?> 0%,
-        <?= htmlspecialchars($secondaryColor) ?> 100%
+        color-mix(in srgb, <?= htmlspecialchars($primaryColor) ?> 50%, #0a0a0a) 100%
     );
     box-shadow:
         0 0 0 1px rgba(0,0,0,0.1),
@@ -94,13 +383,6 @@ $secondaryColor = $brand['secondary_color'] ?? '#8b5cf6';
     max-width: 440px;
     width: 90%;
     overflow: hidden;
-}
-[data-theme="dark"] .ai-lightbox-content {
-    background: linear-gradient(
-        165deg,
-        <?= htmlspecialchars($primaryColor) ?> 0%,
-        <?= htmlspecialchars($secondaryColor) ?> 100%
-    );
 }
 /* Top accent stripe — lighter shimmer on branded bg */
 .ai-lightbox-content::before {
@@ -276,20 +558,20 @@ $secondaryColor = $brand['secondary_color'] ?? '#8b5cf6';
 
 <!-- Generator Controls -->
 <div class="grid-2 mb-3">
-    <!-- Generate Full Week -->
+    <!-- Plan & Generate Week -->
     <div class="card" style="display:flex;flex-direction:column">
         <div class="card-header">
             <div>
-                <h3 class="card-title"><i class="fas fa-calendar-week" style="color:var(--primary);margin-right:8px"></i>Generate Full Week</h3>
-                <p class="card-subtitle">A full week of content in one click</p>
+                <h3 class="card-title"><i class="fas fa-calendar-week" style="color:var(--primary);margin-right:8px"></i>Plan & Generate</h3>
+                <p class="card-subtitle">Choose days, themes, and generate</p>
             </div>
         </div>
         <p style="color:var(--text-secondary);font-size:14px;line-height:1.7;margin-bottom:20px">
-            <?= $nameGreet ?> can automatically generate a full week of varied social media posts for <?= $companyName ?>. Each post is crafted with a unique angle, and the content memory engine ensures nothing feels repetitive.
+            <?= $nameGreet ?> can plan and generate posts with themes from your content strategy. Pick how many, which days, and which themes — AI does the rest.
         </p>
         <div style="margin-top:auto">
-            <button class="btn btn-primary w-full" id="btn-generate-week" onclick="generateWeek()">
-                <i class="fas fa-magic"></i> Generate Full Week
+            <button class="btn btn-primary w-full btn-cta-glow" id="btn-generate-week" onclick="openPlanLightbox()">
+                <i class="fas fa-magic"></i> Plan & Generate
             </button>
         </div>
     </div>
@@ -318,7 +600,7 @@ $secondaryColor = $brand['secondary_color'] ?? '#8b5cf6';
                 </select>
             </div>
             <div style="margin-top:auto">
-                <button type="submit" class="btn btn-primary w-full" id="btn-generate-single">
+                <button type="submit" class="btn btn-primary w-full btn-cta-glow" id="btn-generate-single">
                     <i class="fas fa-bolt"></i> Generate Post
                 </button>
             </div>
@@ -502,41 +784,14 @@ function hideAILightbox() {
     }, 600);
 }
 
-async function generateWeek() {
-    const btn = document.getElementById('btn-generate-week');
-    setLoading(btn, true, 'Generating week...');
-    showAILightbox(
-        'AI is generating your content',
-        'Crafting a full week of posts for <?= addslashes($companyName) ?>'
-    );
-
-    try {
-        const formData = new FormData();
-        formData.append('csrf_token', csrfToken());
-
-        const res = await fetch(BASE + '/generator/week', {
-            method: 'POST',
-            body: formData
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Generation failed');
-
-        hideAILightbox();
-        // Small delay so the user sees the 100% state
-        setTimeout(() => {
-            renderResults(data.posts || []);
-            showToast('Week of content generated!', 'success');
-        }, 800);
-    } catch (err) {
-        hideAILightbox();
-        showToast(err.message, 'error');
-    } finally {
-        setLoading(btn, false);
-    }
+// Legacy generateWeek now opens the plan lightbox
+function generateWeek() {
+    openPlanLightbox();
 }
 
 async function generateSingle(e) {
     e.preventDefault();
+    if (!checkBrandingComplete()) return;
     const btn = document.getElementById('btn-generate-single');
     setLoading(btn, true, 'Generating...');
     showAILightbox(
@@ -608,7 +863,7 @@ function renderResults(posts, append = false) {
                 </div>
                 <div class="post-card-body">
                     <input type="text" class="editable-title" id="title-${uid}" value="${escAttr(post.title || 'Untitled Post')}">
-                    <textarea class="editable-content" id="content-${uid}" rows="3">${escHtml(post.content || '')}</textarea>
+                    <textarea class="editable-content" id="content-${uid}" rows="8" style="white-space:pre-wrap;line-height:1.7">${escHtml(post.content || '')}</textarea>
                     <div class="post-card-meta mt-1">
                         <span class="badge badge-draft" style="text-transform:capitalize">${escHtml(typeLabel)}</span>
                         ${post.topic ? `<span class="text-muted text-small">${escHtml(post.topic)}</span>` : ''}
@@ -619,7 +874,7 @@ function renderResults(posts, append = false) {
                         <i class="fas fa-sync-alt"></i> Regen Text
                     </button>
                     <button class="btn btn-ghost btn-sm" onclick="regenerateImage('${uid}')">
-                        <i class="fas fa-image"></i> Regen Image
+                        <i class="fas fa-image"></i> Generate Image
                     </button>
                     <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="saveDraft('${uid}', '${escAttr(post.post_type || 'educational')}', '${escAttr(post.topic || '')}', '${escAttr(post.keywords || '')}', '${escAttr(post.angle || '')}')">
                         <i class="fas fa-save"></i> Save Draft
@@ -628,6 +883,7 @@ function renderResults(posts, append = false) {
             </div>`;
 
         card.dataset.imageUrl = post.image_url || '';
+        card.dataset.imagePrompt = post.image_prompt || '';
         card.dataset.postType = post.post_type || 'educational';
         card.dataset.topic = post.topic || '';
         card.dataset.keywords = post.keywords || '';
@@ -681,29 +937,86 @@ async function regenerateImage(uid) {
     const btn = event.currentTarget;
     setLoading(btn, true, 'Generating...');
 
-    imgWrap.innerHTML += '<div class="img-loading-overlay"><i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--primary)"></i></div>';
+    var gPrimary = '<?= $primaryColor ?>';
+    var overlayId = 'imgOverlay_' + uid;
+    imgWrap.innerHTML += '<div class="img-loading-overlay" id="' + overlayId + '" style="background:linear-gradient(165deg,'+gPrimary+' 0%,#0a0a0a 70%,#000 100%);flex-direction:column;gap:10px">'
+        // Misty ambient glow
+        + '<div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.08),transparent 65%);animation:atomMist 4s ease-in-out infinite"></div>'
+        // Atom orbit 1 — wide ellipse
+        + '<div style="position:absolute;width:280px;height:120px;border:1px solid rgba(255,255,255,0.08);border-radius:50%;animation:aiSpin 6s linear infinite;transform-origin:center">'
+        + '<div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 10px rgba(255,255,255,0.6);opacity:0.75"></div></div>'
+        // Atom orbit 2 — tilted
+        + '<div style="position:absolute;width:260px;height:110px;border:1px solid rgba(255,255,255,0.06);border-radius:50%;animation:aiSpin 5s linear infinite reverse;transform:rotate(60deg);transform-origin:center">'
+        + '<div style="position:absolute;width:4px;height:4px;background:rgba(255,255,255,0.9);border-radius:50%;bottom:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.5);opacity:0.65"></div></div>'
+        // Atom orbit 3 — steep
+        + '<div style="position:absolute;width:100px;height:240px;border:1px solid rgba(255,255,255,0.05);border-radius:50%;animation:aiSpin 7s linear infinite;transform:rotate(30deg);transform-origin:center">'
+        + '<div style="position:absolute;width:4px;height:4px;background:rgba(255,255,255,0.85);border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.4);opacity:0.55"></div></div>'
+        // Core rings
+        + '<div style="width:50px;height:50px;position:relative;display:flex;align-items:center;justify-content:center;z-index:2">'
+        + '<div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,0.08);border-radius:50%;animation:aiSpin 8s linear infinite"></div>'
+        + '<div style="position:absolute;inset:6px;border:2px solid rgba(255,255,255,0.06);border-top-color:rgba(255,255,255,0.5);border-radius:50%;animation:aiSpin 2.5s linear infinite;box-shadow:0 0 12px rgba(255,255,255,0.06)"></div>'
+        + '<div style="width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,0.6)"></div>'
+        + '</div>'
+        // Badge + text
+        + '<div style="padding:4px 12px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);z-index:2">'
+        + '<span style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6)">AI Image Generation</span>'
+        + '</div>'
+        + '<div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:4px;text-align:center;transition:opacity 0.2s ease;z-index:2" id="imgStatus_'+uid+'">Connecting to AI server...</div>'
+        + '<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;z-index:2">This may take 2\u20133 minutes</div>'
+        + '<style>'
+        + '@keyframes aiSpin{to{transform:rotate(360deg)}}'
+        + '@keyframes atomMist{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:0.7;transform:scale(1.15)}}'
+        + '</style>'
+        + '</div>';
+
+    // Rotating status messages
+    var imgMsgs = ['Connecting to AI server...','Queuing image task...','AI is composing the scene...','Rendering visual elements...','Applying lighting & contrast...','Building composition...','Processing art direction...','Refining image details...','Enhancing resolution...','Applying brand watermark...','Almost ready...'];
+    var imgMsgIdx = 0;
+    var imgMsgInterval = setInterval(function() {
+        imgMsgIdx = (imgMsgIdx + 1) % imgMsgs.length;
+        var el = document.getElementById('imgStatus_'+uid);
+        if (el) { el.style.opacity='0'; setTimeout(function(){ el.textContent=imgMsgs[imgMsgIdx]; el.style.opacity='1'; },200); }
+    }, 4000);
 
     try {
+        const prompt = card.dataset.imagePrompt || contentEl.value;
+
         const formData = new FormData();
         formData.append('csrf_token', csrfToken());
-        formData.append('prompt', contentEl.value);
+        formData.append('prompt', prompt);
 
         const res = await fetch(BASE + '/generator/regenerate-image', {
             method: 'POST',
             body: formData
         });
-        const data = await res.json();
+
+        clearInterval(imgMsgInterval);
+
+        const text = await res.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            throw new Error('The image generation request timed out.');
+        }
         if (!res.ok) throw new Error(data.error || 'Image generation failed');
 
         if (data.image_url) {
+            if (data.image_url.includes('placehold.co') || data.image_url.includes('Image+')) {
+                throw new Error('The AI could not generate this image. The request may have been too complex or the service is busy.');
+            }
             imgWrap.innerHTML = `<img src="${escHtml(data.image_url)}" alt="Post image">`;
             card.dataset.imageUrl = data.image_url;
+            showToast('Image generated!', 'success');
+        } else {
+            throw new Error('No image was returned from the AI service.');
         }
-        showToast('Image regenerated!', 'success');
     } catch (err) {
-        showToast(err.message, 'error');
-        const overlay = imgWrap.querySelector('.img-loading-overlay');
+        clearInterval(imgMsgInterval);
+        // Show error lightbox instead of just a toast
+        var overlay = imgWrap.querySelector('.img-loading-overlay');
         if (overlay) overlay.remove();
+        showImageErrorModal(err.message, function() { regenerateImage(uid); });
     } finally {
         setLoading(btn, false);
     }
@@ -737,7 +1050,9 @@ async function saveDraft(uid, postType, topic, keywords, angle) {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Save failed');
 
-        showToast('Saved as draft!', 'success');
+        // Show lock animation on the card
+        showSaveLockAnimation(card);
+
         btn.innerHTML = '<i class="fas fa-check"></i> Saved';
         btn.classList.add('btn-success');
         btn.classList.remove('btn-primary');
@@ -745,12 +1060,62 @@ async function saveDraft(uid, postType, topic, keywords, angle) {
             btn.innerHTML = '<i class="fas fa-save"></i> Save Draft';
             btn.classList.remove('btn-success');
             btn.classList.add('btn-primary');
-        }, 2000);
+        }, 2500);
     } catch (err) {
         showToast(err.message, 'error');
     } finally {
         setLoading(btn, false);
     }
+}
+
+function showSaveLockAnimation(card) {
+    var primary = '<?= $primaryColor ?>';
+
+    // Create overlay for the image area
+    var imgWrap = card.querySelector('.post-card-image-wrap');
+    var bodyArea = card.querySelector('.post-card-body');
+
+    if (imgWrap) {
+        var imgOverlay = document.createElement('div');
+        imgOverlay.className = 'save-lock-overlay';
+        imgOverlay.style.background = 'linear-gradient(165deg,' + primary + 'dd 0%,rgba(10,10,10,0.85) 100%)';
+        imgOverlay.innerHTML = '<div class="save-lock-icon"><i class="fas fa-lock"></i></div>'
+            + '<div class="save-lock-text">Secured</div>'
+            + '<div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">'
+            + Array.from({length:6}, function(_,i) {
+                return '<div style="position:absolute;left:'+(10+i*16)+'%;width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.5);animation:ptFloat '+(2.5+i%2)+'s ease-in-out infinite;animation-delay:-'+(i*0.3).toFixed(1)+'s;opacity:0"></div>';
+              }).join('')
+            + '</div>';
+        imgWrap.style.position = 'relative';
+        imgWrap.appendChild(imgOverlay);
+    }
+
+    // Create overlay for the body area (staggered 150ms later)
+    if (bodyArea) {
+        setTimeout(function() {
+            var bodyOverlay = document.createElement('div');
+            bodyOverlay.className = 'save-lock-overlay';
+            bodyOverlay.style.background = 'linear-gradient(165deg,' + primary + 'cc 0%,rgba(10,10,10,0.8) 100%)';
+            bodyOverlay.innerHTML = '<div class="save-lock-icon" style="font-size:24px"><i class="fas fa-check-circle"></i></div>'
+                + '<div class="save-lock-text">Draft Saved</div>';
+            bodyArea.style.position = 'relative';
+            bodyArea.appendChild(bodyOverlay);
+        }, 150);
+    }
+
+    // Remove after 1.5s
+    setTimeout(function() {
+        if (imgWrap) {
+            var o = imgWrap.querySelector('.save-lock-overlay');
+            if (o) { o.classList.add('exiting'); setTimeout(function(){ o.remove(); }, 400); }
+        }
+        if (bodyArea) {
+            setTimeout(function() {
+                var o = bodyArea.querySelector('.save-lock-overlay');
+                if (o) { o.classList.add('exiting'); setTimeout(function(){ o.remove(); }, 400); }
+            }, 100);
+        }
+    }, 1500);
 }
 
 function escHtml(str) {
@@ -762,4 +1127,132 @@ function escHtml(str) {
 function escAttr(str) {
     return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+
+function showImageErrorModal(errorMsg, retryCallback) {
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;animation:fadeIn 0.3s ease';
+    overlay.innerHTML = '<div style="background:var(--bg-card);border-radius:20px;max-width:440px;width:90%;padding:32px;box-shadow:0 24px 80px rgba(0,0,0,0.3);animation:slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1)">'
+        + '<div style="text-align:center;margin-bottom:20px">'
+        + '<div style="width:52px;height:52px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><i class="fas fa-exclamation-triangle" style="color:var(--danger);font-size:22px"></i></div>'
+        + '<h3 style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px">Image Generation Failed</h3>'
+        + '<p style="font-size:13px;color:var(--text-secondary);line-height:1.6">' + escHtml(errorMsg) + '</p>'
+        + '</div>'
+        + '<div style="background:var(--bg-input);border-radius:var(--radius-sm);padding:14px;margin-bottom:20px">'
+        + '<div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">What you can do:</div>'
+        + '<div style="font-size:12px;color:var(--text-secondary);line-height:1.6">'
+        + '1. Click <strong>Try Again</strong> to regenerate the image<br>'
+        + '2. The AI service may be busy — wait a moment and retry<br>'
+        + '3. If the issue persists, try simplifying the post content'
+        + '</div></div>'
+        + '<div style="display:flex;gap:10px;justify-content:flex-end">'
+        + '<button class="btn btn-ghost" id="imgErrDismiss">Dismiss</button>'
+        + '<button class="btn btn-primary" id="imgErrRetry"><i class="fas fa-redo" style="margin-right:4px"></i> Try Again</button>'
+        + '</div></div>';
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('#imgErrDismiss').onclick = function() { overlay.remove(); };
+    overlay.querySelector('#imgErrRetry').onclick = function() {
+        overlay.remove();
+        if (retryCallback) retryCallback();
+    };
+}
 </script>
+<style>
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(30px) scale(0.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+
+/* Enticing CTA buttons — periodic glow pulse + shimmer sweep */
+.btn-cta-glow {
+    position: relative;
+    overflow: hidden;
+    animation: ctaBreathing 3s ease-in-out infinite;
+}
+.btn-cta-glow::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -75%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 45%, rgba(255,255,255,0.08) 50%, transparent 55%);
+    animation: ctaSweep 4s ease-in-out infinite;
+    pointer-events: none;
+}
+.btn-cta-glow::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent, rgba(255,255,255,0.1));
+    opacity: 0;
+    animation: ctaEdgeGlow 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+@keyframes ctaBreathing {
+    0%,100% { box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.25); }
+    50% { box-shadow: 0 6px 28px rgba(var(--primary-rgb), 0.45), 0 0 12px rgba(var(--primary-rgb), 0.2); }
+}
+@keyframes ctaSweep {
+    0%,70% { left: -75%; opacity: 0; }
+    75% { opacity: 1; }
+    100% { left: 125%; opacity: 0; }
+}
+@keyframes ctaEdgeGlow {
+    0%,100% { opacity: 0; }
+    50% { opacity: 0.6; }
+}
+.btn-cta-glow:hover {
+    animation: none;
+    box-shadow: 0 6px 28px rgba(var(--primary-rgb), 0.5), 0 0 16px rgba(var(--primary-rgb), 0.3);
+    transform: translateY(-2px);
+}
+
+/* Save Lock Overlay for generator cards */
+.save-lock-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    border-radius: inherit;
+    overflow: hidden;
+    animation: saveLockIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes saveLockIn {
+    0% { opacity:0; transform:scale(0.8); }
+    100% { opacity:1; transform:scale(1); }
+}
+.save-lock-overlay.exiting {
+    animation: saveLockOut 0.4s ease forwards;
+}
+@keyframes saveLockOut {
+    0% { opacity:1; transform:scale(1); }
+    100% { opacity:0; transform:scale(1.05); }
+}
+.save-lock-icon {
+    font-size: 32px;
+    color: #fff;
+    animation: lockBounce 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    animation-delay: 0.15s;
+}
+@keyframes lockBounce {
+    0% { opacity:0; transform:scale(0) rotate(-20deg); }
+    100% { opacity:1; transform:scale(1) rotate(0deg); }
+}
+.save-lock-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 10px;
+    animation: lockTextIn 0.4s ease both;
+    animation-delay: 0.3s;
+}
+@keyframes lockTextIn {
+    from { opacity:0; transform:translateY(8px); }
+    to { opacity:1; transform:translateY(0); }
+}
+</style>

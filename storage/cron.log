@@ -1,0 +1,2255 @@
+[2026-04-07 22:22:35] --- Cron started ---
+[2026-04-07 22:22:35] Found 2 due post(s)
+[2026-04-07 22:22:35] FATAL ERROR: Class "BrandingService" not found
+[2026-04-07 22:22:35] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(59): ZernioService->__construct()
+#1 {main}
+[2026-04-07 22:23:11] --- Cron started ---
+[2026-04-07 22:23:11] Found 2 due post(s)
+[2026-04-07 22:23:11] Processing post #4: Unlocking the Power of AI in Tech Solutions
+[2026-04-07 22:23:11]   Posting to facebook...
+[2026-04-07 22:23:28]   facebook: SUCCESS (zernio_id: 69d567b185526900991cc8ea)
+[2026-04-07 22:23:28]   Post #4 status -> published
+[2026-04-07 22:23:28] Processing post #11: UNLOCK THE POWER OF AUTOMATION!
+[2026-04-07 22:23:28]   Posting to facebook...
+[2026-04-07 22:23:59]   facebook: FAILED (cURL error: Operation timed out after 30012 milliseconds with 0 bytes received)
+[2026-04-07 22:23:59]   Posting to linkedin...
+[2026-04-07 22:24:14]   linkedin: SUCCESS (zernio_id: 69d567e285526900991ccf46)
+[2026-04-07 22:24:14]   Post #11 status -> published
+[2026-04-07 22:24:14] --- Cron finished ---
+[2026-04-07 22:41:12] --- Cron started ---
+[2026-04-07 22:41:12] Found 0 due post(s)
+[2026-04-07 22:41:12] Nothing to process. Exiting.
+[2026-04-07 22:42:10] --- Cron started ---
+[2026-04-07 22:42:10] Found 0 due post(s)
+[2026-04-07 22:42:10] Nothing to process. Exiting.
+[2026-04-07 22:47:10] --- Cron started ---
+[2026-04-07 22:47:10] Found 0 due post(s)
+[2026-04-07 22:47:10] Nothing to process. Exiting.
+[2026-04-07 22:52:10] --- Cron started ---
+[2026-04-07 22:52:10] Found 0 due post(s)
+[2026-04-07 22:52:10] Nothing to process. Exiting.
+[2026-04-07 22:57:10] --- Cron started ---
+[2026-04-07 22:57:10] Found 0 due post(s)
+[2026-04-07 22:57:10] Nothing to process. Exiting.
+[2026-04-07 23:02:10] --- Cron started ---
+[2026-04-07 23:02:10] Found 0 due post(s)
+[2026-04-07 23:02:10] Nothing to process. Exiting.
+[2026-04-07 23:07:10] --- Cron started ---
+[2026-04-07 23:07:10] Found 0 due post(s)
+[2026-04-07 23:07:10] Nothing to process. Exiting.
+[2026-04-07 23:12:10] --- Cron started ---
+[2026-04-07 23:12:10] Found 0 due post(s)
+[2026-04-07 23:12:10] Nothing to process. Exiting.
+[2026-04-07 23:17:10] --- Cron started ---
+[2026-04-07 23:17:10] Found 3 due post(s)
+[2026-04-07 23:17:10] Processing post #12: Unlocking the Power of User Insights
+[2026-04-07 23:17:10]   Posting to facebook...
+[2026-04-07 23:17:24]   facebook: SUCCESS (zernio_id: 69d5745879833851f5751941)
+[2026-04-07 23:17:24]   Posting to linkedin...
+[2026-04-07 23:17:39]   linkedin: SUCCESS (zernio_id: 69d5746679833851f5751a4b)
+[2026-04-07 23:17:39]   Post #12 status -> published
+[2026-04-07 23:17:39] Processing post #13: Transform Your Workflow with SolidTech!
+[2026-04-07 23:17:39]   Posting to facebook...
+[2026-04-07 23:17:50]   facebook: SUCCESS (zernio_id: 69d5747579833851f5751c0a)
+[2026-04-07 23:17:50]   Posting to linkedin...
+[2026-04-07 23:18:00]   linkedin: SUCCESS (zernio_id: 69d57480862857c798111707)
+[2026-04-07 23:18:00]   Post #13 status -> published
+[2026-04-07 23:18:00] Processing post #14: Tell Us Your Tech Challenge!
+[2026-04-07 23:18:00]   Posting to linkedin...
+[2026-04-07 23:18:10]   linkedin: SUCCESS (zernio_id: 69d5748979833851f5751df0)
+[2026-04-07 23:18:10]   Post #14 status -> published
+[2026-04-07 23:18:10] --- Cron finished ---
+[2026-04-07 23:22:10] --- Cron started ---
+[2026-04-07 23:22:10] Found 0 due post(s)
+[2026-04-07 23:22:10] Nothing to process. Exiting.
+[2026-04-07 23:27:11] --- Cron started ---
+[2026-04-07 23:27:11] Found 0 due post(s)
+[2026-04-07 23:27:11] Nothing to process. Exiting.
+[2026-04-07 23:32:09] --- Cron started ---
+[2026-04-07 23:32:09] Found 0 due post(s)
+[2026-04-07 23:32:09] Nothing to process. Exiting.
+[2026-04-07 23:37:09] --- Cron started ---
+[2026-04-07 23:37:09] Found 0 due post(s)
+[2026-04-07 23:37:09] Nothing to process. Exiting.
+[2026-04-07 23:42:09] --- Cron started ---
+[2026-04-07 23:42:09] Found 0 due post(s)
+[2026-04-07 23:42:09] Nothing to process. Exiting.
+[2026-04-07 23:47:10] --- Cron started ---
+[2026-04-07 23:47:10] Found 0 due post(s)
+[2026-04-07 23:47:10] Nothing to process. Exiting.
+[2026-04-07 23:52:10] --- Cron started ---
+[2026-04-07 23:52:10] Found 0 due post(s)
+[2026-04-07 23:52:10] Nothing to process. Exiting.
+[2026-04-07 23:57:09] --- Cron started ---
+[2026-04-07 23:57:09] Found 0 due post(s)
+[2026-04-07 23:57:09] Nothing to process. Exiting.
+[2026-04-08 00:02:10] --- Cron started ---
+[2026-04-08 00:02:10] Found 0 due post(s)
+[2026-04-08 00:02:10] Nothing to process. Exiting.
+[2026-04-08 00:07:09] --- Cron started ---
+[2026-04-08 00:07:09] Found 0 due post(s)
+[2026-04-08 00:07:09] Nothing to process. Exiting.
+[2026-04-08 00:12:09] --- Cron started ---
+[2026-04-08 00:12:09] Found 0 due post(s)
+[2026-04-08 00:12:09] Nothing to process. Exiting.
+[2026-04-08 00:17:10] --- Cron started ---
+[2026-04-08 00:17:10] Found 0 due post(s)
+[2026-04-08 00:17:10] Nothing to process. Exiting.
+[2026-04-08 00:22:10] --- Cron started ---
+[2026-04-08 00:22:10] Found 0 due post(s)
+[2026-04-08 00:22:10] Nothing to process. Exiting.
+[2026-04-08 00:27:10] --- Cron started ---
+[2026-04-08 00:27:10] Found 0 due post(s)
+[2026-04-08 00:27:10] Nothing to process. Exiting.
+[2026-04-08 00:32:10] --- Cron started ---
+[2026-04-08 00:32:10] Found 0 due post(s)
+[2026-04-08 00:32:10] Nothing to process. Exiting.
+[2026-04-08 00:37:09] --- Cron started ---
+[2026-04-08 00:37:09] Found 0 due post(s)
+[2026-04-08 00:37:09] Nothing to process. Exiting.
+[2026-04-08 00:42:09] --- Cron started ---
+[2026-04-08 00:42:09] Found 0 due post(s)
+[2026-04-08 00:42:09] Nothing to process. Exiting.
+[2026-04-08 00:47:10] --- Cron started ---
+[2026-04-08 00:47:10] Found 0 due post(s)
+[2026-04-08 00:47:10] Nothing to process. Exiting.
+[2026-04-08 00:52:09] --- Cron started ---
+[2026-04-08 00:52:09] Found 0 due post(s)
+[2026-04-08 00:52:09] Nothing to process. Exiting.
+[2026-04-08 00:57:10] --- Cron started ---
+[2026-04-08 00:57:10] Found 0 due post(s)
+[2026-04-08 00:57:10] Nothing to process. Exiting.
+[2026-04-08 01:02:10] --- Cron started ---
+[2026-04-08 01:02:10] Found 0 due post(s)
+[2026-04-08 01:02:10] Nothing to process. Exiting.
+[2026-04-08 01:07:10] --- Cron started ---
+[2026-04-08 01:07:10] Found 0 due post(s)
+[2026-04-08 01:07:10] Nothing to process. Exiting.
+[2026-04-08 01:12:10] --- Cron started ---
+[2026-04-08 01:12:10] Found 0 due post(s)
+[2026-04-08 01:12:10] Nothing to process. Exiting.
+[2026-04-08 01:17:10] --- Cron started ---
+[2026-04-08 01:17:10] Found 0 due post(s)
+[2026-04-08 01:17:10] Nothing to process. Exiting.
+[2026-04-08 01:22:10] --- Cron started ---
+[2026-04-08 01:22:10] Found 0 due post(s)
+[2026-04-08 01:22:10] Nothing to process. Exiting.
+[2026-04-08 15:57:33] --- Cron started ---
+[2026-04-08 15:57:33] Found 0 due post(s)
+[2026-04-08 15:57:33] Nothing to process. Exiting.
+[2026-04-08 16:02:11] --- Cron started ---
+[2026-04-08 16:02:11] Found 0 due post(s)
+[2026-04-08 16:02:11] Nothing to process. Exiting.
+[2026-04-08 16:12:10] --- Cron started ---
+[2026-04-08 16:12:10] Found 0 due post(s)
+[2026-04-08 16:12:10] Nothing to process. Exiting.
+[2026-04-08 16:17:11] --- Cron started ---
+[2026-04-08 16:17:11] Found 0 due post(s)
+[2026-04-08 16:17:11] Nothing to process. Exiting.
+[2026-04-08 16:22:10] --- Cron started ---
+[2026-04-08 16:22:10] Found 0 due post(s)
+[2026-04-08 16:22:10] Nothing to process. Exiting.
+[2026-04-08 16:27:10] --- Cron started ---
+[2026-04-08 16:27:10] Found 0 due post(s)
+[2026-04-08 16:27:10] Nothing to process. Exiting.
+[2026-04-08 16:32:10] --- Cron started ---
+[2026-04-08 16:32:10] Found 0 due post(s)
+[2026-04-08 16:32:10] Nothing to process. Exiting.
+[2026-04-08 16:37:10] --- Cron started ---
+[2026-04-08 16:37:10] Found 0 due post(s)
+[2026-04-08 16:37:10] Nothing to process. Exiting.
+[2026-04-08 16:42:10] --- Cron started ---
+[2026-04-08 16:42:10] Found 0 due post(s)
+[2026-04-08 16:42:10] Nothing to process. Exiting.
+[2026-04-08 16:47:10] --- Cron started ---
+[2026-04-08 16:47:10] Found 0 due post(s)
+[2026-04-08 16:47:10] Nothing to process. Exiting.
+[2026-04-08 16:52:10] --- Cron started ---
+[2026-04-08 16:52:10] Found 0 due post(s)
+[2026-04-08 16:52:10] Nothing to process. Exiting.
+[2026-04-08 16:57:10] --- Cron started ---
+[2026-04-08 16:57:10] Found 0 due post(s)
+[2026-04-08 16:57:10] Nothing to process. Exiting.
+[2026-04-08 17:02:10] --- Cron started ---
+[2026-04-08 17:02:10] Found 0 due post(s)
+[2026-04-08 17:02:10] Nothing to process. Exiting.
+[2026-04-08 17:07:10] --- Cron started ---
+[2026-04-08 17:07:10] Found 0 due post(s)
+[2026-04-08 17:07:10] Nothing to process. Exiting.
+[2026-04-08 17:12:11] --- Cron started ---
+[2026-04-08 17:12:11] Found 3 due post(s)
+[2026-04-08 17:12:11] Processing post #15: Unlocking the Potential of Quantum Computing
+[2026-04-08 17:12:11]   Posting to facebook...
+[2026-04-08 17:12:38]   facebook: SUCCESS (zernio_id: 69d6704e0bc847b5e5a2ae9b)
+[2026-04-08 17:12:38]   Posting to linkedin...
+[2026-04-08 17:12:48]   linkedin: SUCCESS (zernio_id: 69d67068622c48c4922330f4)
+[2026-04-08 17:12:48]   Post #15 status -> published
+[2026-04-08 17:12:48] Processing post #17: Unlocking the Potential of Quantum Computing
+[2026-04-08 17:12:48]   Posting to facebook...
+[2026-04-08 17:12:51]   facebook: FAILED (This exact content is already scheduled, publishing, or was posted to this account within the last 24 hours.)
+[2026-04-08 17:12:51]   Post #17 status -> failed
+[2026-04-08 17:12:51] Processing post #18: Elevate Your Tech Game with Our Newest Offer!
+[2026-04-08 17:12:51]   Posting to linkedin...
+[2026-04-08 17:13:01]   linkedin: SUCCESS (zernio_id: 69d67075622c48c4922331a2)
+[2026-04-08 17:13:01]   Post #18 status -> published
+[2026-04-08 17:13:01] --- Cron finished ---
+[2026-04-08 17:17:10] --- Cron started ---
+[2026-04-08 17:17:10] Found 0 due post(s)
+[2026-04-08 17:17:10] Nothing to process. Exiting.
+[2026-04-08 17:22:11] --- Cron started ---
+[2026-04-08 17:22:11] Found 0 due post(s)
+[2026-04-08 17:22:11] Nothing to process. Exiting.
+[2026-04-08 17:27:10] --- Cron started ---
+[2026-04-08 17:27:10] Found 0 due post(s)
+[2026-04-08 17:27:10] Nothing to process. Exiting.
+[2026-04-08 17:32:10] --- Cron started ---
+[2026-04-08 17:32:10] Found 0 due post(s)
+[2026-04-08 17:32:10] Nothing to process. Exiting.
+[2026-04-08 17:37:10] --- Cron started ---
+[2026-04-08 17:37:10] Found 0 due post(s)
+[2026-04-08 17:37:10] Nothing to process. Exiting.
+[2026-04-08 17:42:10] --- Cron started ---
+[2026-04-08 17:42:10] Found 0 due post(s)
+[2026-04-08 17:42:10] Nothing to process. Exiting.
+[2026-04-08 17:47:11] --- Cron started ---
+[2026-04-08 17:47:11] Found 0 due post(s)
+[2026-04-08 17:47:11] Nothing to process. Exiting.
+[2026-04-08 17:52:10] --- Cron started ---
+[2026-04-08 17:52:10] Found 0 due post(s)
+[2026-04-08 17:52:10] Nothing to process. Exiting.
+[2026-04-08 17:57:10] --- Cron started ---
+[2026-04-08 17:57:10] Found 0 due post(s)
+[2026-04-08 17:57:10] Nothing to process. Exiting.
+[2026-04-08 18:02:10] --- Cron started ---
+[2026-04-08 18:02:10] Found 0 due post(s)
+[2026-04-08 18:02:10] Nothing to process. Exiting.
+[2026-04-08 18:07:10] --- Cron started ---
+[2026-04-08 18:07:10] Found 0 due post(s)
+[2026-04-08 18:07:10] Nothing to process. Exiting.
+[2026-04-08 18:12:10] --- Cron started ---
+[2026-04-08 18:12:10] Found 0 due post(s)
+[2026-04-08 18:12:10] Nothing to process. Exiting.
+[2026-04-08 18:17:10] --- Cron started ---
+[2026-04-08 18:17:10] Found 0 due post(s)
+[2026-04-08 18:17:10] Nothing to process. Exiting.
+[2026-04-08 18:22:10] --- Cron started ---
+[2026-04-08 18:22:10] Found 1 due post(s)
+[2026-04-08 18:22:10] Processing post #19: Your Gateway to Modern Tech Solutions
+[2026-04-08 18:22:10]   Posting to facebook...
+[2026-04-08 18:22:24]   facebook: SUCCESS (zernio_id: 69d680b4df6ead8d61e88505)
+[2026-04-08 18:22:24]   Posting to linkedin...
+[2026-04-08 18:22:34]   linkedin: SUCCESS (zernio_id: 69d680c2b38a2231e1b12a35)
+[2026-04-08 18:22:34]   Post #19 status -> published
+[2026-04-08 18:22:34] --- Cron finished ---
+[2026-04-08 18:27:10] --- Cron started ---
+[2026-04-08 18:27:10] Found 0 due post(s)
+[2026-04-08 18:27:10] Nothing to process. Exiting.
+[2026-04-08 18:32:10] --- Cron started ---
+[2026-04-08 18:32:10] Found 0 due post(s)
+[2026-04-08 18:32:10] Nothing to process. Exiting.
+[2026-04-08 18:37:10] --- Cron started ---
+[2026-04-08 18:37:10] Found 0 due post(s)
+[2026-04-08 18:37:10] Nothing to process. Exiting.
+[2026-04-08 18:42:10] --- Cron started ---
+[2026-04-08 18:42:10] Found 0 due post(s)
+[2026-04-08 18:42:10] Nothing to process. Exiting.
+[2026-04-08 18:47:10] --- Cron started ---
+[2026-04-08 18:47:10] Found 0 due post(s)
+[2026-04-08 18:47:10] Nothing to process. Exiting.
+[2026-04-08 18:52:11] --- Cron started ---
+[2026-04-08 18:52:11] Found 0 due post(s)
+[2026-04-08 18:52:11] Nothing to process. Exiting.
+[2026-04-08 18:57:10] --- Cron started ---
+[2026-04-08 18:57:10] Found 0 due post(s)
+[2026-04-08 18:57:10] Nothing to process. Exiting.
+[2026-04-08 19:02:10] --- Cron started ---
+[2026-04-08 19:02:10] Found 0 due post(s)
+[2026-04-08 19:02:10] Nothing to process. Exiting.
+[2026-04-08 19:07:10] --- Cron started ---
+[2026-04-08 19:07:10] Found 0 due post(s)
+[2026-04-08 19:07:10] Nothing to process. Exiting.
+[2026-04-08 19:12:10] --- Cron started ---
+[2026-04-08 19:12:10] Found 0 due post(s)
+[2026-04-08 19:12:10] Nothing to process. Exiting.
+[2026-04-08 19:17:10] --- Cron started ---
+[2026-04-08 19:17:10] Found 0 due post(s)
+[2026-04-08 19:17:10] Nothing to process. Exiting.
+[2026-04-08 19:22:10] --- Cron started ---
+[2026-04-08 19:22:10] Found 0 due post(s)
+[2026-04-08 19:22:10] Nothing to process. Exiting.
+[2026-04-08 19:27:09] --- Cron started ---
+[2026-04-08 19:27:09] Found 0 due post(s)
+[2026-04-08 19:27:09] Nothing to process. Exiting.
+[2026-04-08 19:32:10] --- Cron started ---
+[2026-04-08 19:32:10] Found 0 due post(s)
+[2026-04-08 19:32:10] Nothing to process. Exiting.
+[2026-04-08 19:37:10] --- Cron started ---
+[2026-04-08 19:37:10] Found 0 due post(s)
+[2026-04-08 19:37:10] Nothing to process. Exiting.
+[2026-04-08 19:42:10] --- Cron started ---
+[2026-04-08 19:42:10] Found 0 due post(s)
+[2026-04-08 19:42:10] Nothing to process. Exiting.
+[2026-04-08 19:47:10] --- Cron started ---
+[2026-04-08 19:47:10] Found 0 due post(s)
+[2026-04-08 19:47:10] Nothing to process. Exiting.
+[2026-04-08 19:52:10] --- Cron started ---
+[2026-04-08 19:52:10] Found 0 due post(s)
+[2026-04-08 19:52:10] Nothing to process. Exiting.
+[2026-04-08 19:57:10] --- Cron started ---
+[2026-04-08 19:57:10] Found 0 due post(s)
+[2026-04-08 19:57:10] Nothing to process. Exiting.
+[2026-04-08 20:02:10] --- Cron started ---
+[2026-04-08 20:02:10] Found 0 due post(s)
+[2026-04-08 20:02:10] Nothing to process. Exiting.
+[2026-04-08 20:07:10] --- Cron started ---
+[2026-04-08 20:07:10] Found 0 due post(s)
+[2026-04-08 20:07:10] Nothing to process. Exiting.
+[2026-04-08 20:12:10] --- Cron started ---
+[2026-04-08 20:12:10] Found 0 due post(s)
+[2026-04-08 20:12:10] Nothing to process. Exiting.
+[2026-04-08 20:17:10] --- Cron started ---
+[2026-04-08 20:17:10] Found 0 due post(s)
+[2026-04-08 20:17:10] Nothing to process. Exiting.
+[2026-04-08 20:22:09] --- Cron started ---
+[2026-04-08 20:22:09] Found 0 due post(s)
+[2026-04-08 20:22:09] Nothing to process. Exiting.
+[2026-04-08 20:27:10] --- Cron started ---
+[2026-04-08 20:27:10] Found 0 due post(s)
+[2026-04-08 20:27:10] Nothing to process. Exiting.
+[2026-04-08 20:32:10] --- Cron started ---
+[2026-04-08 20:32:10] Found 0 due post(s)
+[2026-04-08 20:32:10] Nothing to process. Exiting.
+[2026-04-08 20:37:10] --- Cron started ---
+[2026-04-08 20:37:10] Found 0 due post(s)
+[2026-04-08 20:37:10] Nothing to process. Exiting.
+[2026-04-08 21:14:53] --- Cron started ---
+[2026-04-08 21:14:53] Found 0 due post(s)
+[2026-04-08 21:14:53] Nothing to process. Exiting.
+[2026-04-08 21:17:10] --- Cron started ---
+[2026-04-08 21:17:10] Found 0 due post(s)
+[2026-04-08 21:17:10] Nothing to process. Exiting.
+[2026-04-08 21:22:12] --- Cron started ---
+[2026-04-08 21:22:12] Found 0 due post(s)
+[2026-04-08 21:22:12] Nothing to process. Exiting.
+[2026-04-08 21:27:10] --- Cron started ---
+[2026-04-08 21:27:10] Found 0 due post(s)
+[2026-04-08 21:27:10] Nothing to process. Exiting.
+[2026-04-08 21:32:11] --- Cron started ---
+[2026-04-08 21:32:11] Found 0 due post(s)
+[2026-04-08 21:32:11] Nothing to process. Exiting.
+[2026-04-08 21:37:10] --- Cron started ---
+[2026-04-08 21:37:10] Found 0 due post(s)
+[2026-04-08 21:37:10] Nothing to process. Exiting.
+[2026-04-08 21:42:10] --- Cron started ---
+[2026-04-08 21:42:10] Found 0 due post(s)
+[2026-04-08 21:42:10] Nothing to process. Exiting.
+[2026-04-08 21:47:10] --- Cron started ---
+[2026-04-08 21:47:10] Found 0 due post(s)
+[2026-04-08 21:47:10] Nothing to process. Exiting.
+[2026-04-08 21:52:10] --- Cron started ---
+[2026-04-08 21:52:10] Found 0 due post(s)
+[2026-04-08 21:52:10] Nothing to process. Exiting.
+[2026-04-08 21:57:10] --- Cron started ---
+[2026-04-08 21:57:10] Found 0 due post(s)
+[2026-04-08 21:57:10] Nothing to process. Exiting.
+[2026-04-08 22:02:11] --- Cron started ---
+[2026-04-08 22:02:11] Found 0 due post(s)
+[2026-04-08 22:02:11] Nothing to process. Exiting.
+[2026-04-08 22:07:10] --- Cron started ---
+[2026-04-08 22:07:10] Found 0 due post(s)
+[2026-04-08 22:07:10] Nothing to process. Exiting.
+[2026-04-08 22:12:11] --- Cron started ---
+[2026-04-08 22:12:11] Found 0 due post(s)
+[2026-04-08 22:12:11] Nothing to process. Exiting.
+[2026-04-08 22:17:11] --- Cron started ---
+[2026-04-08 22:17:11] Found 0 due post(s)
+[2026-04-08 22:17:11] Nothing to process. Exiting.
+[2026-04-08 22:22:10] --- Cron started ---
+[2026-04-08 22:22:10] Found 0 due post(s)
+[2026-04-08 22:22:10] Nothing to process. Exiting.
+[2026-04-08 22:27:10] --- Cron started ---
+[2026-04-08 22:27:10] Found 0 due post(s)
+[2026-04-08 22:27:10] Nothing to process. Exiting.
+[2026-04-08 22:32:10] --- Cron started ---
+[2026-04-08 22:32:10] Found 0 due post(s)
+[2026-04-08 22:32:10] Nothing to process. Exiting.
+[2026-04-08 22:37:10] --- Cron started ---
+[2026-04-08 22:37:10] Found 0 due post(s)
+[2026-04-08 22:37:10] Nothing to process. Exiting.
+[2026-04-08 22:42:11] --- Cron started ---
+[2026-04-08 22:42:11] Found 0 due post(s)
+[2026-04-08 22:42:11] Nothing to process. Exiting.
+[2026-04-08 22:47:10] --- Cron started ---
+[2026-04-08 22:47:10] Found 0 due post(s)
+[2026-04-08 22:47:10] Nothing to process. Exiting.
+[2026-04-08 22:52:10] --- Cron started ---
+[2026-04-08 22:52:10] Found 0 due post(s)
+[2026-04-08 22:52:10] Nothing to process. Exiting.
+[2026-04-08 22:57:10] --- Cron started ---
+[2026-04-08 22:57:10] Found 0 due post(s)
+[2026-04-08 22:57:10] Nothing to process. Exiting.
+[2026-04-08 23:02:10] --- Cron started ---
+[2026-04-08 23:02:10] Found 0 due post(s)
+[2026-04-08 23:02:10] Nothing to process. Exiting.
+[2026-04-08 23:07:10] --- Cron started ---
+[2026-04-08 23:07:10] Found 0 due post(s)
+[2026-04-08 23:07:10] Nothing to process. Exiting.
+[2026-04-08 23:12:10] --- Cron started ---
+[2026-04-08 23:12:10] Found 0 due post(s)
+[2026-04-08 23:12:10] Nothing to process. Exiting.
+[2026-04-08 23:17:11] --- Cron started ---
+[2026-04-08 23:17:11] Found 0 due post(s)
+[2026-04-08 23:17:11] Nothing to process. Exiting.
+[2026-04-08 23:22:10] --- Cron started ---
+[2026-04-08 23:22:10] Found 0 due post(s)
+[2026-04-08 23:22:10] Nothing to process. Exiting.
+[2026-04-08 23:27:10] --- Cron started ---
+[2026-04-08 23:27:10] Found 0 due post(s)
+[2026-04-08 23:27:10] Nothing to process. Exiting.
+[2026-04-08 23:32:10] --- Cron started ---
+[2026-04-08 23:32:10] Found 0 due post(s)
+[2026-04-08 23:32:10] Nothing to process. Exiting.
+[2026-04-08 23:37:10] --- Cron started ---
+[2026-04-08 23:37:11] Found 0 due post(s)
+[2026-04-08 23:37:11] Nothing to process. Exiting.
+[2026-04-08 23:42:10] --- Cron started ---
+[2026-04-08 23:42:10] Found 0 due post(s)
+[2026-04-08 23:42:10] Nothing to process. Exiting.
+[2026-04-08 23:47:11] --- Cron started ---
+[2026-04-08 23:47:11] Found 0 due post(s)
+[2026-04-08 23:47:11] Nothing to process. Exiting.
+[2026-04-08 23:52:10] --- Cron started ---
+[2026-04-08 23:52:10] Found 0 due post(s)
+[2026-04-08 23:52:10] Nothing to process. Exiting.
+[2026-04-08 23:57:10] --- Cron started ---
+[2026-04-08 23:57:10] Found 0 due post(s)
+[2026-04-08 23:57:10] Nothing to process. Exiting.
+[2026-04-09 00:06:17] --- Cron started ---
+[2026-04-09 00:06:18] Found 0 due post(s)
+[2026-04-09 00:06:18] Nothing to process. Exiting.
+[2026-04-09 00:07:10] --- Cron started ---
+[2026-04-09 00:07:10] Found 0 due post(s)
+[2026-04-09 00:07:10] Nothing to process. Exiting.
+[2026-04-09 15:49:08] --- Cron started ---
+[2026-04-09 15:49:09] Found 0 due post(s)
+[2026-04-09 15:49:09] Nothing to process. Exiting.
+[2026-04-09 15:52:11] --- Cron started ---
+[2026-04-09 15:52:11] Found 0 due post(s)
+[2026-04-09 15:52:11] Nothing to process. Exiting.
+[2026-04-09 15:57:09] --- Cron started ---
+[2026-04-09 15:57:09] Found 0 due post(s)
+[2026-04-09 15:57:09] Nothing to process. Exiting.
+[2026-04-09 16:02:10] --- Cron started ---
+[2026-04-09 16:02:10] Found 0 due post(s)
+[2026-04-09 16:02:10] Nothing to process. Exiting.
+[2026-04-09 16:07:10] --- Cron started ---
+[2026-04-09 16:07:10] Found 0 due post(s)
+[2026-04-09 16:07:10] Nothing to process. Exiting.
+[2026-04-09 16:12:10] --- Cron started ---
+[2026-04-09 16:12:10] Found 0 due post(s)
+[2026-04-09 16:12:10] Nothing to process. Exiting.
+[2026-04-09 16:17:10] --- Cron started ---
+[2026-04-09 16:17:10] Found 0 due post(s)
+[2026-04-09 16:17:10] Nothing to process. Exiting.
+[2026-04-09 16:22:10] --- Cron started ---
+[2026-04-09 16:22:10] Found 0 due post(s)
+[2026-04-09 16:22:10] Nothing to process. Exiting.
+[2026-04-09 16:27:10] --- Cron started ---
+[2026-04-09 16:27:10] Found 0 due post(s)
+[2026-04-09 16:27:10] Nothing to process. Exiting.
+[2026-04-09 16:32:10] --- Cron started ---
+[2026-04-09 16:32:10] Found 0 due post(s)
+[2026-04-09 16:32:10] Nothing to process. Exiting.
+[2026-04-09 16:37:10] --- Cron started ---
+[2026-04-09 16:37:10] Found 0 due post(s)
+[2026-04-09 16:37:10] Nothing to process. Exiting.
+[2026-04-09 16:42:10] --- Cron started ---
+[2026-04-09 16:42:10] Found 0 due post(s)
+[2026-04-09 16:42:10] Nothing to process. Exiting.
+[2026-04-09 16:47:10] --- Cron started ---
+[2026-04-09 16:47:10] Found 0 due post(s)
+[2026-04-09 16:47:10] Nothing to process. Exiting.
+[2026-04-09 16:52:10] --- Cron started ---
+[2026-04-09 16:52:10] Found 0 due post(s)
+[2026-04-09 16:52:10] Nothing to process. Exiting.
+[2026-04-09 16:57:09] --- Cron started ---
+[2026-04-09 16:57:09] Found 0 due post(s)
+[2026-04-09 16:57:09] Nothing to process. Exiting.
+[2026-04-09 17:02:10] --- Cron started ---
+[2026-04-09 17:02:10] Found 0 due post(s)
+[2026-04-09 17:02:10] Nothing to process. Exiting.
+[2026-04-09 17:07:10] --- Cron started ---
+[2026-04-09 17:07:10] Found 0 due post(s)
+[2026-04-09 17:07:10] Nothing to process. Exiting.
+[2026-04-09 17:14:52] --- Cron started ---
+[2026-04-09 17:14:52] Found 0 due post(s)
+[2026-04-09 17:14:52] Nothing to process. Exiting.
+[2026-04-09 17:17:10] --- Cron started ---
+[2026-04-09 17:17:10] Found 0 due post(s)
+[2026-04-09 17:17:10] Nothing to process. Exiting.
+[2026-04-09 17:22:13] --- Cron started ---
+[2026-04-09 17:22:13] Found 0 due post(s)
+[2026-04-09 17:22:13] Nothing to process. Exiting.
+[2026-04-09 17:27:10] --- Cron started ---
+[2026-04-09 17:27:10] Found 0 due post(s)
+[2026-04-09 17:27:10] Nothing to process. Exiting.
+[2026-04-09 17:42:56] --- Cron started ---
+[2026-04-09 17:42:56] Found 0 due post(s)
+[2026-04-09 17:42:56] Nothing to process. Exiting.
+[2026-04-09 17:47:11] --- Cron started ---
+[2026-04-09 17:47:11] Found 0 due post(s)
+[2026-04-09 17:47:11] Nothing to process. Exiting.
+[2026-04-09 21:12:13] --- Cron started ---
+[2026-04-09 21:12:17] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:12:17] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 21:17:12] --- Cron started ---
+[2026-04-09 21:17:17] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:17:17] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 21:22:10] --- Cron started ---
+[2026-04-09 21:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 21:27:10] --- Cron started ---
+[2026-04-09 21:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 21:32:11] --- Cron started ---
+[2026-04-09 21:32:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:32:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 21:37:10] --- Cron started ---
+[2026-04-09 21:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 21:42:10] --- Cron started ---
+[2026-04-09 21:42:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:42:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 21:47:11] --- Cron started ---
+[2026-04-09 21:47:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:47:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 21:52:10] --- Cron started ---
+[2026-04-09 21:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 21:57:10] --- Cron started ---
+[2026-04-09 21:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 21:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:02:10] --- Cron started ---
+[2026-04-09 22:02:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:02:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:07:10] --- Cron started ---
+[2026-04-09 22:07:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:07:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:12:10] --- Cron started ---
+[2026-04-09 22:12:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:12:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:17:11] --- Cron started ---
+[2026-04-09 22:17:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:17:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:22:10] --- Cron started ---
+[2026-04-09 22:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:27:10] --- Cron started ---
+[2026-04-09 22:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:32:10] --- Cron started ---
+[2026-04-09 22:32:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:32:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:37:10] --- Cron started ---
+[2026-04-09 22:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:42:10] --- Cron started ---
+[2026-04-09 22:42:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:42:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:47:10] --- Cron started ---
+[2026-04-09 22:47:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:47:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:52:10] --- Cron started ---
+[2026-04-09 22:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 22:57:10] --- Cron started ---
+[2026-04-09 22:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 22:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:02:10] --- Cron started ---
+[2026-04-09 23:02:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:02:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:07:10] --- Cron started ---
+[2026-04-09 23:07:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:07:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:12:10] --- Cron started ---
+[2026-04-09 23:12:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:12:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:17:11] --- Cron started ---
+[2026-04-09 23:17:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:17:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:22:10] --- Cron started ---
+[2026-04-09 23:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:27:10] --- Cron started ---
+[2026-04-09 23:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:32:11] --- Cron started ---
+[2026-04-09 23:32:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:32:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:37:10] --- Cron started ---
+[2026-04-09 23:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:42:10] --- Cron started ---
+[2026-04-09 23:42:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:42:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:47:10] --- Cron started ---
+[2026-04-09 23:47:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:47:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:52:10] --- Cron started ---
+[2026-04-09 23:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-09 23:57:11] --- Cron started ---
+[2026-04-09 23:57:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-09 23:57:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 00:02:10] --- Cron started ---
+[2026-04-10 00:02:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 00:02:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 00:07:10] --- Cron started ---
+[2026-04-10 00:07:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 00:07:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 15:46:45] --- Cron started ---
+[2026-04-10 15:46:49] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 15:46:49] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 15:47:15] --- Cron started ---
+[2026-04-10 15:47:20] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 15:47:20] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:05:06] --- Cron started ---
+[2026-04-10 16:05:11] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:05:11] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:07:10] --- Cron started ---
+[2026-04-10 16:07:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:07:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:12:10] --- Cron started ---
+[2026-04-10 16:12:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:12:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:17:10] --- Cron started ---
+[2026-04-10 16:17:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:17:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:22:10] --- Cron started ---
+[2026-04-10 16:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:27:10] --- Cron started ---
+[2026-04-10 16:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:32:11] --- Cron started ---
+[2026-04-10 16:32:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:32:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:37:10] --- Cron started ---
+[2026-04-10 16:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:42:11] --- Cron started ---
+[2026-04-10 16:42:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:42:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:47:11] --- Cron started ---
+[2026-04-10 16:47:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:47:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:52:10] --- Cron started ---
+[2026-04-10 16:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 16:57:10] --- Cron started ---
+[2026-04-10 16:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 16:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:02:10] --- Cron started ---
+[2026-04-10 17:02:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:02:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:07:10] --- Cron started ---
+[2026-04-10 17:07:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:07:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:12:10] --- Cron started ---
+[2026-04-10 17:12:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:12:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:17:11] --- Cron started ---
+[2026-04-10 17:17:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:17:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:22:10] --- Cron started ---
+[2026-04-10 17:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:27:10] --- Cron started ---
+[2026-04-10 17:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:32:10] --- Cron started ---
+[2026-04-10 17:32:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:32:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:37:10] --- Cron started ---
+[2026-04-10 17:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:42:11] --- Cron started ---
+[2026-04-10 17:42:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:42:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:47:11] --- Cron started ---
+[2026-04-10 17:47:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:47:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:52:10] --- Cron started ---
+[2026-04-10 17:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 17:57:10] --- Cron started ---
+[2026-04-10 17:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 17:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:02:10] --- Cron started ---
+[2026-04-10 18:02:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:02:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:07:11] --- Cron started ---
+[2026-04-10 18:07:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:07:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:12:10] --- Cron started ---
+[2026-04-10 18:12:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:12:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:17:10] --- Cron started ---
+[2026-04-10 18:17:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:17:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:22:10] --- Cron started ---
+[2026-04-10 18:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:27:10] --- Cron started ---
+[2026-04-10 18:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:32:11] --- Cron started ---
+[2026-04-10 18:32:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:32:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:37:10] --- Cron started ---
+[2026-04-10 18:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:42:11] --- Cron started ---
+[2026-04-10 18:42:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:42:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:47:10] --- Cron started ---
+[2026-04-10 18:47:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:47:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:52:10] --- Cron started ---
+[2026-04-10 18:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 18:57:10] --- Cron started ---
+[2026-04-10 18:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 18:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:02:11] --- Cron started ---
+[2026-04-10 19:02:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:02:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:07:10] --- Cron started ---
+[2026-04-10 19:07:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:07:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:12:11] --- Cron started ---
+[2026-04-10 19:12:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:12:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:17:10] --- Cron started ---
+[2026-04-10 19:17:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:17:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:22:10] --- Cron started ---
+[2026-04-10 19:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:27:10] --- Cron started ---
+[2026-04-10 19:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:32:11] --- Cron started ---
+[2026-04-10 19:32:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:32:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:37:14] --- Cron started ---
+[2026-04-10 19:37:18] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:37:18] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:42:10] --- Cron started ---
+[2026-04-10 19:42:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:42:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:47:11] --- Cron started ---
+[2026-04-10 19:47:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:47:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 19:52:10] --- Cron started ---
+[2026-04-10 19:57:10] --- Cron started ---
+[2026-04-10 19:57:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 19:57:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:02:11] --- Cron started ---
+[2026-04-10 20:02:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:02:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:07:11] --- Cron started ---
+[2026-04-10 20:07:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:07:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:12:10] --- Cron started ---
+[2026-04-10 20:12:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:12:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:17:11] --- Cron started ---
+[2026-04-10 20:17:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:17:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:22:10] --- Cron started ---
+[2026-04-10 20:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:27:10] --- Cron started ---
+[2026-04-10 20:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:32:10] --- Cron started ---
+[2026-04-10 20:32:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:32:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:37:10] --- Cron started ---
+[2026-04-10 20:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:42:10] --- Cron started ---
+[2026-04-10 20:42:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:42:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:47:11] --- Cron started ---
+[2026-04-10 20:47:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:47:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:52:10] --- Cron started ---
+[2026-04-10 20:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 20:57:10] --- Cron started ---
+[2026-04-10 20:57:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 20:57:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:02:11] --- Cron started ---
+[2026-04-10 21:02:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:02:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:07:11] --- Cron started ---
+[2026-04-10 21:07:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:07:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:12:10] --- Cron started ---
+[2026-04-10 21:12:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:12:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:17:11] --- Cron started ---
+[2026-04-10 21:17:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:17:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:22:10] --- Cron started ---
+[2026-04-10 21:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:27:11] --- Cron started ---
+[2026-04-10 21:27:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:27:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:32:10] --- Cron started ---
+[2026-04-10 21:32:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:32:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:37:10] --- Cron started ---
+[2026-04-10 21:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:42:10] --- Cron started ---
+[2026-04-10 21:42:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:42:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:47:11] --- Cron started ---
+[2026-04-10 21:47:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:47:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:52:11] --- Cron started ---
+[2026-04-10 21:52:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:52:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 21:57:10] --- Cron started ---
+[2026-04-10 21:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 21:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:02:11] --- Cron started ---
+[2026-04-10 22:02:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:02:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:07:10] --- Cron started ---
+[2026-04-10 22:07:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:07:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:12:10] --- Cron started ---
+[2026-04-10 22:12:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:12:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:17:10] --- Cron started ---
+[2026-04-10 22:17:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:17:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:22:10] --- Cron started ---
+[2026-04-10 22:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:27:10] --- Cron started ---
+[2026-04-10 22:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:32:11] --- Cron started ---
+[2026-04-10 22:32:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:32:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:37:11] --- Cron started ---
+[2026-04-10 22:37:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:37:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:42:10] --- Cron started ---
+[2026-04-10 22:42:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:42:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:47:11] --- Cron started ---
+[2026-04-10 22:47:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:47:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:52:10] --- Cron started ---
+[2026-04-10 22:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 22:57:10] --- Cron started ---
+[2026-04-10 22:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 22:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:02:10] --- Cron started ---
+[2026-04-10 23:02:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:02:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:07:11] --- Cron started ---
+[2026-04-10 23:07:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:07:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:12:10] --- Cron started ---
+[2026-04-10 23:12:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:12:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:17:10] --- Cron started ---
+[2026-04-10 23:17:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:17:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:22:10] --- Cron started ---
+[2026-04-10 23:22:16] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:22:16] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:27:11] --- Cron started ---
+[2026-04-10 23:27:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:27:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:32:12] --- Cron started ---
+[2026-04-10 23:32:16] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:32:16] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:37:10] --- Cron started ---
+[2026-04-10 23:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:42:11] --- Cron started ---
+[2026-04-10 23:42:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:42:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:47:11] --- Cron started ---
+[2026-04-10 23:47:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:47:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:52:10] --- Cron started ---
+[2026-04-10 23:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-10 23:57:10] --- Cron started ---
+[2026-04-10 23:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-10 23:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-11 00:02:10] --- Cron started ---
+[2026-04-11 00:02:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-11 00:02:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-11 00:07:11] --- Cron started ---
+[2026-04-11 00:07:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-11 00:07:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-12 21:07:13] --- Cron started ---
+[2026-04-12 21:07:17] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-12 21:07:17] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-12 21:12:11] --- Cron started ---
+[2026-04-12 21:12:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-12 21:12:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:29:13] --- Cron started ---
+[2026-04-13 05:29:17] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:29:17] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:32:10] --- Cron started ---
+[2026-04-13 05:32:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:32:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:32:32] --- Cron started ---
+[2026-04-13 05:32:37] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:32:37] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:37:10] --- Cron started ---
+[2026-04-13 05:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:37:33] --- Cron started ---
+[2026-04-13 05:37:37] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:37:37] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:42:11] --- Cron started ---
+[2026-04-13 05:42:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:42:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:42:32] --- Cron started ---
+[2026-04-13 05:42:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:42:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:47:11] --- Cron started ---
+[2026-04-13 05:47:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:47:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:47:33] --- Cron started ---
+[2026-04-13 05:47:37] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:47:37] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:52:10] --- Cron started ---
+[2026-04-13 05:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:52:31] --- Cron started ---
+[2026-04-13 05:52:35] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:52:35] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:57:10] --- Cron started ---
+[2026-04-13 05:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 05:57:32] --- Cron started ---
+[2026-04-13 05:57:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 05:57:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:02:10] --- Cron started ---
+[2026-04-13 06:02:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:02:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:02:32] --- Cron started ---
+[2026-04-13 06:02:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:02:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:07:10] --- Cron started ---
+[2026-04-13 06:07:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:07:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:07:32] --- Cron started ---
+[2026-04-13 06:07:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:07:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:12:11] --- Cron started ---
+[2026-04-13 06:12:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:12:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:12:31] --- Cron started ---
+[2026-04-13 06:12:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:12:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:17:10] --- Cron started ---
+[2026-04-13 06:17:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:17:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:17:31] --- Cron started ---
+[2026-04-13 06:17:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:17:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:22:10] --- Cron started ---
+[2026-04-13 06:22:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:22:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:22:31] --- Cron started ---
+[2026-04-13 06:22:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:22:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:27:10] --- Cron started ---
+[2026-04-13 06:27:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:27:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:27:31] --- Cron started ---
+[2026-04-13 06:27:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:27:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:32:10] --- Cron started ---
+[2026-04-13 06:32:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:32:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:32:32] --- Cron started ---
+[2026-04-13 06:32:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:32:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:37:10] --- Cron started ---
+[2026-04-13 06:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:37:31] --- Cron started ---
+[2026-04-13 06:37:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:37:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:42:10] --- Cron started ---
+[2026-04-13 06:42:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:42:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:42:31] --- Cron started ---
+[2026-04-13 06:42:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:42:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:47:10] --- Cron started ---
+[2026-04-13 06:47:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:47:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:47:31] --- Cron started ---
+[2026-04-13 06:47:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:47:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:52:10] --- Cron started ---
+[2026-04-13 06:52:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:52:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:52:31] --- Cron started ---
+[2026-04-13 06:52:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:52:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:57:10] --- Cron started ---
+[2026-04-13 06:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 06:57:32] --- Cron started ---
+[2026-04-13 06:57:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 06:57:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 07:02:10] --- Cron started ---
+[2026-04-13 07:02:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 07:02:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 07:02:32] --- Cron started ---
+[2026-04-13 07:02:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 07:02:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 15:35:14] --- Cron started ---
+[2026-04-13 15:35:18] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 15:35:18] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 15:37:10] --- Cron started ---
+[2026-04-13 15:37:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 15:37:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 15:37:32] --- Cron started ---
+[2026-04-13 15:37:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 15:37:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 15:42:11] --- Cron started ---
+[2026-04-13 15:42:15] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 15:42:15] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 15:42:31] --- Cron started ---
+[2026-04-13 15:42:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 15:42:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 15:47:10] --- Cron started ---
+[2026-04-13 15:47:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 15:47:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 15:47:32] --- Cron started ---
+[2026-04-13 15:47:32] Found 0 due post(s)
+[2026-04-13 15:47:32] Nothing to process. Exiting.
+[2026-04-13 15:52:12] --- Cron started ---
+[2026-04-13 15:52:12] Found 0 due post(s)
+[2026-04-13 15:52:12] Nothing to process. Exiting.
+[2026-04-13 15:52:32] --- Cron started ---
+[2026-04-13 15:52:32] Found 0 due post(s)
+[2026-04-13 15:52:32] Nothing to process. Exiting.
+[2026-04-13 15:57:10] --- Cron started ---
+[2026-04-13 15:57:14] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 15:57:14] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 15:57:32] --- Cron started ---
+[2026-04-13 15:57:36] FATAL ERROR: Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[2026-04-13 15:57:36] #0 C:\xampp\htdocs\Solid-SocialMedia\cron\run_scheduled_posts.php(47): Database::connect()
+#1 {main}
+[2026-04-13 16:02:10] --- Cron started ---
+[2026-04-13 16:02:10] Found 0 due post(s)
+[2026-04-13 16:02:10] Nothing to process. Exiting.
+[2026-04-13 16:02:32] --- Cron started ---
+[2026-04-13 16:02:32] Found 0 due post(s)
+[2026-04-13 16:02:32] Nothing to process. Exiting.
+[2026-04-13 16:07:10] --- Cron started ---
+[2026-04-13 16:07:10] Found 0 due post(s)
+[2026-04-13 16:07:10] Nothing to process. Exiting.
+[2026-04-13 16:07:32] --- Cron started ---
+[2026-04-13 16:07:32] Found 0 due post(s)
+[2026-04-13 16:07:32] Nothing to process. Exiting.
+[2026-04-13 16:12:10] --- Cron started ---
+[2026-04-13 16:12:10] Found 0 due post(s)
+[2026-04-13 16:12:10] Nothing to process. Exiting.
+[2026-04-13 16:12:32] --- Cron started ---
+[2026-04-13 16:12:32] Found 0 due post(s)
+[2026-04-13 16:12:32] Nothing to process. Exiting.
+[2026-04-13 16:17:10] --- Cron started ---
+[2026-04-13 16:17:10] Found 0 due post(s)
+[2026-04-13 16:17:10] Nothing to process. Exiting.
+[2026-04-13 16:17:32] --- Cron started ---
+[2026-04-13 16:17:32] Found 0 due post(s)
+[2026-04-13 16:17:32] Nothing to process. Exiting.
+[2026-04-13 16:22:10] --- Cron started ---
+[2026-04-13 16:22:10] Found 0 due post(s)
+[2026-04-13 16:22:10] Nothing to process. Exiting.
+[2026-04-13 16:22:34] --- Cron started ---
+[2026-04-13 16:22:34] Found 0 due post(s)
+[2026-04-13 16:22:34] Nothing to process. Exiting.
+[2026-04-13 16:27:10] --- Cron started ---
+[2026-04-13 16:27:10] Found 0 due post(s)
+[2026-04-13 16:27:10] Nothing to process. Exiting.
+[2026-04-13 16:27:34] --- Cron started ---
+[2026-04-13 16:27:34] Found 0 due post(s)
+[2026-04-13 16:27:34] Nothing to process. Exiting.
+[2026-04-13 16:32:10] --- Cron started ---
+[2026-04-13 16:32:10] Found 0 due post(s)
+[2026-04-13 16:32:10] Nothing to process. Exiting.
+[2026-04-13 16:32:31] --- Cron started ---
+[2026-04-13 16:32:31] Found 0 due post(s)
+[2026-04-13 16:32:31] Nothing to process. Exiting.
+[2026-04-13 16:37:10] --- Cron started ---
+[2026-04-13 16:37:10] Found 0 due post(s)
+[2026-04-13 16:37:10] Nothing to process. Exiting.
+[2026-04-13 16:37:31] --- Cron started ---
+[2026-04-13 16:37:31] Found 0 due post(s)
+[2026-04-13 16:37:31] Nothing to process. Exiting.
+[2026-04-13 16:42:10] --- Cron started ---
+[2026-04-13 16:42:10] Found 0 due post(s)
+[2026-04-13 16:42:10] Nothing to process. Exiting.
+[2026-04-13 16:42:31] --- Cron started ---
+[2026-04-13 16:42:31] Found 0 due post(s)
+[2026-04-13 16:42:31] Nothing to process. Exiting.
+[2026-04-13 16:47:09] --- Cron started ---
+[2026-04-13 16:47:09] Found 0 due post(s)
+[2026-04-13 16:47:09] Nothing to process. Exiting.
+[2026-04-13 16:47:31] --- Cron started ---
+[2026-04-13 16:47:31] Found 0 due post(s)
+[2026-04-13 16:47:31] Nothing to process. Exiting.
+[2026-04-13 16:52:09] --- Cron started ---
+[2026-04-13 16:52:09] Found 0 due post(s)
+[2026-04-13 16:52:09] Nothing to process. Exiting.
+[2026-04-13 16:52:31] --- Cron started ---
+[2026-04-13 16:52:31] Found 0 due post(s)
+[2026-04-13 16:52:31] Nothing to process. Exiting.
+[2026-04-13 16:57:09] --- Cron started ---
+[2026-04-13 16:57:09] Found 0 due post(s)
+[2026-04-13 16:57:09] Nothing to process. Exiting.
+[2026-04-13 16:57:31] --- Cron started ---
+[2026-04-13 16:57:31] Found 0 due post(s)
+[2026-04-13 16:57:31] Nothing to process. Exiting.
+[2026-04-13 17:02:10] --- Cron started ---
+[2026-04-13 17:02:10] Found 0 due post(s)
+[2026-04-13 17:02:10] Nothing to process. Exiting.
+[2026-04-13 17:02:31] --- Cron started ---
+[2026-04-13 17:02:31] Found 0 due post(s)
+[2026-04-13 17:02:31] Nothing to process. Exiting.
+[2026-04-13 17:07:09] --- Cron started ---
+[2026-04-13 17:07:09] Found 0 due post(s)
+[2026-04-13 17:07:09] Nothing to process. Exiting.
+[2026-04-13 17:07:31] --- Cron started ---
+[2026-04-13 17:07:31] Found 0 due post(s)
+[2026-04-13 17:07:31] Nothing to process. Exiting.
+[2026-04-13 17:12:10] --- Cron started ---
+[2026-04-13 17:12:10] Found 0 due post(s)
+[2026-04-13 17:12:10] Nothing to process. Exiting.
+[2026-04-13 17:12:31] --- Cron started ---
+[2026-04-13 17:12:31] Found 0 due post(s)
+[2026-04-13 17:12:31] Nothing to process. Exiting.
+[2026-04-13 17:17:10] --- Cron started ---
+[2026-04-13 17:17:10] Found 0 due post(s)
+[2026-04-13 17:17:10] Nothing to process. Exiting.
+[2026-04-13 17:17:31] --- Cron started ---
+[2026-04-13 17:17:31] Found 0 due post(s)
+[2026-04-13 17:17:31] Nothing to process. Exiting.
+[2026-04-13 17:22:10] --- Cron started ---
+[2026-04-13 17:22:10] Found 0 due post(s)
+[2026-04-13 17:22:10] Nothing to process. Exiting.
+[2026-04-13 17:22:31] --- Cron started ---
+[2026-04-13 17:22:31] Found 0 due post(s)
+[2026-04-13 17:22:31] Nothing to process. Exiting.
+[2026-04-13 17:27:10] --- Cron started ---
+[2026-04-13 17:27:10] Found 0 due post(s)
+[2026-04-13 17:27:10] Nothing to process. Exiting.
+[2026-04-13 17:27:31] --- Cron started ---
+[2026-04-13 17:27:31] Found 0 due post(s)
+[2026-04-13 17:27:31] Nothing to process. Exiting.
+[2026-04-13 17:32:09] --- Cron started ---
+[2026-04-13 17:32:10] Found 0 due post(s)
+[2026-04-13 17:32:10] Nothing to process. Exiting.
+[2026-04-13 17:32:31] --- Cron started ---
+[2026-04-13 17:32:31] Found 0 due post(s)
+[2026-04-13 17:32:31] Nothing to process. Exiting.
+[2026-04-13 17:37:10] --- Cron started ---
+[2026-04-13 17:37:10] Found 0 due post(s)
+[2026-04-13 17:37:10] Nothing to process. Exiting.
+[2026-04-13 17:37:31] --- Cron started ---
+[2026-04-13 17:37:31] Found 0 due post(s)
+[2026-04-13 17:37:31] Nothing to process. Exiting.
+[2026-04-13 17:42:10] --- Cron started ---
+[2026-04-13 17:42:10] Found 0 due post(s)
+[2026-04-13 17:42:10] Nothing to process. Exiting.
+[2026-04-13 17:42:31] --- Cron started ---
+[2026-04-13 17:42:31] Found 0 due post(s)
+[2026-04-13 17:42:31] Nothing to process. Exiting.
+[2026-04-13 17:47:10] --- Cron started ---
+[2026-04-13 17:47:10] Found 0 due post(s)
+[2026-04-13 17:47:10] Nothing to process. Exiting.
+[2026-04-13 17:47:35] --- Cron started ---
+[2026-04-13 17:47:35] Found 0 due post(s)
+[2026-04-13 17:47:35] Nothing to process. Exiting.
+[2026-04-13 17:52:21] --- Cron started ---
+[2026-04-13 17:52:21] Found 0 due post(s)
+[2026-04-13 17:52:21] Nothing to process. Exiting.
+[2026-04-13 17:53:10] --- Cron started ---
+[2026-04-13 17:53:10] Found 0 due post(s)
+[2026-04-13 17:53:10] Nothing to process. Exiting.
+[2026-04-13 17:57:10] --- Cron started ---
+[2026-04-13 17:57:10] Found 0 due post(s)
+[2026-04-13 17:57:10] Nothing to process. Exiting.
+[2026-04-13 17:57:31] --- Cron started ---
+[2026-04-13 17:57:31] Found 0 due post(s)
+[2026-04-13 17:57:31] Nothing to process. Exiting.
+[2026-04-13 18:02:10] --- Cron started ---
+[2026-04-13 18:02:10] Found 0 due post(s)
+[2026-04-13 18:02:10] Nothing to process. Exiting.
+[2026-04-13 18:02:32] --- Cron started ---
+[2026-04-13 18:02:32] Found 0 due post(s)
+[2026-04-13 18:02:32] Nothing to process. Exiting.
+[2026-04-13 18:07:10] --- Cron started ---
+[2026-04-13 18:07:10] Found 0 due post(s)
+[2026-04-13 18:07:10] Nothing to process. Exiting.
+[2026-04-13 18:07:31] --- Cron started ---
+[2026-04-13 18:07:31] Found 0 due post(s)
+[2026-04-13 18:07:31] Nothing to process. Exiting.
+[2026-04-13 18:12:10] --- Cron started ---
+[2026-04-13 18:12:10] Found 0 due post(s)
+[2026-04-13 18:12:10] Nothing to process. Exiting.
+[2026-04-13 18:12:32] --- Cron started ---
+[2026-04-13 18:12:32] Found 0 due post(s)
+[2026-04-13 18:12:32] Nothing to process. Exiting.
+[2026-04-13 18:17:10] --- Cron started ---
+[2026-04-13 18:17:10] Found 0 due post(s)
+[2026-04-13 18:17:10] Nothing to process. Exiting.
+[2026-04-13 18:17:31] --- Cron started ---
+[2026-04-13 18:17:31] Found 0 due post(s)
+[2026-04-13 18:17:31] Nothing to process. Exiting.
+[2026-04-13 18:22:10] --- Cron started ---
+[2026-04-13 18:22:10] Found 0 due post(s)
+[2026-04-13 18:22:10] Nothing to process. Exiting.
+[2026-04-13 18:22:31] --- Cron started ---
+[2026-04-13 18:22:31] Found 0 due post(s)
+[2026-04-13 18:22:31] Nothing to process. Exiting.
+[2026-04-13 18:27:10] --- Cron started ---
+[2026-04-13 18:27:10] Found 0 due post(s)
+[2026-04-13 18:27:10] Nothing to process. Exiting.
+[2026-04-13 18:27:31] --- Cron started ---
+[2026-04-13 18:27:31] Found 0 due post(s)
+[2026-04-13 18:27:31] Nothing to process. Exiting.
+[2026-04-13 18:32:10] --- Cron started ---
+[2026-04-13 18:32:10] Found 0 due post(s)
+[2026-04-13 18:32:10] Nothing to process. Exiting.
+[2026-04-13 18:32:32] --- Cron started ---
+[2026-04-13 18:32:32] Found 0 due post(s)
+[2026-04-13 18:32:32] Nothing to process. Exiting.
+[2026-04-13 18:37:12] --- Cron started ---
+[2026-04-13 18:37:13] Found 0 due post(s)
+[2026-04-13 18:37:13] Nothing to process. Exiting.
+[2026-04-13 18:37:31] --- Cron started ---
+[2026-04-13 18:37:31] Found 0 due post(s)
+[2026-04-13 18:37:31] Nothing to process. Exiting.
+[2026-04-13 18:42:10] --- Cron started ---
+[2026-04-13 18:42:10] Found 0 due post(s)
+[2026-04-13 18:42:10] Nothing to process. Exiting.
+[2026-04-13 18:42:31] --- Cron started ---
+[2026-04-13 18:42:31] Found 0 due post(s)
+[2026-04-13 18:42:31] Nothing to process. Exiting.
+[2026-04-13 18:47:10] --- Cron started ---
+[2026-04-13 18:47:10] Found 0 due post(s)
+[2026-04-13 18:47:10] Nothing to process. Exiting.
+[2026-04-13 18:47:31] --- Cron started ---
+[2026-04-13 18:47:31] Found 0 due post(s)
+[2026-04-13 18:47:31] Nothing to process. Exiting.
+[2026-04-13 18:52:11] --- Cron started ---
+[2026-04-13 18:52:11] Found 0 due post(s)
+[2026-04-13 18:52:11] Nothing to process. Exiting.
+[2026-04-13 18:52:32] --- Cron started ---
+[2026-04-13 18:52:32] Found 0 due post(s)
+[2026-04-13 18:52:32] Nothing to process. Exiting.
+[2026-04-13 18:57:12] --- Cron started ---
+[2026-04-13 18:57:12] Found 0 due post(s)
+[2026-04-13 18:57:12] Nothing to process. Exiting.
+[2026-04-13 18:57:34] --- Cron started ---
+[2026-04-13 18:57:34] Found 0 due post(s)
+[2026-04-13 18:57:34] Nothing to process. Exiting.
+[2026-04-13 19:02:11] --- Cron started ---
+[2026-04-13 19:02:11] Found 0 due post(s)
+[2026-04-13 19:02:11] Nothing to process. Exiting.
+[2026-04-13 19:02:31] --- Cron started ---
+[2026-04-13 19:02:31] Found 0 due post(s)
+[2026-04-13 19:02:31] Nothing to process. Exiting.
+[2026-04-13 19:07:10] --- Cron started ---
+[2026-04-13 19:07:10] Found 0 due post(s)
+[2026-04-13 19:07:10] Nothing to process. Exiting.
+[2026-04-13 19:07:31] --- Cron started ---
+[2026-04-13 19:07:31] Found 0 due post(s)
+[2026-04-13 19:07:31] Nothing to process. Exiting.
+[2026-04-13 19:12:10] --- Cron started ---
+[2026-04-13 19:12:10] Found 0 due post(s)
+[2026-04-13 19:12:10] Nothing to process. Exiting.
+[2026-04-13 19:12:31] --- Cron started ---
+[2026-04-13 19:12:31] Found 0 due post(s)
+[2026-04-13 19:12:31] Nothing to process. Exiting.
+[2026-04-13 19:17:10] --- Cron started ---
+[2026-04-13 19:17:10] Found 0 due post(s)
+[2026-04-13 19:17:10] Nothing to process. Exiting.
+[2026-04-13 19:17:31] --- Cron started ---
+[2026-04-13 19:17:31] Found 0 due post(s)
+[2026-04-13 19:17:31] Nothing to process. Exiting.
+[2026-04-13 19:22:10] --- Cron started ---
+[2026-04-13 19:22:10] Found 0 due post(s)
+[2026-04-13 19:22:10] Nothing to process. Exiting.
+[2026-04-13 19:22:31] --- Cron started ---
+[2026-04-13 19:22:31] Found 0 due post(s)
+[2026-04-13 19:22:31] Nothing to process. Exiting.
+[2026-04-13 19:27:10] --- Cron started ---
+[2026-04-13 19:27:10] Found 0 due post(s)
+[2026-04-13 19:27:10] Nothing to process. Exiting.
+[2026-04-13 19:27:31] --- Cron started ---
+[2026-04-13 19:27:31] Found 0 due post(s)
+[2026-04-13 19:27:31] Nothing to process. Exiting.
+[2026-04-13 19:32:10] --- Cron started ---
+[2026-04-13 19:32:10] Found 0 due post(s)
+[2026-04-13 19:32:10] Nothing to process. Exiting.
+[2026-04-13 19:32:31] --- Cron started ---
+[2026-04-13 19:32:31] Found 0 due post(s)
+[2026-04-13 19:32:31] Nothing to process. Exiting.
+[2026-04-13 19:37:10] --- Cron started ---
+[2026-04-13 19:37:10] Found 0 due post(s)
+[2026-04-13 19:37:10] Nothing to process. Exiting.
+[2026-04-13 19:37:31] --- Cron started ---
+[2026-04-13 19:37:31] Found 0 due post(s)
+[2026-04-13 19:37:31] Nothing to process. Exiting.
+[2026-04-13 19:42:10] --- Cron started ---
+[2026-04-13 19:42:10] Found 0 due post(s)
+[2026-04-13 19:42:10] Nothing to process. Exiting.
+[2026-04-13 19:42:31] --- Cron started ---
+[2026-04-13 19:42:31] Found 0 due post(s)
+[2026-04-13 19:42:31] Nothing to process. Exiting.
+[2026-04-13 19:47:10] --- Cron started ---
+[2026-04-13 19:47:10] Found 0 due post(s)
+[2026-04-13 19:47:10] Nothing to process. Exiting.
+[2026-04-13 19:47:31] --- Cron started ---
+[2026-04-13 19:47:31] Found 0 due post(s)
+[2026-04-13 19:47:31] Nothing to process. Exiting.
+[2026-04-13 19:52:10] --- Cron started ---
+[2026-04-13 19:52:10] Found 0 due post(s)
+[2026-04-13 19:52:10] Nothing to process. Exiting.
+[2026-04-13 19:52:31] --- Cron started ---
+[2026-04-13 19:52:31] Found 0 due post(s)
+[2026-04-13 19:52:31] Nothing to process. Exiting.
+[2026-04-13 19:57:10] --- Cron started ---
+[2026-04-13 19:57:10] Found 0 due post(s)
+[2026-04-13 19:57:10] Nothing to process. Exiting.
+[2026-04-13 19:57:31] --- Cron started ---
+[2026-04-13 19:57:31] Found 0 due post(s)
+[2026-04-13 19:57:31] Nothing to process. Exiting.
+[2026-04-13 20:02:10] --- Cron started ---
+[2026-04-13 20:02:10] Found 0 due post(s)
+[2026-04-13 20:02:10] Nothing to process. Exiting.
+[2026-04-13 20:02:31] --- Cron started ---
+[2026-04-13 20:02:31] Found 0 due post(s)
+[2026-04-13 20:02:31] Nothing to process. Exiting.
+[2026-04-13 20:07:10] --- Cron started ---
+[2026-04-13 20:07:10] Found 0 due post(s)
+[2026-04-13 20:07:10] Nothing to process. Exiting.
+[2026-04-13 20:07:31] --- Cron started ---
+[2026-04-13 20:07:31] Found 0 due post(s)
+[2026-04-13 20:07:31] Nothing to process. Exiting.
+[2026-04-13 20:12:10] --- Cron started ---
+[2026-04-13 20:12:10] Found 0 due post(s)
+[2026-04-13 20:12:10] Nothing to process. Exiting.
+[2026-04-13 20:12:31] --- Cron started ---
+[2026-04-13 20:12:31] Found 0 due post(s)
+[2026-04-13 20:12:31] Nothing to process. Exiting.
+[2026-04-13 20:17:10] --- Cron started ---
+[2026-04-13 20:17:10] Found 0 due post(s)
+[2026-04-13 20:17:10] Nothing to process. Exiting.
+[2026-04-13 20:17:31] --- Cron started ---
+[2026-04-13 20:17:31] Found 0 due post(s)
+[2026-04-13 20:17:31] Nothing to process. Exiting.
+[2026-04-13 20:22:10] --- Cron started ---
+[2026-04-13 20:22:10] Found 0 due post(s)
+[2026-04-13 20:22:10] Nothing to process. Exiting.
+[2026-04-13 20:22:31] --- Cron started ---
+[2026-04-13 20:22:31] Found 0 due post(s)
+[2026-04-13 20:22:31] Nothing to process. Exiting.
+[2026-04-13 20:27:09] --- Cron started ---
+[2026-04-13 20:27:09] Found 0 due post(s)
+[2026-04-13 20:27:09] Nothing to process. Exiting.
+[2026-04-13 20:27:31] --- Cron started ---
+[2026-04-13 20:27:31] Found 0 due post(s)
+[2026-04-13 20:27:31] Nothing to process. Exiting.
+[2026-04-13 20:32:09] --- Cron started ---
+[2026-04-13 20:32:09] Found 0 due post(s)
+[2026-04-13 20:32:09] Nothing to process. Exiting.
+[2026-04-13 20:32:31] --- Cron started ---
+[2026-04-13 20:32:31] Found 0 due post(s)
+[2026-04-13 20:32:31] Nothing to process. Exiting.
+[2026-04-13 20:37:10] --- Cron started ---
+[2026-04-13 20:37:10] Found 0 due post(s)
+[2026-04-13 20:37:10] Nothing to process. Exiting.
+[2026-04-13 20:37:31] --- Cron started ---
+[2026-04-13 20:37:31] Found 0 due post(s)
+[2026-04-13 20:37:31] Nothing to process. Exiting.
+[2026-04-13 20:42:10] --- Cron started ---
+[2026-04-13 20:42:10] Found 0 due post(s)
+[2026-04-13 20:42:10] Nothing to process. Exiting.
+[2026-04-13 20:42:31] --- Cron started ---
+[2026-04-13 20:42:31] Found 0 due post(s)
+[2026-04-13 20:42:31] Nothing to process. Exiting.
+[2026-04-13 20:47:10] --- Cron started ---
+[2026-04-13 20:47:10] Found 0 due post(s)
+[2026-04-13 20:47:10] Nothing to process. Exiting.
+[2026-04-13 20:47:31] --- Cron started ---
+[2026-04-13 20:47:31] Found 0 due post(s)
+[2026-04-13 20:47:31] Nothing to process. Exiting.
+[2026-04-13 20:52:10] --- Cron started ---
+[2026-04-13 20:52:10] Found 0 due post(s)
+[2026-04-13 20:52:10] Nothing to process. Exiting.
+[2026-04-13 20:52:31] --- Cron started ---
+[2026-04-13 20:52:31] Found 0 due post(s)
+[2026-04-13 20:52:31] Nothing to process. Exiting.
+[2026-04-13 20:57:09] --- Cron started ---
+[2026-04-13 20:57:09] Found 0 due post(s)
+[2026-04-13 20:57:09] Nothing to process. Exiting.
+[2026-04-13 20:57:31] --- Cron started ---
+[2026-04-13 20:57:31] Found 0 due post(s)
+[2026-04-13 20:57:31] Nothing to process. Exiting.
+[2026-04-13 21:02:09] --- Cron started ---
+[2026-04-13 21:02:09] Found 0 due post(s)
+[2026-04-13 21:02:09] Nothing to process. Exiting.
+[2026-04-13 21:02:32] --- Cron started ---
+[2026-04-13 21:02:32] Found 0 due post(s)
+[2026-04-13 21:02:32] Nothing to process. Exiting.
+[2026-04-13 21:07:10] --- Cron started ---
+[2026-04-13 21:07:10] Found 0 due post(s)
+[2026-04-13 21:07:10] Nothing to process. Exiting.
+[2026-04-13 21:07:31] --- Cron started ---
+[2026-04-13 21:07:31] Found 0 due post(s)
+[2026-04-13 21:07:31] Nothing to process. Exiting.
+[2026-04-13 21:12:10] --- Cron started ---
+[2026-04-13 21:12:10] Found 0 due post(s)
+[2026-04-13 21:12:10] Nothing to process. Exiting.
+[2026-04-13 21:12:31] --- Cron started ---
+[2026-04-13 21:12:31] Found 0 due post(s)
+[2026-04-13 21:12:31] Nothing to process. Exiting.
+[2026-04-13 21:17:10] --- Cron started ---
+[2026-04-13 21:17:10] Found 0 due post(s)
+[2026-04-13 21:17:10] Nothing to process. Exiting.
+[2026-04-13 21:17:31] --- Cron started ---
+[2026-04-13 21:17:31] Found 0 due post(s)
+[2026-04-13 21:17:31] Nothing to process. Exiting.
+[2026-04-13 21:22:10] --- Cron started ---
+[2026-04-13 21:22:10] Found 0 due post(s)
+[2026-04-13 21:22:10] Nothing to process. Exiting.
+[2026-04-13 21:22:31] --- Cron started ---
+[2026-04-13 21:22:31] Found 0 due post(s)
+[2026-04-13 21:22:31] Nothing to process. Exiting.
+[2026-04-13 21:27:10] --- Cron started ---
+[2026-04-13 21:27:10] Found 0 due post(s)
+[2026-04-13 21:27:10] Nothing to process. Exiting.
+[2026-04-13 21:27:31] --- Cron started ---
+[2026-04-13 21:27:31] Found 0 due post(s)
+[2026-04-13 21:27:31] Nothing to process. Exiting.
+[2026-04-13 21:32:10] --- Cron started ---
+[2026-04-13 21:32:10] Found 0 due post(s)
+[2026-04-13 21:32:10] Nothing to process. Exiting.
+[2026-04-13 21:32:31] --- Cron started ---
+[2026-04-13 21:32:31] Found 0 due post(s)
+[2026-04-13 21:32:31] Nothing to process. Exiting.
+[2026-04-13 21:37:10] --- Cron started ---
+[2026-04-13 21:37:10] Found 0 due post(s)
+[2026-04-13 21:37:10] Nothing to process. Exiting.
+[2026-04-13 21:37:31] --- Cron started ---
+[2026-04-13 21:37:31] Found 0 due post(s)
+[2026-04-13 21:37:31] Nothing to process. Exiting.
+[2026-04-13 21:42:10] --- Cron started ---
+[2026-04-13 21:42:10] Found 0 due post(s)
+[2026-04-13 21:42:10] Nothing to process. Exiting.
+[2026-04-13 21:42:31] --- Cron started ---
+[2026-04-13 21:42:31] Found 0 due post(s)
+[2026-04-13 21:42:31] Nothing to process. Exiting.
+[2026-04-13 21:47:10] --- Cron started ---
+[2026-04-13 21:47:10] Found 0 due post(s)
+[2026-04-13 21:47:10] Nothing to process. Exiting.
+[2026-04-13 21:47:33] --- Cron started ---
+[2026-04-13 21:47:33] Found 0 due post(s)
+[2026-04-13 21:47:33] Nothing to process. Exiting.
+[2026-04-13 21:52:10] --- Cron started ---
+[2026-04-13 21:52:10] Found 0 due post(s)
+[2026-04-13 21:52:10] Nothing to process. Exiting.
+[2026-04-13 21:52:31] --- Cron started ---
+[2026-04-13 21:52:31] Found 0 due post(s)
+[2026-04-13 21:52:31] Nothing to process. Exiting.
+[2026-04-13 21:57:11] --- Cron started ---
+[2026-04-13 21:57:11] Found 0 due post(s)
+[2026-04-13 21:57:11] Nothing to process. Exiting.
+[2026-04-13 21:57:31] --- Cron started ---
+[2026-04-13 21:57:31] Found 0 due post(s)
+[2026-04-13 21:57:31] Nothing to process. Exiting.
+[2026-04-13 22:02:10] --- Cron started ---
+[2026-04-13 22:02:10] Found 0 due post(s)
+[2026-04-13 22:02:10] Nothing to process. Exiting.
+[2026-04-13 22:02:31] --- Cron started ---
+[2026-04-13 22:02:31] Found 0 due post(s)
+[2026-04-13 22:02:31] Nothing to process. Exiting.
+[2026-04-13 22:07:10] --- Cron started ---
+[2026-04-13 22:07:10] Found 0 due post(s)
+[2026-04-13 22:07:10] Nothing to process. Exiting.
+[2026-04-13 22:07:31] --- Cron started ---
+[2026-04-13 22:07:31] Found 0 due post(s)
+[2026-04-13 22:07:31] Nothing to process. Exiting.
+[2026-04-13 22:12:10] --- Cron started ---
+[2026-04-13 22:12:10] Found 0 due post(s)
+[2026-04-13 22:12:10] Nothing to process. Exiting.
+[2026-04-13 22:12:32] --- Cron started ---
+[2026-04-13 22:12:32] Found 0 due post(s)
+[2026-04-13 22:12:32] Nothing to process. Exiting.
+[2026-04-13 22:17:10] --- Cron started ---
+[2026-04-13 22:17:10] Found 0 due post(s)
+[2026-04-13 22:17:10] Nothing to process. Exiting.
+[2026-04-13 22:17:31] --- Cron started ---
+[2026-04-13 22:17:31] Found 0 due post(s)
+[2026-04-13 22:17:31] Nothing to process. Exiting.
+[2026-04-13 22:22:10] --- Cron started ---
+[2026-04-13 22:22:10] Found 0 due post(s)
+[2026-04-13 22:22:10] Nothing to process. Exiting.
+[2026-04-13 22:22:31] --- Cron started ---
+[2026-04-13 22:22:31] Found 0 due post(s)
+[2026-04-13 22:22:31] Nothing to process. Exiting.
+[2026-04-13 22:27:10] --- Cron started ---
+[2026-04-13 22:27:10] Found 0 due post(s)
+[2026-04-13 22:27:10] Nothing to process. Exiting.
+[2026-04-13 22:27:32] --- Cron started ---
+[2026-04-13 22:27:32] Found 0 due post(s)
+[2026-04-13 22:27:32] Nothing to process. Exiting.
+[2026-04-13 22:32:10] --- Cron started ---
+[2026-04-13 22:32:10] Found 0 due post(s)
+[2026-04-13 22:32:10] Nothing to process. Exiting.
+[2026-04-13 22:32:31] --- Cron started ---
+[2026-04-13 22:32:31] Found 0 due post(s)
+[2026-04-13 22:32:31] Nothing to process. Exiting.
+[2026-04-13 22:37:10] --- Cron started ---
+[2026-04-13 22:37:10] Found 0 due post(s)
+[2026-04-13 22:37:10] Nothing to process. Exiting.
+[2026-04-13 22:37:31] --- Cron started ---
+[2026-04-13 22:37:31] Found 0 due post(s)
+[2026-04-13 22:37:31] Nothing to process. Exiting.
+[2026-04-13 22:42:10] --- Cron started ---
+[2026-04-13 22:42:10] Found 0 due post(s)
+[2026-04-13 22:42:10] Nothing to process. Exiting.
+[2026-04-13 22:42:32] --- Cron started ---
+[2026-04-13 22:42:32] Found 0 due post(s)
+[2026-04-13 22:42:32] Nothing to process. Exiting.
+[2026-04-13 22:47:10] --- Cron started ---
+[2026-04-13 22:47:10] Found 0 due post(s)
+[2026-04-13 22:47:10] Nothing to process. Exiting.
+[2026-04-13 22:47:32] --- Cron started ---
+[2026-04-13 22:47:32] Found 0 due post(s)
+[2026-04-13 22:47:32] Nothing to process. Exiting.
+[2026-04-13 22:52:10] --- Cron started ---
+[2026-04-13 22:52:10] Found 0 due post(s)
+[2026-04-13 22:52:10] Nothing to process. Exiting.
+[2026-04-13 22:52:31] --- Cron started ---
+[2026-04-13 22:52:31] Found 0 due post(s)
+[2026-04-13 22:52:31] Nothing to process. Exiting.
+[2026-04-13 22:57:10] --- Cron started ---
+[2026-04-13 22:57:10] Found 0 due post(s)
+[2026-04-13 22:57:10] Nothing to process. Exiting.
+[2026-04-13 22:57:31] --- Cron started ---
+[2026-04-13 22:57:31] Found 0 due post(s)
+[2026-04-13 22:57:31] Nothing to process. Exiting.
+[2026-04-13 23:02:10] --- Cron started ---
+[2026-04-13 23:02:10] Found 0 due post(s)
+[2026-04-13 23:02:10] Nothing to process. Exiting.
+[2026-04-13 23:02:31] --- Cron started ---
+[2026-04-13 23:02:31] Found 0 due post(s)
+[2026-04-13 23:02:31] Nothing to process. Exiting.
+[2026-04-13 23:07:10] --- Cron started ---
+[2026-04-13 23:07:10] Found 0 due post(s)
+[2026-04-13 23:07:10] Nothing to process. Exiting.
+[2026-04-13 23:07:31] --- Cron started ---
+[2026-04-13 23:07:31] Found 0 due post(s)
+[2026-04-13 23:07:31] Nothing to process. Exiting.
+[2026-04-13 23:12:10] --- Cron started ---
+[2026-04-13 23:12:10] Found 0 due post(s)
+[2026-04-13 23:12:10] Nothing to process. Exiting.
+[2026-04-13 23:12:31] --- Cron started ---
+[2026-04-13 23:12:31] Found 0 due post(s)
+[2026-04-13 23:12:31] Nothing to process. Exiting.
+[2026-04-13 23:17:10] --- Cron started ---
+[2026-04-13 23:17:10] Found 0 due post(s)
+[2026-04-13 23:17:10] Nothing to process. Exiting.
+[2026-04-13 23:17:31] --- Cron started ---
+[2026-04-13 23:17:31] Found 0 due post(s)
+[2026-04-13 23:17:31] Nothing to process. Exiting.
+[2026-04-13 23:22:10] --- Cron started ---
+[2026-04-13 23:22:10] Found 0 due post(s)
+[2026-04-13 23:22:10] Nothing to process. Exiting.
+[2026-04-13 23:22:31] --- Cron started ---
+[2026-04-13 23:22:31] Found 0 due post(s)
+[2026-04-13 23:22:31] Nothing to process. Exiting.
+[2026-04-13 23:27:10] --- Cron started ---
+[2026-04-13 23:27:10] Found 0 due post(s)
+[2026-04-13 23:27:10] Nothing to process. Exiting.
+[2026-04-13 23:27:31] --- Cron started ---
+[2026-04-13 23:27:31] Found 0 due post(s)
+[2026-04-13 23:27:31] Nothing to process. Exiting.
+[2026-04-13 23:32:10] --- Cron started ---
+[2026-04-13 23:32:10] Found 0 due post(s)
+[2026-04-13 23:32:10] Nothing to process. Exiting.
+[2026-04-13 23:32:31] --- Cron started ---
+[2026-04-13 23:32:31] Found 0 due post(s)
+[2026-04-13 23:32:31] Nothing to process. Exiting.
+[2026-04-13 23:37:10] --- Cron started ---
+[2026-04-13 23:37:10] Found 0 due post(s)
+[2026-04-13 23:37:10] Nothing to process. Exiting.
+[2026-04-13 23:37:31] --- Cron started ---
+[2026-04-13 23:37:31] Found 0 due post(s)
+[2026-04-13 23:37:31] Nothing to process. Exiting.
+[2026-04-13 23:42:10] --- Cron started ---
+[2026-04-13 23:42:10] Found 0 due post(s)
+[2026-04-13 23:42:10] Nothing to process. Exiting.
+[2026-04-13 23:42:31] --- Cron started ---
+[2026-04-13 23:42:31] Found 0 due post(s)
+[2026-04-13 23:42:31] Nothing to process. Exiting.
+[2026-04-13 23:47:10] --- Cron started ---
+[2026-04-13 23:47:10] Found 0 due post(s)
+[2026-04-13 23:47:10] Nothing to process. Exiting.
+[2026-04-13 23:47:31] --- Cron started ---
+[2026-04-13 23:47:31] Found 0 due post(s)
+[2026-04-13 23:47:31] Nothing to process. Exiting.
+[2026-04-13 23:52:10] --- Cron started ---
+[2026-04-13 23:52:10] Found 0 due post(s)
+[2026-04-13 23:52:10] Nothing to process. Exiting.
+[2026-04-13 23:52:31] --- Cron started ---
+[2026-04-13 23:52:31] Found 0 due post(s)
+[2026-04-13 23:52:31] Nothing to process. Exiting.
+[2026-04-13 23:57:10] --- Cron started ---
+[2026-04-13 23:57:10] Found 0 due post(s)
+[2026-04-13 23:57:10] Nothing to process. Exiting.
+[2026-04-13 23:57:32] --- Cron started ---
+[2026-04-13 23:57:32] Found 0 due post(s)
+[2026-04-13 23:57:32] Nothing to process. Exiting.
+[2026-04-14 00:02:10] --- Cron started ---
+[2026-04-14 00:02:10] Found 0 due post(s)
+[2026-04-14 00:02:10] Nothing to process. Exiting.
+[2026-04-14 00:02:31] --- Cron started ---
+[2026-04-14 00:02:31] Found 0 due post(s)
+[2026-04-14 00:02:31] Nothing to process. Exiting.
+[2026-04-14 00:07:10] --- Cron started ---
+[2026-04-14 00:07:10] Found 0 due post(s)
+[2026-04-14 00:07:10] Nothing to process. Exiting.
+[2026-04-14 00:07:31] --- Cron started ---
+[2026-04-14 00:07:31] Found 0 due post(s)
+[2026-04-14 00:07:31] Nothing to process. Exiting.
+[2026-04-14 00:12:11] --- Cron started ---
+[2026-04-14 00:12:11] Found 0 due post(s)
+[2026-04-14 00:12:11] Nothing to process. Exiting.
+[2026-04-14 00:12:31] --- Cron started ---
+[2026-04-14 00:12:31] Found 0 due post(s)
+[2026-04-14 00:12:31] Nothing to process. Exiting.
+[2026-04-14 00:17:10] --- Cron started ---
+[2026-04-14 00:17:10] Found 0 due post(s)
+[2026-04-14 00:17:10] Nothing to process. Exiting.
+[2026-04-14 00:17:31] --- Cron started ---
+[2026-04-14 00:17:31] Found 0 due post(s)
+[2026-04-14 00:17:31] Nothing to process. Exiting.
+[2026-04-14 00:22:10] --- Cron started ---
+[2026-04-14 00:22:10] Found 0 due post(s)
+[2026-04-14 00:22:10] Nothing to process. Exiting.
+[2026-04-14 00:22:31] --- Cron started ---
+[2026-04-14 00:22:31] Found 0 due post(s)
+[2026-04-14 00:22:31] Nothing to process. Exiting.
+[2026-04-14 00:27:10] --- Cron started ---
+[2026-04-14 00:27:10] Found 0 due post(s)
+[2026-04-14 00:27:10] Nothing to process. Exiting.
+[2026-04-14 00:27:31] --- Cron started ---
+[2026-04-14 00:27:31] Found 0 due post(s)
+[2026-04-14 00:27:31] Nothing to process. Exiting.
+[2026-04-14 00:32:10] --- Cron started ---
+[2026-04-14 00:32:10] Found 0 due post(s)
+[2026-04-14 00:32:10] Nothing to process. Exiting.
+[2026-04-14 00:32:31] --- Cron started ---
+[2026-04-14 00:32:31] Found 0 due post(s)
+[2026-04-14 00:32:31] Nothing to process. Exiting.
+[2026-04-14 00:37:10] --- Cron started ---
+[2026-04-14 00:37:10] Found 0 due post(s)
+[2026-04-14 00:37:10] Nothing to process. Exiting.
+[2026-04-14 00:37:31] --- Cron started ---
+[2026-04-14 00:37:31] Found 0 due post(s)
+[2026-04-14 00:37:31] Nothing to process. Exiting.
+[2026-04-14 00:42:10] --- Cron started ---
+[2026-04-14 00:42:10] Found 0 due post(s)
+[2026-04-14 00:42:10] Nothing to process. Exiting.
+[2026-04-14 00:42:31] --- Cron started ---
+[2026-04-14 00:42:31] Found 0 due post(s)
+[2026-04-14 00:42:31] Nothing to process. Exiting.
+[2026-04-14 00:47:10] --- Cron started ---
+[2026-04-14 00:47:10] Found 0 due post(s)
+[2026-04-14 00:47:10] Nothing to process. Exiting.
+[2026-04-14 00:47:31] --- Cron started ---
+[2026-04-14 00:47:31] Found 0 due post(s)
+[2026-04-14 00:47:31] Nothing to process. Exiting.
+[2026-04-14 00:52:10] --- Cron started ---
+[2026-04-14 00:52:10] Found 0 due post(s)
+[2026-04-14 00:52:10] Nothing to process. Exiting.
+[2026-04-14 00:52:31] --- Cron started ---
+[2026-04-14 00:52:31] Found 0 due post(s)
+[2026-04-14 00:52:31] Nothing to process. Exiting.
+[2026-04-14 00:57:10] --- Cron started ---
+[2026-04-14 00:57:10] Found 0 due post(s)
+[2026-04-14 00:57:10] Nothing to process. Exiting.
+[2026-04-14 00:57:31] --- Cron started ---
+[2026-04-14 00:57:31] Found 0 due post(s)
+[2026-04-14 00:57:31] Nothing to process. Exiting.
+[2026-04-14 01:02:10] --- Cron started ---
+[2026-04-14 01:02:10] Found 0 due post(s)
+[2026-04-14 01:02:10] Nothing to process. Exiting.
+[2026-04-14 01:02:31] --- Cron started ---
+[2026-04-14 01:02:31] Found 0 due post(s)
+[2026-04-14 01:02:31] Nothing to process. Exiting.
+[2026-04-14 01:07:10] --- Cron started ---
+[2026-04-14 01:07:10] Found 0 due post(s)
+[2026-04-14 01:07:10] Nothing to process. Exiting.
+[2026-04-14 01:07:31] --- Cron started ---
+[2026-04-14 01:07:31] Found 0 due post(s)
+[2026-04-14 01:07:31] Nothing to process. Exiting.
+[2026-04-14 01:12:10] --- Cron started ---
+[2026-04-14 01:12:10] Found 0 due post(s)
+[2026-04-14 01:12:10] Nothing to process. Exiting.
+[2026-04-14 01:12:31] --- Cron started ---
+[2026-04-14 01:12:31] Found 0 due post(s)
+[2026-04-14 01:12:31] Nothing to process. Exiting.
+[2026-04-14 01:17:10] --- Cron started ---
+[2026-04-14 01:17:10] Found 0 due post(s)
+[2026-04-14 01:17:10] Nothing to process. Exiting.
+[2026-04-14 01:17:31] --- Cron started ---
+[2026-04-14 01:17:31] Found 0 due post(s)
+[2026-04-14 01:17:31] Nothing to process. Exiting.
+[2026-04-14 01:22:09] --- Cron started ---
+[2026-04-14 01:22:09] Found 0 due post(s)
+[2026-04-14 01:22:09] Nothing to process. Exiting.
+[2026-04-14 01:22:31] --- Cron started ---
+[2026-04-14 01:22:31] Found 0 due post(s)
+[2026-04-14 01:22:31] Nothing to process. Exiting.
+[2026-04-14 01:27:10] --- Cron started ---
+[2026-04-14 01:27:10] Found 0 due post(s)
+[2026-04-14 01:27:10] Nothing to process. Exiting.
+[2026-04-14 01:27:31] --- Cron started ---
+[2026-04-14 01:27:31] Found 0 due post(s)
+[2026-04-14 01:27:31] Nothing to process. Exiting.
+[2026-04-14 01:32:10] --- Cron started ---
+[2026-04-14 01:32:10] Found 0 due post(s)
+[2026-04-14 01:32:10] Nothing to process. Exiting.
+[2026-04-14 01:32:31] --- Cron started ---
+[2026-04-14 01:32:31] Found 0 due post(s)
+[2026-04-14 01:32:31] Nothing to process. Exiting.
+[2026-04-14 01:37:09] --- Cron started ---
+[2026-04-14 01:37:09] Found 0 due post(s)
+[2026-04-14 01:37:09] Nothing to process. Exiting.
+[2026-04-14 01:37:31] --- Cron started ---
+[2026-04-14 01:37:31] Found 0 due post(s)
+[2026-04-14 01:37:31] Nothing to process. Exiting.
+[2026-04-14 01:42:10] --- Cron started ---
+[2026-04-14 01:42:10] Found 0 due post(s)
+[2026-04-14 01:42:10] Nothing to process. Exiting.
+[2026-04-14 01:42:31] --- Cron started ---
+[2026-04-14 01:42:31] Found 0 due post(s)
+[2026-04-14 01:42:31] Nothing to process. Exiting.
+[2026-04-14 01:47:09] --- Cron started ---
+[2026-04-14 01:47:09] Found 0 due post(s)
+[2026-04-14 01:47:09] Nothing to process. Exiting.
+[2026-04-14 01:47:34] --- Cron started ---
+[2026-04-14 01:47:34] Found 0 due post(s)
+[2026-04-14 01:47:34] Nothing to process. Exiting.
+[2026-04-14 01:52:10] --- Cron started ---
+[2026-04-14 01:52:10] Found 0 due post(s)
+[2026-04-14 01:52:10] Nothing to process. Exiting.
+[2026-04-14 01:52:31] --- Cron started ---
+[2026-04-14 01:52:31] Found 0 due post(s)
+[2026-04-14 01:52:31] Nothing to process. Exiting.
+[2026-04-14 01:57:10] --- Cron started ---
+[2026-04-14 01:57:10] Found 0 due post(s)
+[2026-04-14 01:57:10] Nothing to process. Exiting.
+[2026-04-14 01:57:31] --- Cron started ---
+[2026-04-14 01:57:31] Found 0 due post(s)
+[2026-04-14 01:57:31] Nothing to process. Exiting.
+[2026-04-14 02:02:10] --- Cron started ---
+[2026-04-14 02:02:10] Found 0 due post(s)
+[2026-04-14 02:02:10] Nothing to process. Exiting.
+[2026-04-14 02:02:31] --- Cron started ---
+[2026-04-14 02:02:31] Found 0 due post(s)
+[2026-04-14 02:02:31] Nothing to process. Exiting.
+[2026-04-14 02:07:09] --- Cron started ---
+[2026-04-14 02:07:09] Found 0 due post(s)
+[2026-04-14 02:07:09] Nothing to process. Exiting.
+[2026-04-14 02:07:31] --- Cron started ---
+[2026-04-14 02:07:31] Found 0 due post(s)
+[2026-04-14 02:07:31] Nothing to process. Exiting.
+[2026-04-14 02:12:10] --- Cron started ---
+[2026-04-14 02:12:10] Found 0 due post(s)
+[2026-04-14 02:12:10] Nothing to process. Exiting.
+[2026-04-14 02:12:31] --- Cron started ---
+[2026-04-14 02:12:31] Found 0 due post(s)
+[2026-04-14 02:12:31] Nothing to process. Exiting.
+[2026-04-14 02:17:10] --- Cron started ---
+[2026-04-14 02:17:10] Found 0 due post(s)
+[2026-04-14 02:17:10] Nothing to process. Exiting.
+[2026-04-14 02:17:31] --- Cron started ---
+[2026-04-14 02:17:31] Found 0 due post(s)
+[2026-04-14 02:17:31] Nothing to process. Exiting.
+[2026-04-14 02:22:09] --- Cron started ---
+[2026-04-14 02:22:09] Found 0 due post(s)
+[2026-04-14 02:22:09] Nothing to process. Exiting.
+[2026-04-14 02:22:31] --- Cron started ---
+[2026-04-14 02:22:31] Found 0 due post(s)
+[2026-04-14 02:22:31] Nothing to process. Exiting.
+[2026-04-14 02:27:10] --- Cron started ---
+[2026-04-14 02:27:10] Found 0 due post(s)
+[2026-04-14 02:27:10] Nothing to process. Exiting.
+[2026-04-14 02:27:31] --- Cron started ---
+[2026-04-14 02:27:31] Found 0 due post(s)
+[2026-04-14 02:27:31] Nothing to process. Exiting.
+[2026-04-14 02:32:09] --- Cron started ---
+[2026-04-14 02:32:09] Found 0 due post(s)
+[2026-04-14 02:32:09] Nothing to process. Exiting.
+[2026-04-14 02:32:31] --- Cron started ---
+[2026-04-14 02:32:31] Found 0 due post(s)
+[2026-04-14 02:32:31] Nothing to process. Exiting.
+[2026-04-14 02:37:10] --- Cron started ---
+[2026-04-14 02:37:10] Found 0 due post(s)
+[2026-04-14 02:37:10] Nothing to process. Exiting.
+[2026-04-14 02:37:31] --- Cron started ---
+[2026-04-14 02:37:31] Found 0 due post(s)
+[2026-04-14 02:37:31] Nothing to process. Exiting.
+[2026-04-14 02:42:09] --- Cron started ---
+[2026-04-14 02:42:09] Found 0 due post(s)
+[2026-04-14 02:42:09] Nothing to process. Exiting.
+[2026-04-14 02:42:31] --- Cron started ---
+[2026-04-14 02:42:31] Found 0 due post(s)
+[2026-04-14 02:42:31] Nothing to process. Exiting.
+[2026-04-14 02:47:10] --- Cron started ---
+[2026-04-14 02:47:10] Found 0 due post(s)
+[2026-04-14 02:47:10] Nothing to process. Exiting.
+[2026-04-14 02:47:31] --- Cron started ---
+[2026-04-14 02:47:31] Found 0 due post(s)
+[2026-04-14 02:47:31] Nothing to process. Exiting.
+[2026-04-14 02:52:09] --- Cron started ---
+[2026-04-14 02:52:09] Found 0 due post(s)
+[2026-04-14 02:52:09] Nothing to process. Exiting.
+[2026-04-14 02:52:31] --- Cron started ---
+[2026-04-14 02:52:31] Found 0 due post(s)
+[2026-04-14 02:52:31] Nothing to process. Exiting.
+[2026-04-14 02:57:10] --- Cron started ---
+[2026-04-14 02:57:10] Found 0 due post(s)
+[2026-04-14 02:57:10] Nothing to process. Exiting.
+[2026-04-14 02:57:31] --- Cron started ---
+[2026-04-14 02:57:31] Found 0 due post(s)
+[2026-04-14 02:57:31] Nothing to process. Exiting.
+[2026-04-14 03:02:09] --- Cron started ---
+[2026-04-14 03:02:09] Found 0 due post(s)
+[2026-04-14 03:02:09] Nothing to process. Exiting.
+[2026-04-14 03:02:31] --- Cron started ---
+[2026-04-14 03:02:31] Found 0 due post(s)
+[2026-04-14 03:02:31] Nothing to process. Exiting.
+[2026-04-14 03:07:10] --- Cron started ---
+[2026-04-14 03:07:10] Found 0 due post(s)
+[2026-04-14 03:07:10] Nothing to process. Exiting.
+[2026-04-14 03:07:31] --- Cron started ---
+[2026-04-14 03:07:31] Found 0 due post(s)
+[2026-04-14 03:07:31] Nothing to process. Exiting.
+[2026-04-14 03:12:09] --- Cron started ---
+[2026-04-14 03:12:09] Found 0 due post(s)
+[2026-04-14 03:12:09] Nothing to process. Exiting.
+[2026-04-14 03:12:31] --- Cron started ---
+[2026-04-14 03:12:31] Found 0 due post(s)
+[2026-04-14 03:12:31] Nothing to process. Exiting.
+[2026-04-14 03:17:09] --- Cron started ---
+[2026-04-14 03:17:09] Found 0 due post(s)
+[2026-04-14 03:17:09] Nothing to process. Exiting.
+[2026-04-14 03:17:31] --- Cron started ---
+[2026-04-14 03:17:31] Found 0 due post(s)
+[2026-04-14 03:17:31] Nothing to process. Exiting.
+[2026-04-14 03:22:09] --- Cron started ---
+[2026-04-14 03:22:09] Found 0 due post(s)
+[2026-04-14 03:22:09] Nothing to process. Exiting.
+[2026-04-14 03:22:31] --- Cron started ---
+[2026-04-14 03:22:31] Found 0 due post(s)
+[2026-04-14 03:22:31] Nothing to process. Exiting.
+[2026-04-14 03:27:09] --- Cron started ---
+[2026-04-14 03:27:09] Found 0 due post(s)
+[2026-04-14 03:27:09] Nothing to process. Exiting.
+[2026-04-14 03:27:31] --- Cron started ---
+[2026-04-14 03:27:31] Found 0 due post(s)
+[2026-04-14 03:27:31] Nothing to process. Exiting.
+[2026-04-14 03:32:10] --- Cron started ---
+[2026-04-14 03:32:10] Found 0 due post(s)
+[2026-04-14 03:32:10] Nothing to process. Exiting.
+[2026-04-14 03:32:31] --- Cron started ---
+[2026-04-14 03:32:31] Found 0 due post(s)
+[2026-04-14 03:32:31] Nothing to process. Exiting.
+[2026-04-14 03:37:10] --- Cron started ---
+[2026-04-14 03:37:10] Found 0 due post(s)
+[2026-04-14 03:37:10] Nothing to process. Exiting.
+[2026-04-14 03:37:31] --- Cron started ---
+[2026-04-14 03:37:31] Found 0 due post(s)
+[2026-04-14 03:37:31] Nothing to process. Exiting.
+[2026-04-14 03:42:10] --- Cron started ---
+[2026-04-14 03:42:10] Found 0 due post(s)
+[2026-04-14 03:42:10] Nothing to process. Exiting.
+[2026-04-14 03:42:31] --- Cron started ---
+[2026-04-14 03:42:31] Found 0 due post(s)
+[2026-04-14 03:42:31] Nothing to process. Exiting.
+[2026-04-14 03:47:09] --- Cron started ---
+[2026-04-14 03:47:09] Found 0 due post(s)
+[2026-04-14 03:47:10] Nothing to process. Exiting.
+[2026-04-14 03:47:31] --- Cron started ---
+[2026-04-14 03:47:31] Found 0 due post(s)
+[2026-04-14 03:47:31] Nothing to process. Exiting.
+[2026-04-14 03:52:10] --- Cron started ---
+[2026-04-14 03:52:10] Found 0 due post(s)
+[2026-04-14 03:52:10] Nothing to process. Exiting.
+[2026-04-14 03:52:31] --- Cron started ---
+[2026-04-14 03:52:31] Found 0 due post(s)
+[2026-04-14 03:52:31] Nothing to process. Exiting.
+[2026-04-14 03:57:09] --- Cron started ---
+[2026-04-14 03:57:09] Found 0 due post(s)
+[2026-04-14 03:57:09] Nothing to process. Exiting.
+[2026-04-14 03:57:31] --- Cron started ---
+[2026-04-14 03:57:31] Found 0 due post(s)
+[2026-04-14 03:57:31] Nothing to process. Exiting.
+[2026-04-14 04:02:10] --- Cron started ---
+[2026-04-14 04:02:10] Found 0 due post(s)
+[2026-04-14 04:02:10] Nothing to process. Exiting.
+[2026-04-14 04:02:31] --- Cron started ---
+[2026-04-14 04:02:31] Found 0 due post(s)
+[2026-04-14 04:02:31] Nothing to process. Exiting.
+[2026-04-14 04:07:10] --- Cron started ---
+[2026-04-14 04:07:10] Found 0 due post(s)
+[2026-04-14 04:07:10] Nothing to process. Exiting.
+[2026-04-14 04:07:31] --- Cron started ---
+[2026-04-14 04:07:31] Found 0 due post(s)
+[2026-04-14 04:07:31] Nothing to process. Exiting.
+[2026-04-14 04:12:09] --- Cron started ---
+[2026-04-14 04:12:09] Found 0 due post(s)
+[2026-04-14 04:12:09] Nothing to process. Exiting.
+[2026-04-14 04:12:31] --- Cron started ---
+[2026-04-14 04:12:31] Found 0 due post(s)
+[2026-04-14 04:12:31] Nothing to process. Exiting.
+[2026-04-14 04:17:10] --- Cron started ---
+[2026-04-14 04:17:10] Found 0 due post(s)
+[2026-04-14 04:17:10] Nothing to process. Exiting.
+[2026-04-14 04:17:32] --- Cron started ---
+[2026-04-14 04:17:32] Found 0 due post(s)
+[2026-04-14 04:17:32] Nothing to process. Exiting.
+[2026-04-14 04:22:10] --- Cron started ---
+[2026-04-14 04:22:10] Found 0 due post(s)
+[2026-04-14 04:22:10] Nothing to process. Exiting.
+[2026-04-14 04:22:31] --- Cron started ---
+[2026-04-14 04:22:31] Found 0 due post(s)
+[2026-04-14 04:22:31] Nothing to process. Exiting.
+[2026-04-14 04:27:10] --- Cron started ---
+[2026-04-14 04:27:10] Found 0 due post(s)
+[2026-04-14 04:27:10] Nothing to process. Exiting.
+[2026-04-14 04:27:31] --- Cron started ---
+[2026-04-14 04:27:31] Found 0 due post(s)
+[2026-04-14 04:27:31] Nothing to process. Exiting.
+[2026-04-14 04:32:09] --- Cron started ---
+[2026-04-14 04:32:10] Found 0 due post(s)
+[2026-04-14 04:32:10] Nothing to process. Exiting.
+[2026-04-14 04:32:31] --- Cron started ---
+[2026-04-14 04:32:31] Found 0 due post(s)
+[2026-04-14 04:32:31] Nothing to process. Exiting.
+[2026-04-14 04:37:09] --- Cron started ---
+[2026-04-14 04:37:10] Found 0 due post(s)
+[2026-04-14 04:37:10] Nothing to process. Exiting.
+[2026-04-14 04:37:31] --- Cron started ---
+[2026-04-14 04:37:31] Found 0 due post(s)
+[2026-04-14 04:37:31] Nothing to process. Exiting.
+[2026-04-14 04:42:09] --- Cron started ---
+[2026-04-14 04:42:09] Found 0 due post(s)
+[2026-04-14 04:42:09] Nothing to process. Exiting.
+[2026-04-14 04:42:31] --- Cron started ---
+[2026-04-14 04:42:31] Found 0 due post(s)
+[2026-04-14 04:42:31] Nothing to process. Exiting.
+[2026-04-14 04:47:10] --- Cron started ---
+[2026-04-14 04:47:10] Found 0 due post(s)
+[2026-04-14 04:47:10] Nothing to process. Exiting.
+[2026-04-14 04:47:31] --- Cron started ---
+[2026-04-14 04:47:31] Found 0 due post(s)
+[2026-04-14 04:47:31] Nothing to process. Exiting.
+[2026-04-14 04:52:09] --- Cron started ---
+[2026-04-14 04:52:09] Found 0 due post(s)
+[2026-04-14 04:52:09] Nothing to process. Exiting.
+[2026-04-14 04:52:31] --- Cron started ---
+[2026-04-14 04:52:31] Found 0 due post(s)
+[2026-04-14 04:52:31] Nothing to process. Exiting.
+[2026-04-14 04:57:10] --- Cron started ---
+[2026-04-14 04:57:10] Found 0 due post(s)
+[2026-04-14 04:57:10] Nothing to process. Exiting.
+[2026-04-14 04:57:31] --- Cron started ---
+[2026-04-14 04:57:31] Found 0 due post(s)
+[2026-04-14 04:57:31] Nothing to process. Exiting.
+[2026-04-14 05:02:10] --- Cron started ---
+[2026-04-14 05:02:10] Found 0 due post(s)
+[2026-04-14 05:02:10] Nothing to process. Exiting.
+[2026-04-14 05:02:31] --- Cron started ---
+[2026-04-14 05:02:31] Found 0 due post(s)
+[2026-04-14 05:02:31] Nothing to process. Exiting.
+[2026-04-14 05:07:09] --- Cron started ---
+[2026-04-14 05:07:09] Found 0 due post(s)
+[2026-04-14 05:07:09] Nothing to process. Exiting.
+[2026-04-14 05:07:31] --- Cron started ---
+[2026-04-14 05:07:31] Found 0 due post(s)
+[2026-04-14 05:07:31] Nothing to process. Exiting.
+[2026-04-14 05:12:10] --- Cron started ---
+[2026-04-14 05:12:10] Found 0 due post(s)
+[2026-04-14 05:12:10] Nothing to process. Exiting.
+[2026-04-14 05:12:31] --- Cron started ---
+[2026-04-14 05:12:31] Found 0 due post(s)
+[2026-04-14 05:12:31] Nothing to process. Exiting.
+[2026-04-14 05:17:10] --- Cron started ---
+[2026-04-14 05:17:10] Found 0 due post(s)
+[2026-04-14 05:17:10] Nothing to process. Exiting.
+[2026-04-14 05:17:31] --- Cron started ---
+[2026-04-14 05:17:31] Found 0 due post(s)
+[2026-04-14 05:17:31] Nothing to process. Exiting.
+[2026-04-14 05:22:10] --- Cron started ---
+[2026-04-14 05:22:10] Found 0 due post(s)
+[2026-04-14 05:22:10] Nothing to process. Exiting.
+[2026-04-14 05:22:31] --- Cron started ---
+[2026-04-14 05:22:31] Found 0 due post(s)
+[2026-04-14 05:22:31] Nothing to process. Exiting.
+[2026-04-14 05:27:09] --- Cron started ---
+[2026-04-14 05:27:09] Found 0 due post(s)
+[2026-04-14 05:27:09] Nothing to process. Exiting.
+[2026-04-14 05:27:31] --- Cron started ---
+[2026-04-14 05:27:31] Found 0 due post(s)
+[2026-04-14 05:27:31] Nothing to process. Exiting.
+[2026-04-14 05:32:10] --- Cron started ---
+[2026-04-14 05:32:10] Found 0 due post(s)
+[2026-04-14 05:32:10] Nothing to process. Exiting.
+[2026-04-14 05:32:31] --- Cron started ---
+[2026-04-14 05:32:31] Found 0 due post(s)
+[2026-04-14 05:32:31] Nothing to process. Exiting.
+[2026-04-14 05:37:09] --- Cron started ---
+[2026-04-14 05:37:10] Found 0 due post(s)
+[2026-04-14 05:37:10] Nothing to process. Exiting.
+[2026-04-14 05:37:31] --- Cron started ---
+[2026-04-14 05:37:31] Found 0 due post(s)
+[2026-04-14 05:37:31] Nothing to process. Exiting.
+[2026-04-14 05:42:10] --- Cron started ---
+[2026-04-14 05:42:10] Found 0 due post(s)
+[2026-04-14 05:42:10] Nothing to process. Exiting.
+[2026-04-14 05:42:31] --- Cron started ---
+[2026-04-14 05:42:31] Found 0 due post(s)
+[2026-04-14 05:42:31] Nothing to process. Exiting.
+[2026-04-14 05:47:10] --- Cron started ---
+[2026-04-14 05:47:10] Found 0 due post(s)
+[2026-04-14 05:47:10] Nothing to process. Exiting.
+[2026-04-14 05:47:33] --- Cron started ---
+[2026-04-14 05:47:33] Found 0 due post(s)
+[2026-04-14 05:47:33] Nothing to process. Exiting.
+[2026-04-14 05:52:10] --- Cron started ---
+[2026-04-14 05:52:10] Found 0 due post(s)
+[2026-04-14 05:52:10] Nothing to process. Exiting.
+[2026-04-14 05:52:31] --- Cron started ---
+[2026-04-14 05:52:31] Found 0 due post(s)
+[2026-04-14 05:52:31] Nothing to process. Exiting.
+[2026-04-14 05:57:10] --- Cron started ---
+[2026-04-14 05:57:10] Found 0 due post(s)
+[2026-04-14 05:57:10] Nothing to process. Exiting.
+[2026-04-14 05:57:31] --- Cron started ---
+[2026-04-14 05:57:31] Found 0 due post(s)
+[2026-04-14 05:57:31] Nothing to process. Exiting.

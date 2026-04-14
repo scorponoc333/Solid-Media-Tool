@@ -1,8 +1,7 @@
 # SolidTech Social Media Manager — Project Context
 
 > **Read this file at the start of every new Claude session.**
-> It captures architecture decisions, current state, and key details
-> so nothing is lost between conversations.
+> Also read `CLAUDE.md` for role permissions, upgrade guidelines, and roadmap.
 
 ---
 
@@ -10,27 +9,30 @@
 
 | | DEV (XAMPP) | PROD (SiteGround) |
 |---|---|---|
-| **Root path** | `C:\xampp\htdocs\social-media\` | `/home/<user>/public_html/social-media/` |
-| **Base URL** | `http://localhost/social-media/public` | `https://social.solidtech.com` |
+| **Root path** | `C:\xampp\htdocs\Solid-SocialMedia\` | `/home/<user>/public_html/social-media/` |
+| **Base URL** | `http://localhost/Solid-SocialMedia/public` | `https://social.solidtech.com` |
 | **DB name** | `solidtech_social` | `solidtech_social_prod` |
 | **DB user** | `root` (no password) | `solidtech_prod_user` |
 | **Switch env** | Set `APP_ENV` to `'local'` in `config/env.php` | Set `APP_ENV` to `'production'` in `config/env.php` |
-
-**Important:** Always edit files in the XAMPP path (`C:\xampp\htdocs\social-media\`) — that's where the dev browser points. There is a separate copy on Google Drive (`G:\My Drive\Clients\Social Media\`) that is NOT served by XAMPP.
 
 ---
 
 ## Architecture Overview
 
 - **Framework:** Custom PHP MVC (no Composer, no external framework)
-- **Core:** `core/` — Router, Controller base, Model base, Database (PDO/MySQL)
+- **Core:** `core/` — Router, Controller base (with RBAC), Model base, Database (PDO/MySQL)
 - **Config:** `config/env.php` — all constants (DB, API keys, env toggle)
-- **Controllers:** `app/controllers/` — PostController, GeneratorController, CalendarController, BrandingController, etc.
-- **Models:** `app/models/` — Post, BrandingSetting, ContentMemory, User, Doc
-- **Views:** `app/views/` — PHP templates loaded by controllers
-- **Services:** `app/services/` — ZernioService, BrandingService, ContentMemoryService, OpenRouterService, KieService
-- **Public entry:** `public/index.php` — front controller, all requests route through here
+- **Public entry:** `public/index.php` — front controller, loads all models/services, runs router
 - **Cron jobs:** `cron/run_scheduled_posts.php` — scheduled post publisher
+
+### Controllers
+PostController, GeneratorController, CalendarController, BrandingController, ArtDirectionController, ContentStrategyController, WizardController, UserController, SmtpController, ReviewController, AuthController, DashboardController, ReportingController, MemoryController, DocumentationController
+
+### Models
+User, Post, BrandingSetting, ContentMemory, ArtDirectionSetting, ContentTheme, ThemeSample, ThemeSchedule, SmtpSetting, ApprovalSetting, PostReview
+
+### Services
+AIService, ZernioService, BrandingService, ContentMemoryService, ArtDirectionService, ContentStrategyService, WizardService, EmailService, UserManagementService, ApprovalService, ModalService
 
 ---
 
@@ -38,174 +40,193 @@
 
 ### Zernio (Social Media Posting API)
 - **Service:** `app/services/ZernioService.php`
-- **Purpose:** Posts content to Facebook and LinkedIn via their API
-- **Methods:**
-  - `postNow($platform, $content, $imageUrl)` — immediately publishes (used by "Post Now" button and cron job)
-  - `schedulePost()` — exists but is NO LONGER USED (we handle scheduling ourselves via cron)
-- **Account IDs (constants in env.php):**
-  - Facebook: `ZERNIO_FACEBOOK_ACCOUNT_ID`
-  - LinkedIn: `ZERNIO_LINKEDIN_ACCOUNT_ID`
-- **Image handling:** Local images (localhost) are uploaded to a temporary host for dev; production URLs pass through directly. See `resolveImageUrl()`.
+- Posts to Facebook and LinkedIn via API
+- `postNow()` used by "Post Now" button and cron job
+- Image handling: localhost images uploaded to temp host for dev
 
 ### OpenRouter (AI Content Generation)
-- **Service:** `app/services/OpenRouterService.php`
-- **Used by:** GeneratorController for creating post content
+- **Service:** `app/services/AIService.php` — `generateWeekContent()`, `generateSinglePost()`, `regenerateText()`
+- Theme-aware: accepts theme data (name, instructions, samples, required elements) per post
+- Memory-aware: excludes recent topics and angles via ContentMemoryService
 
 ### Kie.ai (AI Image Generation)
-- **Service:** `app/services/KieService.php`
-- **Used by:** GeneratorController for creating post images
+- **Service:** `app/services/AIService.php` — `generateImage()`
+- Art direction modifiers appended to every image prompt via ArtDirectionService
+- Watermarking: logo + website + gradient overlay (configurable position, opacity, enable/disable)
 
 ---
 
-## Platforms
+## User Roles & Access (RBAC)
 
-| Platform | Status | Notes |
-|---|---|---|
-| **Facebook** | Active | Fully connected via Zernio |
-| **LinkedIn** | Active | Fully connected via Zernio |
-| **Instagram** | Future | UI placeholder exists (disabled checkbox), not yet connected |
-| **X / Twitter** | Future | UI placeholder exists (disabled checkbox), not yet connected |
+Three roles: **admin**, **editor**, **reviewer**
 
-- Users can select multiple active platforms per post
-- Posts store both `platform` (legacy single, always first selected) and `platforms` (JSON array of all selected)
-- The cron job and Post Now both loop through ALL selected platforms
+| Feature | Admin | Editor | Reviewer |
+|---------|:-----:|:------:|:--------:|
+| Dashboard | Full | Full | Read-only |
+| Generator | Yes | Yes | No |
+| Posts (create/edit) | Yes | Yes | No |
+| Posts (view) | Yes | Yes | Yes |
+| Posts (approve/reject) | Yes | No | Yes |
+| Calendar | Full | Full | View only |
+| Reports | Full | Full | No |
+| Content Strategy | Yes | No | No |
+| Art Direction | Yes | No | No |
+| Branding / Wizard | Yes | No | No |
+| User Management | Yes | No | No |
+| SMTP Settings | Yes | No | No |
+| Reviews Queue | Yes | No | Yes |
+| Memory | Yes | Yes | No |
+| Docs | Yes | Yes | Yes |
+
+RBAC enforced by `Controller::requireRole()` and nav filtering in `layouts/main.php`.
+
+---
+
+## Content Strategy System
+
+- **Themes** (`content_themes`): Named categories with copy instructions, required elements (phone/website/CTA/hashtags/emojis), default hashtags, image style override
+- **Theme Samples** (`theme_samples`): 1-3 example posts per theme for AI to mimic
+- **Schedule** (`theme_schedule`): Day-of-week → theme mapping
+- **AI Critique**: Analyzes post copy and returns strengths, suggestions, revised version
+
+## Art Direction System
+
+- **Settings** (`art_direction_settings`): Image style, realism level, color temperature, contrast, mood, brand color bleed, illustration limit, avoid list
+- **Watermark controls**: Enable/disable, website text override, logo position, gradient opacity
+- **Presets**: Corporate IT, Tech Magazine, Dark & Dramatic, Clean Professional
+- **Prompt modifiers**: Assembled by `ArtDirectionService::buildImagePromptModifiers()` and appended to every image generation prompt
+
+## Approval Workflow
+
+- **Settings** (`approval_settings`): Toggle approval required, min approvals count (1-5)
+- **Flow**: Editor creates post → submits for review (`pending_review`) → Reviewers approve/request changes → When min approvals met → post moves back to `draft` for scheduling
+- **Optional**: Admin can enable/disable via User Management page
+
+---
+
+## Post Status Lifecycle
+
+```
+draft → pending_review (if approval required) → draft (after approved) → scheduled → published
+                                                                                   → failed
+```
+
+---
+
+## User Invitation Flow
+
+1. Admin creates user (email, name, role) on User Management page
+2. System generates random 12-char temp password
+3. If SMTP configured: sends branded HTML email with login URL + temp password
+4. If SMTP not configured: shows temp password to admin for manual sharing
+5. User logs in → forced password change lightbox (non-dismissable)
+6. After password change → onboarding tour starts (role-specific)
+7. Tour uses spiral favicon as guide avatar, brand-colored Next button
+
+---
+
+## Setup Wizard
+
+- 5 steps: Company Basics → Website Scan → Brand Identity → Theme Suggestions → Review
+- AI scans website to extract services, about text, contact info, keywords
+- AI suggests tailored content themes
+- Brand reveal animation on completion (typewriter text, orbiting ring, particles, 5-7 sec)
+- Re-runnable from Branding page
 
 ---
 
 ## Scheduling & Posting Flow
 
-### How scheduling works:
-1. User creates/edits a post, selects platform(s), sets a future date/time
-2. Clicks **"Schedule"** button
-3. Post is saved with `status = 'scheduled'` and `scheduled_at` timestamp
-4. **NO API call is made at this point** — the post just sits in the database
-5. The **cron job** (`cron/run_scheduled_posts.php`) runs every minute
-6. It queries: `WHERE status = 'scheduled' AND scheduled_at <= NOW()`
-7. For each due post, it calls `ZernioService::postNow()` for each platform
-8. Updates status to `published` (success) or `failed` (all platforms failed)
-9. Logs everything to `social_post_logs` table and `storage/cron.log`
-
-### Validation rules:
-- Cannot schedule a post in the past (validated in both JS and PHP)
-- Must select at least one platform
-- Must set a date/time
-
-### "Post Now" button:
-- Immediately calls `ZernioService::postNow()` for each selected platform
-- Does NOT require a scheduled date
-
-### "Retry Failed" button:
-- Checks post logs to find which platforms failed
-- If scheduled time is in the future: resets to `scheduled`, lets cron retry
-- If scheduled time has passed (or no schedule): calls `postNow()` immediately
-
-### Cron setup:
-- **XAMPP (dev):** Run manually or use Windows Task Scheduler
-  ```
-  php C:\xampp\htdocs\social-media\cron\run_scheduled_posts.php
-  ```
-- **SiteGround (prod):** Site Tools > Devs > Cron Jobs, set to `* * * * *`
-  ```
-  php /home/<user>/public_html/social-media/cron/run_scheduled_posts.php
-  ```
+1. User creates/edits post, selects platform(s), sets future date/time
+2. If approval required: "Submit for Review" → reviewers approve → back to draft
+3. Clicks "Schedule" → status = `scheduled`
+4. Cron job runs every minute → queries due posts → calls ZernioService → updates status
+5. Logs to `social_post_logs` table
 
 ---
 
-## Post Statuses
+## Database Tables
 
-| Status | Meaning |
-|---|---|
-| `draft` | Created but not scheduled or posted |
-| `scheduled` | Has a future date/time, waiting for cron to publish |
-| `published` | Successfully posted to at least one platform |
-| `failed` | All platform attempts failed |
-
----
-
-## Branding System
-
-- **Settings stored in:** `branding_settings` table (per client)
-- **Fields:** `logo_url`, `primary_color`, `secondary_color`, `login_bg_url`, `particles_enabled`, `company_name`, `tagline`
-- **Service:** `app/services/BrandingService.php`
-- **Used by:** Login page, sidebar, generator lightbox, and anywhere brand colors appear
-- **Current brand:** SolidTech — reddish primary color, logo stored as uploaded file
+| Table | Purpose |
+|-------|---------|
+| `users` | Auth, roles (admin/editor/reviewer), temp password, tour state, client_id |
+| `posts` | Social media posts with full status lifecycle |
+| `social_post_logs` | Log of every posting attempt per platform |
+| `branding_settings` | Per-client brand identity (logo, colors, favicon, etc.) |
+| `art_direction_settings` | Per-client image generation style controls |
+| `content_themes` | Reusable content themes with copy instructions |
+| `theme_samples` | Example posts linked to themes |
+| `theme_schedule` | Day-of-week → theme mapping |
+| `content_memory` | Topic/angle deduplication hashes |
+| `smtp_settings` | Email provider config (SMTP/SendGrid/Mailgun) |
+| `approval_settings` | Per-client approval workflow toggle + min approvals |
+| `post_reviews` | Individual approval/rejection records per post |
 
 ---
 
-## Content Memory System
-
-- **Purpose:** Prevents repetitive AI-generated content
-- **Service:** `app/services/ContentMemoryService.php`
-- **Model:** `app/models/ContentMemory.php`
-- **How:** Stores hashes of topic + keywords + angle for each generated post. Generator checks against memory before creating new content.
-
----
-
-## Generator Lightbox
-
-- **Location:** `app/views/generator/index.php`
-- **Trigger:** Shows when "Generate Full Week" or "Generate Single Post" is clicked
-- **Features:**
-  - Company logo from branding (inverted to white)
-  - Brand-colored background (primary → secondary gradient)
-  - Orbiting animated dots around the logo
-  - Pulse rings radiating outward
-  - Animated progress bar (white on brand background)
-  - Rotating status messages ("Analyzing your brand voice...", etc.)
-  - Floating particles
-  - Disappears when generation completes
-
----
-
-## Database Tables (Key Ones)
-
-- `posts` — all social media posts (title, content, image_url, platform, platforms, status, scheduled_at, post_type, topic, keywords, angle, content_hash, zernio_post_id)
-- `social_post_logs` — log of every posting attempt (post_id, platform, status, account_id, zernio_post_id, response_data, error_message, created_at)
-- `branding_settings` — per-client branding config
-- `content_memory` — used topics/angles for deduplication
-- `users` — authentication
-- `docs` — documentation/knowledge base entries
-
----
-
-## Known Issues / Things to Watch
-
-1. **Two file copies:** XAMPP (`C:\xampp\htdocs\social-media\`) is the working dev copy. Google Drive (`G:\My Drive\Clients\Social Media\`) is a separate copy — edits there won't show in the browser. Always edit the XAMPP copy.
-2. **Calendar shows single platform:** The calendar tooltip/modal reads `post.platform` (singular). Needs update to show all platforms from the `platforms` JSON column.
-3. **Instagram & X/Twitter:** Checkbox UI exists but is disabled. Will need Zernio account IDs and enabling the checkboxes when ready.
-4. **Image URL for dev:** Zernio can't reach `localhost` images. The `resolveImageUrl()` method in ZernioService uploads them to a temporary host. In production this won't be needed.
-
----
-
-## File Structure (Key Paths)
+## File Structure
 
 ```
-social-media/
-  config/env.php          — environment config, API keys, DB credentials
-  core/                   — Router, Controller, Model, Database
+Solid-SocialMedia/
+  CLAUDE.md                — Project intelligence for AI sessions (READ THIS)
+  PROJECT-CONTEXT.md       — This file
+  config/
+    env.php                — Environment config, API keys, DB credentials
+    routes.php             — All GET/POST route definitions
+  core/
+    Router.php             — URL routing with parameterized paths
+    Controller.php         — Base class: view(), json(), requireAuth(), requireRole()
+    Model.php              — Base class: find(), create(), update(), delete()
+    Database.php           — PDO singleton
   app/
-    controllers/          — PostController, GeneratorController, CalendarController, etc.
-    models/               — Post, User, BrandingSetting, ContentMemory, Doc
-    services/             — ZernioService, BrandingService, OpenRouterService, KieService, ContentMemoryService
+    controllers/           — One per feature area (16 controllers)
+    models/                — One per DB table (11 models)
+    services/              — Business logic (11 services)
     views/
-      editor/edit.php     — Edit post page (platform checkboxes, schedule, post now)
-      editor/index.php    — All posts list
-      generator/index.php — Content generator with AI lightbox
-      calendar/index.php  — Calendar view
-      branding/index.php  — Branding settings (logo, colors)
-      memory/index.php    — Content memory viewer
-      docs/index.php      — Documentation
-      reports/index.php   — Performance reports
+      layouts/main.php     — Master layout: role-filtered nav, password lightbox, tour
+      auth/login.php       — Login page (glassmorphism, particles)
+      dashboard/           — Dashboard overview
+      generator/           — Content generator with Plan & Generate lightbox
+      editor/              — Post editor with AI critique
+      calendar/            — Calendar view
+      reporting/           — Reports and analytics
+      branding/            — Brand settings + wizard button
+      art-direction/       — Art direction controls
+      content-strategy/    — Theme management + weekly schedule
+      wizard/              — Setup wizard with brand reveal animation
+      users/               — User management + approval settings
+      smtp/                — Email provider configuration
+      reviews/             — Post review queue for approvers
+      emails/              — HTML email templates (invitation)
+      components/tour.php  — Onboarding tour engine
+      memory/              — Content memory viewer
+      documentation/       — User-facing docs
   cron/
-    run_scheduled_posts.php — Cron job that publishes due posts
+    run_scheduled_posts.php
+  database/
+    migrations/            — 001 (initial), 002 (art direction + themes), 003 (users + SMTP + reviews)
   public/
-    index.php             — Front controller / entry point
-    uploads/              — Uploaded files (logos, images)
+    index.php              — Front controller
+    css/app.css            — Main stylesheet
+    js/app.js              — Modal, toast, theme toggle utilities
+    uploads/               — Uploaded files
+    favicon.ico            — Browser favicon (from spiral.png)
+    favicon-*.png          — Favicon sizes (16, 32, 48)
+    apple-touch-icon.png   — iOS icon (180x180)
+  img/
+    spiral.png             — SolidTech spiral logo source
   storage/
-    cron.log              — Cron job execution log
-  PROJECT-CONTEXT.md      — THIS FILE
+    cron.log               — Cron job execution log
 ```
 
 ---
 
-*Last updated: March 25, 2026*
+## Known Issues
+
+1. **Calendar shows single platform** — tooltip reads `post.platform` (singular). Needs update to show all platforms from `platforms` JSON column.
+2. **Instagram & X/Twitter** — Checkbox UI exists but disabled. Needs Zernio account IDs.
+3. **Image URL for dev** — Zernio can't reach localhost images; `resolveImageUrl()` uploads to temp host. Not needed in production.
+
+---
+
+*Last updated: April 13, 2026*

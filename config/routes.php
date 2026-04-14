@@ -3,6 +3,7 @@
 // Auth routes
 $router->get('/login', 'AuthController', 'loginForm');
 $router->post('/login', 'AuthController', 'login');
+$router->post('/login-ajax', 'AuthController', 'loginAjax');
 $router->get('/logout', 'AuthController', 'logout');
 
 // Dashboard
@@ -33,12 +34,54 @@ $router->get('/calendar/events', 'CalendarController', 'events');
 
 // Reporting
 $router->get('/reporting', 'ReportingController', 'index');
+$router->get('/reporting/export-csv', 'ReportingController', 'exportCsv');
 
 // Branding
 $router->get('/branding', 'BrandingController', 'index');
 $router->post('/branding/save', 'BrandingController', 'save');
 $router->post('/branding/save-api', 'BrandingController', 'saveApi');
 $router->post('/branding/test-api', 'BrandingController', 'testApi');
+
+// Art Direction
+$router->get('/art-direction', 'ArtDirectionController', 'index');
+$router->post('/art-direction/save', 'ArtDirectionController', 'save');
+$router->post('/art-direction/preview', 'ArtDirectionController', 'preview');
+$router->post('/art-direction/apply-preset', 'ArtDirectionController', 'applyPreset');
+
+// Content Strategy
+$router->get('/content-strategy', 'ContentStrategyController', 'index');
+$router->post('/content-strategy/save-theme', 'ContentStrategyController', 'saveTheme');
+$router->post('/content-strategy/delete-theme/{id}', 'ContentStrategyController', 'deleteTheme');
+$router->post('/content-strategy/save-schedule', 'ContentStrategyController', 'saveSchedule');
+$router->post('/content-strategy/critique', 'ContentStrategyController', 'critique');
+
+// Setup Wizard
+$router->get('/wizard', 'WizardController', 'index');
+$router->post('/wizard/scan-website', 'WizardController', 'scanWebsite');
+$router->post('/wizard/suggest-themes', 'WizardController', 'suggestThemes');
+$router->post('/wizard/save', 'WizardController', 'save');
+
+// User Management
+$router->get('/users', 'UserController', 'index');
+$router->post('/users/create', 'UserController', 'create');
+$router->post('/users/update/{id}', 'UserController', 'update');
+$router->post('/users/deactivate/{id}', 'UserController', 'deactivate');
+$router->post('/users/resend-invite/{id}', 'UserController', 'resendInvite');
+$router->post('/users/save-approval-settings', 'UserController', 'saveApprovalSettings');
+
+// SMTP / Email Settings
+$router->get('/smtp', 'SmtpController', 'index');
+$router->post('/smtp/save', 'SmtpController', 'save');
+$router->post('/smtp/test', 'SmtpController', 'test');
+
+// Post Reviews
+$router->get('/reviews', 'ReviewController', 'index');
+$router->post('/reviews/approve/{id}', 'ReviewController', 'approve');
+$router->post('/reviews/request-changes/{id}', 'ReviewController', 'requestChanges');
+
+// Auth extras (password change, tour complete)
+$router->post('/auth/change-password', 'AuthController', 'changePassword');
+$router->post('/auth/complete-tour', 'AuthController', 'completeTour');
 
 // Memory
 $router->get('/memory', 'MemoryController', 'index');

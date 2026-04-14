@@ -5,6 +5,7 @@ class BrandingController extends Controller
     public function index(): void
     {
         $this->requireAuth();
+        $this->requireRole('admin');
 
         $brandingService = new BrandingService();
         $branding = $brandingService->get($GLOBALS['client_id']);
@@ -18,6 +19,7 @@ class BrandingController extends Controller
     public function save(): void
     {
         $this->requireAuth();
+        $this->requireRole('admin');
 
         if (!$this->verifyCsrf()) {
             $this->json(['error' => 'Invalid request.'], 403);
@@ -32,20 +34,36 @@ class BrandingController extends Controller
             'secondary_color' => trim($_POST['secondary_color'] ?? '#8b5cf6'),
             'tagline' => trim($_POST['tagline'] ?? ''),
             'website' => trim($_POST['website'] ?? ''),
+            'first_comment' => trim($_POST['first_comment'] ?? ''),
             'particles_enabled' => isset($_POST['particles_enabled']) ? 1 : 0,
         ];
 
-        if (!empty($_FILES['logo']['tmp_name'])) {
+        // Handle file uploads — or removal if flagged
+        if (!empty($_POST['remove_logo']) && $_POST['remove_logo'] === '1') {
+            $data['logo_url'] = '';
+        } elseif (!empty($_FILES['logo']['tmp_name'])) {
             $logoPath = $this->handleUpload('logo');
             if ($logoPath) {
                 $data['logo_url'] = $logoPath;
             }
         }
 
-        if (!empty($_FILES['login_bg']['tmp_name'])) {
+        if (!empty($_POST['remove_login_bg']) && $_POST['remove_login_bg'] === '1') {
+            $data['login_bg_url'] = '';
+        } elseif (!empty($_FILES['login_bg']['tmp_name'])) {
             $bgPath = $this->handleUpload('login_bg');
             if ($bgPath) {
                 $data['login_bg_url'] = $bgPath;
+            }
+        }
+
+        if (!empty($_POST['remove_favicon']) && $_POST['remove_favicon'] === '1') {
+            $data['favicon_url'] = '';
+        } elseif (!empty($_FILES['favicon']['tmp_name'])) {
+            $faviconPath = $this->handleUpload('favicon');
+            if ($faviconPath) {
+                $data['favicon_url'] = $faviconPath;
+                $this->generateFaviconSizes($faviconPath);
             }
         }
 
@@ -66,6 +84,7 @@ class BrandingController extends Controller
     public function saveApi(): void
     {
         $this->requireAuth();
+        $this->requireRole('admin');
 
         $input = json_decode(file_get_contents('php://input'), true);
         if (!$input || ($input['csrf_token'] ?? '') !== ($_SESSION['csrf_token'] ?? '')) {
@@ -110,6 +129,7 @@ class BrandingController extends Controller
     public function testApi(): void
     {
         $this->requireAuth();
+        $this->requireRole('admin');
 
         $input = json_decode(file_get_contents('php://input'), true);
         if (!$input || ($input['csrf_token'] ?? '') !== ($_SESSION['csrf_token'] ?? '')) {
@@ -188,6 +208,49 @@ class BrandingController extends Controller
         } else {
             $this->json(['ok' => false, 'error' => 'Unknown service']);
         }
+    }
+
+    private function generateFaviconSizes(string $faviconWebUrl): void
+    {
+        $filename = basename(parse_url($faviconWebUrl, PHP_URL_PATH));
+        $localFile = UPLOAD_DIR . $filename;
+        self::generateFaviconSizesFromFile($localFile);
+    }
+
+    public static function generateFaviconSizesFromFile(string $localFile): void
+    {
+        if (!file_exists($localFile)) return;
+
+        $info = getimagesize($localFile);
+        if (!$info) return;
+
+        $src = match ($info['mime']) {
+            'image/png' => imagecreatefrompng($localFile),
+            'image/jpeg' => imagecreatefromjpeg($localFile),
+            'image/webp' => function_exists('imagecreatefromwebp') ? imagecreatefromwebp($localFile) : null,
+            'image/gif' => imagecreatefromgif($localFile),
+            default => null,
+        };
+        if (!$src) return;
+
+        $publicDir = APP_ROOT . '/public/';
+        $sizes = [16, 32, 48, 180];
+        $names = [16 => 'favicon-16.png', 32 => 'favicon-32.png', 48 => 'favicon-48.png', 180 => 'apple-touch-icon.png'];
+
+        foreach ($sizes as $s) {
+            $dst = imagecreatetruecolor($s, $s);
+            imagealphablending($dst, false);
+            imagesavealpha($dst, true);
+            $trans = imagecolorallocatealpha($dst, 0, 0, 0, 127);
+            imagefill($dst, 0, 0, $trans);
+            imagecopyresampled($dst, $src, 0, 0, 0, 0, $s, $s, imagesx($src), imagesy($src));
+            imagepng($dst, $publicDir . $names[$s]);
+            imagedestroy($dst);
+        }
+
+        // Also create favicon.ico (32x32 PNG)
+        copy($publicDir . 'favicon-32.png', $publicDir . 'favicon.ico');
+        imagedestroy($src);
     }
 
     private function handleUpload(string $field): ?string

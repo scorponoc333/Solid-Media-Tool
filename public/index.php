@@ -19,6 +19,13 @@ require_once APP_ROOT . '/app/models/User.php';
 require_once APP_ROOT . '/app/models/Post.php';
 require_once APP_ROOT . '/app/models/BrandingSetting.php';
 require_once APP_ROOT . '/app/models/ContentMemory.php';
+require_once APP_ROOT . '/app/models/ArtDirectionSetting.php';
+require_once APP_ROOT . '/app/models/ContentTheme.php';
+require_once APP_ROOT . '/app/models/ThemeSample.php';
+require_once APP_ROOT . '/app/models/ThemeSchedule.php';
+require_once APP_ROOT . '/app/models/SmtpSetting.php';
+require_once APP_ROOT . '/app/models/ApprovalSetting.php';
+require_once APP_ROOT . '/app/models/PostReview.php';
 
 // Load services
 require_once APP_ROOT . '/app/services/AIService.php';
@@ -26,6 +33,12 @@ require_once APP_ROOT . '/app/services/ZernioService.php';
 require_once APP_ROOT . '/app/services/ContentMemoryService.php';
 require_once APP_ROOT . '/app/services/BrandingService.php';
 require_once APP_ROOT . '/app/services/ModalService.php';
+require_once APP_ROOT . '/app/services/ArtDirectionService.php';
+require_once APP_ROOT . '/app/services/ContentStrategyService.php';
+require_once APP_ROOT . '/app/services/WizardService.php';
+require_once APP_ROOT . '/app/services/EmailService.php';
+require_once APP_ROOT . '/app/services/UserManagementService.php';
+require_once APP_ROOT . '/app/services/ApprovalService.php';
 
 // Single client mode
 $GLOBALS['client_id'] = CLIENT_ID;

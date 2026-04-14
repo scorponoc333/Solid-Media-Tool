@@ -1,16 +1,16 @@
 <style>
-.cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+.cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; padding:16px 20px; background:var(--bg-card); border:1px solid var(--border); border-left:4px solid var(--primary); border-radius:var(--radius-lg); box-shadow:0 2px 8px rgba(0,0,0,0.04); }
 .cal-header h2 { font-size:22px; font-weight:700; color:var(--text); min-width:220px; text-align:center; }
 .cal-nav { display:flex; gap:8px; }
-.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; background:var(--bg-card); box-shadow:var(--shadow-sm); }
-.cal-day-header { padding:12px 8px; font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; text-align:center; background:var(--bg-input); border-bottom:1px solid var(--border); }
-.cal-cell { min-height:110px; padding:8px; border-bottom:1px solid var(--border-light); border-right:1px solid var(--border-light); position:relative; transition:background var(--transition); }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; background:var(--bg-card); box-shadow:0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); }
+.cal-day-header { padding:14px 8px; font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.06em; text-align:center; background:linear-gradient(180deg, rgba(var(--primary-rgb),0.06) 0%, rgba(var(--primary-rgb),0.02) 100%); border-bottom:2px solid rgba(var(--primary-rgb),0.12); }
+.cal-cell { min-height:110px; padding:8px; border-bottom:1px solid var(--border-light); border-right:1px solid var(--border-light); position:relative; transition:all 0.2s ease; }
 .cal-cell:nth-child(7n) { border-right:none; }
-.cal-cell:hover { background:var(--bg-input); }
-.cal-cell.today { background:rgba(var(--primary-rgb),0.04); }
-.cal-cell.today .cal-date { background:var(--primary); color:#fff; }
+.cal-cell:hover { background:rgba(var(--primary-rgb),0.03); }
+.cal-cell.today { background:rgba(var(--primary-rgb),0.06); box-shadow:inset 0 0 0 1px rgba(var(--primary-rgb),0.12); }
+.cal-cell.today .cal-date { background:var(--primary); color:#fff; box-shadow:0 2px 8px rgba(var(--primary-rgb),0.3); }
 .cal-cell.other-month { opacity:0.35; }
-.cal-date { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; }
+.cal-date { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; transition:all 0.2s ease; }
 .cal-dots { display:flex; flex-direction:column; gap:3px; }
 .cal-dot { display:flex; align-items:center; gap:5px; padding:3px 6px; border-radius:6px; cursor:pointer; transition:background var(--transition); font-size:11px; font-weight:500; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .cal-dot:hover { filter:brightness(1.15); }
@@ -23,11 +23,35 @@
 .status-scheduled .dot-circle { background:var(--info); }
 .status-published .dot-circle { background:var(--success); }
 .status-failed .dot-circle { background:var(--danger); }
-.cal-tooltip { position:absolute; z-index:200; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); box-shadow:var(--shadow-lg); padding:12px; width:240px; pointer-events:none; display:none; }
-.cal-tooltip.visible { display:block; }
+.cal-tooltip { position:absolute; z-index:200; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); box-shadow:var(--shadow-lg); padding:12px; width:240px; pointer-events:none; opacity:0; transform:scale(0.92); transition:opacity 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1); visibility:hidden; }
+.cal-tooltip.visible { opacity:1; transform:scale(1); visibility:visible; }
 .cal-tooltip-img { width:100%; height:100px; object-fit:cover; border-radius:var(--radius-sm); margin-bottom:8px; background:var(--bg-input); }
 .cal-tooltip-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; }
-.cal-tooltip-meta { display:flex; align-items:center; gap:6px; }
+.cal-tooltip-time { font-size:11px; color:var(--text-muted); margin-bottom:6px; display:flex; align-items:center; gap:4px; }
+.cal-tooltip-time i { font-size:10px; }
+.cal-tooltip-meta { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+
+/* Calendar entrance animations */
+.cal-header { animation: calFadeDown 0.5s ease both; }
+.cal-grid { animation: calGridIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) both; animation-delay: 0.15s; }
+@keyframes calFadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes calGridIn { from { opacity:0; transform:translateY(16px) scale(0.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+
+.cal-day-header { animation: calHeaderPop 0.3s ease both; }
+.cal-day-header:nth-child(1) { animation-delay:0.2s; }
+.cal-day-header:nth-child(2) { animation-delay:0.24s; }
+.cal-day-header:nth-child(3) { animation-delay:0.28s; }
+.cal-day-header:nth-child(4) { animation-delay:0.32s; }
+.cal-day-header:nth-child(5) { animation-delay:0.36s; }
+.cal-day-header:nth-child(6) { animation-delay:0.40s; }
+.cal-day-header:nth-child(7) { animation-delay:0.44s; }
+@keyframes calHeaderPop { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
+.cal-cell { animation: calCellIn 0.3s ease both; }
+@keyframes calCellIn { from { opacity:0; } to { opacity:1; } }
+
+.cal-dot { animation: calDotPop 0.3s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes calDotPop { from { opacity:0; transform:scale(0.7) translateX(-4px); } to { opacity:1; transform:scale(1) translateX(0); } }
 </style>
 
 <div class="cal-header">
@@ -51,6 +75,7 @@
 <div class="cal-tooltip" id="cal-tooltip">
     <img class="cal-tooltip-img" id="cal-tooltip-img" src="" alt="">
     <div class="cal-tooltip-title" id="cal-tooltip-title"></div>
+    <div class="cal-tooltip-time" id="cal-tooltip-time"></div>
     <div class="cal-tooltip-meta" id="cal-tooltip-meta"></div>
 </div>
 
@@ -124,7 +149,8 @@
                 classes += ' today';
             }
 
-            html += '<div class="' + classes + '">';
+            var cellDelay = (0.02 * i + 0.1).toFixed(2);
+            html += '<div class="' + classes + '" style="animation-delay:' + cellDelay + 's">';
             html += '<div class="cal-date">' + dayNum + '</div>';
 
             if (!isOther) {
@@ -136,7 +162,8 @@
                         var status = p.status || 'draft';
                         var title = p.title || 'Untitled';
                         if (title.length > 22) title = title.substring(0, 22) + '...';
-                        html += '<div class="cal-dot status-' + escH(status) + '" data-post-id="' + p.id + '" data-post-idx="' + j + '" data-day="' + dayNum + '">';
+                        var dotDelay = (0.02 * i + 0.3 + j * 0.08).toFixed(2);
+                        html += '<div class="cal-dot status-' + escH(status) + '" data-post-id="' + p.id + '" data-post-idx="' + j + '" data-day="' + dayNum + '" style="animation-delay:' + dotDelay + 's">';
                         html += '<span class="dot-circle"></span>' + escH(title);
                         html += '</div>';
                     }
@@ -172,15 +199,25 @@
 
         var imgEl = document.getElementById('cal-tooltip-img');
         var titleEl2 = document.getElementById('cal-tooltip-title');
+        var timeEl = document.getElementById('cal-tooltip-time');
         var metaEl = document.getElementById('cal-tooltip-meta');
 
         if (post.image_url) {
             imgEl.src = post.image_url;
             imgEl.style.display = 'block';
         } else {
+            imgEl.src = '';
             imgEl.style.display = 'none';
         }
         titleEl2.textContent = post.title || 'Untitled';
+
+        if (post.scheduled_at) {
+            timeEl.innerHTML = '<i class="fas fa-clock"></i> ' + formatDate(post.scheduled_at);
+            timeEl.style.display = 'flex';
+        } else {
+            timeEl.style.display = 'none';
+        }
+
         var platformBadges = buildPlatformBadges(post);
         metaEl.innerHTML = platformBadges
                          + ' <span class="badge badge-' + (post.status || 'draft') + '">' + ucfirst(post.status || 'draft') + '</span>';

@@ -11,11 +11,9 @@ class ZernioService
         $this->apiKey = ZERNIO_API_KEY;
         $this->baseUrl = rtrim(ZERNIO_API_URL, '/');
 
-        // Build first comment from branding
+        // Load default first comment from branding settings
         $branding = (new BrandingService())->get($GLOBALS['client_id'] ?? 1);
-        $phone = $branding['phone'] ?? '587-557-1234';
-        $website = $branding['website'] ?? 'solidtech.ca';
-        $this->firstComment = "\xF0\x9F\x93\x9E {$phone}\n\xF0\x9F\x8C\x90 https://{$website}";
+        $this->firstComment = $branding['first_comment'] ?? '';
     }
 
     /**
@@ -34,11 +32,19 @@ class ZernioService
     /**
      * Post immediately to a single platform
      */
-    public function postNow(string $platform, string $content, ?string $imageUrl = null): array
+    public function postNow(string $platform, string $content, ?string $imageUrl = null, ?string $firstComment = null): array
     {
         $accountId = $this->getAccountId($platform);
         if (!$accountId) {
             return ['success' => false, 'error' => "No Zernio account configured for {$platform}"];
+        }
+
+        // Use post-level override, fall back to branding default
+        $comment = $firstComment ?? $this->firstComment;
+
+        $platformData = [];
+        if (!empty($comment)) {
+            $platformData['firstComment'] = $comment;
         }
 
         $payload = [
@@ -47,9 +53,7 @@ class ZernioService
                 [
                     'platform' => strtolower($platform),
                     'accountId' => $accountId,
-                    'platformSpecificData' => [
-                        'firstComment' => $this->firstComment,
-                    ],
+                    'platformSpecificData' => $platformData,
                 ]
             ],
             'publishNow' => true,
@@ -66,11 +70,19 @@ class ZernioService
     /**
      * Schedule a post for a future time on a single platform
      */
-    public function schedulePost(string $platform, string $content, string $scheduledAt, ?string $imageUrl = null, ?string $timezone = null): array
+    public function schedulePost(string $platform, string $content, string $scheduledAt, ?string $imageUrl = null, ?string $timezone = null, ?string $firstComment = null): array
     {
         $accountId = $this->getAccountId($platform);
         if (!$accountId) {
             return ['success' => false, 'error' => "No Zernio account configured for {$platform}"];
+        }
+
+        // Use post-level override, fall back to branding default
+        $comment = $firstComment ?? $this->firstComment;
+
+        $platformData = [];
+        if (!empty($comment)) {
+            $platformData['firstComment'] = $comment;
         }
 
         // Convert to ISO 8601
@@ -83,9 +95,7 @@ class ZernioService
                 [
                     'platform' => strtolower($platform),
                     'accountId' => $accountId,
-                    'platformSpecificData' => [
-                        'firstComment' => $this->firstComment,
-                    ],
+                    'platformSpecificData' => $platformData,
                 ]
             ],
             'scheduledFor' => $isoDate,
@@ -185,12 +195,15 @@ class ZernioService
 
     /**
      * Resolve an image URL to a publicly accessible one.
-     * If the URL is localhost, upload the file to imgBB for a public link.
+     * If the URL is localhost, upload the file to a public host so Zernio can fetch it.
      * In production (SiteGround), URLs are already public.
      */
     public function resolveImageUrl(?string $imageUrl): ?string
     {
-        if (!$imageUrl) return null;
+        if (!$imageUrl) {
+            error_log("ZernioService::resolveImageUrl — no image URL provided");
+            return null;
+        }
 
         // Already public
         if (!str_contains($imageUrl, 'localhost') && !str_contains($imageUrl, '127.0.0.1')) {
@@ -198,6 +211,34 @@ class ZernioService
         }
 
         // Convert localhost URL to local file path
+        $localFile = $this->resolveLocalFilePath($imageUrl);
+
+        if (!$localFile || !file_exists($localFile)) {
+            error_log("ZernioService::resolveImageUrl — local file not found: " . ($localFile ?: 'null') . " (from URL: {$imageUrl})");
+            return null;
+        }
+
+        error_log("ZernioService::resolveImageUrl — uploading local file: {$localFile} (" . filesize($localFile) . " bytes)");
+
+        // Try multiple public hosts in order of reliability
+        $publicUrl = $this->uploadToCatbox($localFile)
+                  ?? $this->uploadToLitterbox($localFile)
+                  ?? $this->uploadToFileIO($localFile);
+
+        if ($publicUrl) {
+            error_log("ZernioService::resolveImageUrl — public URL obtained: {$publicUrl}");
+        } else {
+            error_log("ZernioService::resolveImageUrl — all upload methods failed for: {$localFile}");
+        }
+
+        return $publicUrl;
+    }
+
+    /**
+     * Convert a localhost URL to a local file path.
+     */
+    private function resolveLocalFilePath(string $imageUrl): ?string
+    {
         $basePath = parse_url(BASE_URL, PHP_URL_PATH) ?: '';
         $urlPath = parse_url($imageUrl, PHP_URL_PATH) ?: '';
         if ($basePath && str_starts_with($urlPath, $basePath)) {
@@ -205,30 +246,116 @@ class ZernioService
         } else {
             $relativePath = $urlPath;
         }
-        $localFile = APP_ROOT . '/public' . $relativePath;
+        return APP_ROOT . '/public' . $relativePath;
+    }
 
-        if (!file_exists($localFile)) {
+    /**
+     * Upload to file.io (temporary file host — reliable, files auto-expire)
+     */
+    private function uploadToFileIO(string $localFile): ?string
+    {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => 'https://file.io',
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => ['file' => new CURLFile($localFile)],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTPHEADER     => ['User-Agent: SolidTech-Social/1.0'],
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($curlError) {
+            error_log("ZernioService::uploadToFileIO — cURL error: {$curlError}");
             return null;
         }
 
-        // Upload to 0x0.st (free file host, works for dev)
-        // In production on SiteGround, this code won't run since URLs are already public
+        $data = json_decode($response, true);
+        if ($httpCode === 200 && !empty($data['success']) && !empty($data['link'])) {
+            error_log("ZernioService::uploadToFileIO — success: {$data['link']}");
+            return $data['link'];
+        }
+
+        error_log("ZernioService::uploadToFileIO — failed [{$httpCode}]: " . substr($response, 0, 500));
+        return null;
+    }
+
+    /**
+     * Upload to catbox.moe (reliable free file host, no expiry)
+     */
+    private function uploadToCatbox(string $localFile): ?string
+    {
         $ch = curl_init();
         curl_setopt_array($ch, [
-            CURLOPT_URL => 'https://0x0.st',
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => ['file' => new CURLFile($localFile)],
+            CURLOPT_URL            => 'https://catbox.moe/user/api.php',
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => [
+                'reqtype'  => 'fileupload',
+                'fileToUpload' => new CURLFile($localFile),
+            ],
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTPHEADER     => ['User-Agent: SolidTech-Social/1.0'],
         ]);
         $publicUrl = trim(curl_exec($ch));
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
         curl_close($ch);
 
-        if ($httpCode === 200 && str_starts_with($publicUrl, 'http')) {
+        if ($curlError) {
+            error_log("ZernioService::uploadToCatbox — cURL error: {$curlError}");
+            return null;
+        }
+
+        if ($httpCode === 200 && str_starts_with($publicUrl, 'https://files.catbox.moe/')) {
+            error_log("ZernioService::uploadToCatbox — success: {$publicUrl}");
             return $publicUrl;
         }
 
+        error_log("ZernioService::uploadToCatbox — failed [{$httpCode}]: " . substr($publicUrl, 0, 500));
+        return null;
+    }
+
+    /**
+     * Upload to litterbox.catbox.moe (temporary file host, 24h expiry — fallback)
+     */
+    private function uploadToLitterbox(string $localFile): ?string
+    {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => 'https://litterbox.catbox.moe/resources/internals/api.php',
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => [
+                'reqtype'  => 'fileupload',
+                'time'     => '24h',
+                'fileToUpload' => new CURLFile($localFile),
+            ],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTPHEADER     => ['User-Agent: SolidTech-Social/1.0'],
+        ]);
+        $publicUrl = trim(curl_exec($ch));
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($curlError) {
+            error_log("ZernioService::uploadToLitterbox — cURL error: {$curlError}");
+            return null;
+        }
+
+        if ($httpCode === 200 && str_starts_with($publicUrl, 'https://litter.catbox.moe/')) {
+            error_log("ZernioService::uploadToLitterbox — success: {$publicUrl}");
+            return $publicUrl;
+        }
+
+        error_log("ZernioService::uploadToLitterbox — failed [{$httpCode}]: " . substr($publicUrl, 0, 500));
         return null;
     }
 
@@ -292,7 +419,6 @@ class ZernioService
         $data = json_decode($response, true) ?? [];
 
         if ($httpCode >= 200 && $httpCode < 300) {
-            $data['success'] = true;
             $data['http_code'] = $httpCode;
             // Extract zernio_post_id from response
             if (isset($data['post']['_id'])) {
@@ -300,6 +426,30 @@ class ZernioService
             } elseif (isset($data['id'])) {
                 $data['zernio_post_id'] = $data['id'];
             }
+
+            // HTTP 207 means the API accepted the request but platform publishing may have failed.
+            // Check the actual post status and platform results to determine real success.
+            if ($httpCode === 207) {
+                $postStatus = $data['post']['status'] ?? null;
+                $platformResults = $data['platformResults'] ?? [];
+                $anyPlatformFailed = false;
+                $errors = [];
+
+                foreach ($platformResults as $pr) {
+                    if (($pr['status'] ?? '') === 'failed') {
+                        $anyPlatformFailed = true;
+                        $errors[] = ($pr['platform'] ?? 'unknown') . ': ' . ($pr['error'] ?? 'Unknown error');
+                    }
+                }
+
+                if ($postStatus === 'failed' || $anyPlatformFailed) {
+                    $data['success'] = false;
+                    $data['error'] = implode('; ', $errors) ?: ($data['error'] ?? 'Publishing failed on platform');
+                    return $data;
+                }
+            }
+
+            $data['success'] = true;
             return $data;
         }
 

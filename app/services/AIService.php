@@ -17,12 +17,14 @@ class AIService
     //  TEXT GENERATION  (OpenRouter)
     // ──────────────────────────────────────────
 
-    public function generateWeekContent(array $brandContext, array $memoryContext): array
+    /**
+     * Generate weekly content. Supports theme-aware generation when themeData is provided.
+     *
+     * @param array $themeData  Optional array of [{day, theme_name, description, copy_instructions, required_elements, samples, default_hashtags, image_style_override}, ...]
+     */
+    public function generateWeekContent(array $brandContext, array $memoryContext, array $themeData = []): array
     {
         $company  = $brandContext['company_name'] ?? 'the company';
-        $days     = ['Monday', 'Wednesday', 'Friday'];
-        $types    = ['educational', 'promotional', 'engagement'];
-        $results  = [];
 
         // Build memory exclusion list — flatten DB rows to simple strings
         $rawTopics = $memoryContext['topics'] ?? [];
@@ -37,18 +39,109 @@ class AIService
             $exclusion .= "\nAVOID these recently-used angles: " . implode(', ', array_slice($usedAngles, 0, 10));
         }
 
+        // Determine days/types from theme data or use defaults
+        if (!empty($themeData)) {
+            $days = array_column($themeData, 'day');
+            $postCount = count($themeData);
+        } else {
+            $days = ['Monday', 'Wednesday', 'Friday'];
+            $postCount = 3;
+        }
+        $types = ['educational', 'promotional', 'engagement', 'storytelling', 'behind_the_scenes'];
+
+        // Build company contact info for injection
+        $phone = $brandContext['phone'] ?? '';
+        $website = $brandContext['website'] ?? '';
+        $contactBlock = '';
+        if ($phone || $website) {
+            $contactParts = [];
+            if ($phone) $contactParts[] = "Phone: {$phone}";
+            if ($website) $contactParts[] = "Website: {$website}";
+            $contactBlock = "\nCompany contact info to include in posts: " . implode(', ', $contactParts);
+        }
+
         $systemPrompt = "You are a senior social media strategist for {$company}. "
-            . "Create engaging, on-brand social media posts. "
+            . "Create engaging, on-brand social media posts formatted for LinkedIn and Facebook. "
             . "Return valid JSON only — no markdown fences, no extra text.";
 
-        $userPrompt = "Generate 3 social media posts for {$company} to publish on Monday, Wednesday, and Friday.\n"
-            . "Each post must have a DIFFERENT topic and angle.\n"
-            . "Post types in order: educational, promotional, engagement.\n"
-            . $exclusion . "\n\n"
-            . "Return a JSON array of 3 objects, each with these exact keys:\n"
+        // Build per-post instructions when themes are provided
+        $themeInstructions = '';
+        if (!empty($themeData)) {
+            foreach ($themeData as $i => $td) {
+                $num = $i + 1;
+                $themeInstructions .= "\nPost {$num} ({$td['day']}):\n";
+
+                if (!empty($td['theme_name'])) {
+                    $themeInstructions .= "Theme: {$td['theme_name']}";
+                    if (!empty($td['description'])) {
+                        $themeInstructions .= " — {$td['description']}";
+                    }
+                    $themeInstructions .= "\n";
+                }
+                if (!empty($td['copy_instructions'])) {
+                    $themeInstructions .= "Writing style: {$td['copy_instructions']}\n";
+                }
+                // Required elements
+                $req = $td['required_elements'] ?? [];
+                $reqList = [];
+                if (!empty($req['phone'])) $reqList[] = 'include phone number';
+                if (!empty($req['website'])) $reqList[] = 'include website URL';
+                if (!empty($req['cta'])) $reqList[] = 'include a call to action';
+                if (!empty($req['hashtags'])) $reqList[] = 'include hashtags';
+                if (!empty($req['emojis'])) $reqList[] = 'use emojis';
+                if ($reqList) {
+                    $themeInstructions .= "Required: " . implode(', ', $reqList) . "\n";
+                }
+                if (!empty($td['default_hashtags'])) {
+                    $themeInstructions .= "Include these hashtags: {$td['default_hashtags']}\n";
+                }
+                // Sample posts for AI to mimic
+                $samples = $td['samples'] ?? [];
+                if (!empty($samples)) {
+                    $themeInstructions .= "Mimic the tone and structure of these examples:\n";
+                    foreach (array_slice($samples, 0, 2) as $si => $sample) {
+                        $sampleText = is_array($sample) ? ($sample['sample_content'] ?? '') : $sample;
+                        $sampleText = mb_substr(trim($sampleText), 0, 300);
+                        $themeInstructions .= "Example " . ($si + 1) . ": \"{$sampleText}\"\n";
+                    }
+                }
+            }
+        }
+
+        $userPrompt = "Generate {$postCount} social media posts for {$company} to publish on " . implode(', ', $days) . ".\n"
+            . "Each post must have a DIFFERENT topic and angle.\n";
+
+        if (empty($themeData)) {
+            $userPrompt .= "Post types in order: " . implode(', ', array_slice($types, 0, $postCount)) . ".\n";
+        }
+
+        $userPrompt .= $exclusion . "\n"
+            . $contactBlock . "\n";
+
+        if ($themeInstructions) {
+            $userPrompt .= "\nPer-post theme instructions:\n" . $themeInstructions . "\n";
+        }
+
+        $userPrompt .= "\nFORMATTING RULES for the 'content' field (CRITICAL — follow exactly):\n"
+            . "1. Start with a strong opening line with a relevant emoji\n"
+            . "2. Use \\n (newline) for line breaks — this will display on social media\n"
+            . "3. Add a blank line (\\n\\n) between paragraphs for readability\n"
+            . "4. Use emojis at the start of key points or bullet items (e.g. ✅, 🔒, 💡, 🚀, 📊)\n"
+            . "5. Include a clear call-to-action on its own line\n"
+            . "6. ALWAYS end with the company contact info on its own line:\n";
+        if ($phone) {
+            $userPrompt .= "   📞 {$phone}\n";
+        }
+        if ($website) {
+            $userPrompt .= "   🌐 {$website}\n";
+        }
+        $userPrompt .= "7. After the contact info, add TWO blank lines, then put all hashtags on the last line, space-separated\n"
+            . "8. The post should be 150-350 characters and look polished when pasted directly into LinkedIn or Facebook\n"
+            . "9. Mix up the style — vary the CTA wording, emoji choices, and hook styles across posts\n\n"
+            . "Return a JSON array of {$postCount} objects, each with these exact keys:\n"
             . "day, title, content, post_type, topic, keywords, angle, image_prompt\n"
-            . "- title: catchy headline (max 80 chars)\n"
-            . "- content: full post caption (120-280 chars, include relevant hashtags)\n"
+            . "- title: catchy headline with an emoji (max 80 chars)\n"
+            . "- content: the FULL formatted post caption following the formatting rules above. Use \\n for line breaks.\n"
             . "- topic: one-word or short phrase topic\n"
             . "- keywords: comma-separated relevant keywords\n"
             . "- angle: the creative approach used\n"
@@ -64,26 +157,43 @@ class AIService
         }
 
         // Fallback if API fails or key missing
-        return $this->fallbackWeekContent($company, $days, $types);
+        return $this->fallbackWeekContent($company, $days, array_slice($types, 0, count($days)));
     }
 
     public function generateSinglePost(string $topic, string $postType, array $brandContext, array $memoryContext): array
     {
         $company = $brandContext['company_name'] ?? 'the company';
+        $phone = $brandContext['phone'] ?? '';
+        $website = $brandContext['website'] ?? '';
 
         $rawAngles = $memoryContext['recent_angles'] ?? [];
         $usedAngles = array_column($rawAngles, 'angle');
         $exclusion  = $usedAngles ? "\nAVOID these angles: " . implode(', ', array_slice($usedAngles, 0, 10)) : '';
 
+        $contactInfo = '';
+        if ($phone) $contactInfo .= "Phone: {$phone}. ";
+        if ($website) $contactInfo .= "Website: {$website}. ";
+
         $systemPrompt = "You are a senior social media strategist for {$company}. "
+            . "Create posts formatted for LinkedIn and Facebook. "
             . "Return valid JSON only — no markdown fences, no extra text.";
 
         $userPrompt = "Create one {$postType} social media post about \"{$topic}\" for {$company}.\n"
+            . ($contactInfo ? "Company contact: {$contactInfo}\n" : '')
             . $exclusion . "\n\n"
+            . "FORMATTING RULES for the 'content' field:\n"
+            . "1. Start with a hook line using a relevant emoji\n"
+            . "2. Use \\n for line breaks, \\n\\n for paragraph breaks\n"
+            . "3. Use emojis at key points (✅ 🔒 💡 🚀 📊 etc.)\n"
+            . "4. Include a clear CTA on its own line\n"
+            . "5. End with contact info on its own line"
+            . ($phone ? " (📞 {$phone})" : '') . ($website ? " (🌐 {$website})" : '') . "\n"
+            . "6. Two blank lines, then hashtags on the last line\n"
+            . "7. 150-350 chars, polished and ready to paste\n\n"
             . "Return a single JSON object with these keys:\n"
             . "title, content, post_type, topic, keywords, angle, image_prompt\n"
-            . "- title: catchy headline (max 80 chars)\n"
-            . "- content: full post caption (120-280 chars, include relevant hashtags)\n"
+            . "- title: catchy headline with emoji (max 80 chars)\n"
+            . "- content: FULL formatted post following the rules above, using \\n for line breaks\n"
             . "- topic: \"{$topic}\"\n"
             . "- post_type: \"{$postType}\"\n"
             . "- keywords: comma-separated relevant keywords\n"
@@ -180,20 +290,64 @@ class AIService
 
     public function generateImage(string $prompt): string
     {
+        // Image generation can take a while (polling Kie.ai) — extend time limit
+        set_time_limit(180);
+
         if (empty($this->kieKey)) {
             return 'https://placehold.co/1080x1080/6366f1/ffffff?text=Add+Kie+API+Key';
         }
 
-        // Step 1: Create task
-        $taskId = $this->kieCreateTask($prompt);
-        if (!$taskId) {
-            return 'https://placehold.co/1080x1080/ef4444/ffffff?text=Image+Gen+Failed';
+        // Clean the prompt for image generation
+        $cleanPrompt = $prompt;
+        // Strip hashtags
+        $cleanPrompt = preg_replace('/#\w+\s*/u', '', $cleanPrompt);
+        // Strip emojis (unicode emoji ranges)
+        $cleanPrompt = preg_replace('/[\x{1F600}-\x{1F64F}\x{1F300}-\x{1F5FF}\x{1F680}-\x{1F6FF}\x{1F1E0}-\x{1F1FF}\x{2600}-\x{27BF}\x{FE00}-\x{FE0F}\x{1F900}-\x{1F9FF}\x{200D}\x{20E3}\x{2702}-\x{27B0}\x{2300}-\x{23FF}]/u', '', $cleanPrompt);
+        // Strip phone numbers and URLs
+        $cleanPrompt = preg_replace('/\d{3}[-.]?\d{3}[-.]?\d{4}/', '', $cleanPrompt);
+        $cleanPrompt = preg_replace('#https?://\S+#i', '', $cleanPrompt);
+        // Strip common CTA phrases that shouldn't be in image prompts
+        $cleanPrompt = preg_replace('/\b(call us|contact us|visit|schedule|sign up|learn more|click here|check out)\b.*/i', '', $cleanPrompt);
+        // Clean up whitespace
+        $cleanPrompt = preg_replace('/\s+/', ' ', trim($cleanPrompt));
+
+        // Truncate to keep prompt reasonable for image gen (max 300 chars before art direction)
+        if (mb_strlen($cleanPrompt) > 300) {
+            $cleanPrompt = mb_substr($cleanPrompt, 0, 300);
         }
 
-        // Step 2: Poll for result (max ~60 seconds)
-        $imageUrl = $this->kiePollResult($taskId);
+        if (empty($cleanPrompt)) {
+            $cleanPrompt = $prompt; // fallback to original if nothing left
+        }
+
+        // Inject art direction modifiers
+        $artService = new ArtDirectionService();
+        $artModifiers = $artService->buildImagePromptModifiers($GLOBALS['client_id']);
+        if (!empty($artModifiers)) {
+            // Keep art modifiers concise — truncate to 200 chars
+            $artModifiers = mb_substr($artModifiers, 0, 200);
+            $cleanPrompt = $cleanPrompt . '. ' . $artModifiers;
+        }
+
+        // Step 1: Create task
+        $createResult = $this->kieCreateTask($cleanPrompt);
+        if (is_array($createResult) && isset($createResult['error'])) {
+            // Return structured error as a JSON-encoded string that starts with ERROR:
+            return 'ERROR:' . json_encode($createResult);
+        }
+        $taskId = $createResult;
+        if (!$taskId) {
+            return 'ERROR:' . json_encode(['error' => 'Failed to create image task', 'code' => 'CREATE_FAILED']);
+        }
+
+        // Step 2: Poll for result (max ~120 seconds)
+        $pollResult = $this->kiePollResult($taskId);
+        if (is_array($pollResult) && isset($pollResult['error'])) {
+            return 'ERROR:' . json_encode($pollResult);
+        }
+        $imageUrl = $pollResult;
         if (!$imageUrl) {
-            return 'https://placehold.co/1080x1080/f59e0b/ffffff?text=Image+Timeout';
+            return 'ERROR:' . json_encode(['error' => 'Image generation timed out after 2 minutes', 'code' => 'TIMEOUT']);
         }
 
         // Step 3: Download and save locally
@@ -213,11 +367,23 @@ class AIService
      */
     private function watermarkImage(string $imageWebUrl): ?string
     {
+        // Check art direction watermark settings
+        $artService = new ArtDirectionService();
+        $artSettings = $artService->get($GLOBALS['client_id']);
+
+        // If watermark is disabled, skip entirely
+        if (empty($artSettings['watermark_enabled'])) {
+            return $imageWebUrl;
+        }
+
         // Get branding data
         $brandingService = new BrandingService();
         $brand = $brandingService->get($GLOBALS['client_id']);
         $logoUrl  = $brand['logo_url'] ?? '';
-        $website  = $brand['website'] ?? '';
+        // Watermark website: art direction override takes precedence, then branding
+        $website = !empty($artSettings['watermark_website']) ? $artSettings['watermark_website'] : ($brand['website'] ?? '');
+        $logoPosition = $artSettings['watermark_logo_position'] ?? 'bottom-left';
+        $gradientOpacity = (int)($artSettings['watermark_gradient_opacity'] ?? 85);
 
         // Nothing to stamp if no logo and no website
         if (empty($logoUrl) && empty($website)) {
@@ -253,8 +419,7 @@ class AIService
         $gradientStart  = $imgH - $gradientHeight;
 
         for ($y = 0; $y < $gradientHeight; $y++) {
-            // Alpha goes from 0 (transparent at top of gradient) to ~85 (dark at bottom)
-            $alpha = (int)(85 * ($y / $gradientHeight));
+            $alpha = (int)($gradientOpacity * ($y / $gradientHeight));
             $color = imagecolorallocatealpha($img, 0, 0, 0, 127 - (int)(($alpha / 100) * 127));
             imageline($img, 0, $gradientStart + $y, $imgW, $gradientStart + $y, $color);
         }
@@ -262,7 +427,8 @@ class AIService
         $padding = (int)($imgW * 0.03); // 3% padding from edges
         $bottomY = $imgH - $padding;
 
-        // ── Logo (bottom-left) ──
+        // ── Logo ──
+        $logoOnRight = ($logoPosition === 'bottom-right');
         if (!empty($logoUrl)) {
             $logoFilename = basename(parse_url($logoUrl, PHP_URL_PATH));
             $logoLocal = UPLOAD_DIR . $logoFilename;
@@ -292,7 +458,7 @@ class AIService
                             $targetW = (int)($logoOrigW * (100 / $logoOrigH));
                         }
 
-                        $logoX = $padding;
+                        $logoX = $logoOnRight ? ($imgW - $padding - $targetW) : $padding;
                         $logoY = $bottomY - $targetH;
 
                         // Use imagecopyresampled for quality
@@ -309,7 +475,7 @@ class AIService
             }
         }
 
-        // ── Website text (bottom-right) ──
+        // ── Website text (opposite side of logo) ──
         if (!empty($website)) {
             $white = imagecolorallocate($img, 255, 255, 255);
 
@@ -321,7 +487,8 @@ class AIService
                 $bbox = imagettfbbox($fontSize, 0, $fontFile, $website);
                 $textW = abs($bbox[2] - $bbox[0]);
                 $textH = abs($bbox[7] - $bbox[1]);
-                $textX = $imgW - $padding - $textW;
+                // Text goes on opposite side of logo
+                $textX = $logoOnRight ? $padding : ($imgW - $padding - $textW);
                 $textY = $bottomY - (int)($textH * 0.3);
                 imagettftext($img, $fontSize, 0, $textX, $textY, $white, $fontFile, $website);
             } else {
@@ -330,7 +497,7 @@ class AIService
                 $charW = imagefontwidth($font);
                 $charH = imagefontheight($font);
                 $textW = strlen($website) * $charW;
-                $textX = $imgW - $padding - $textW;
+                $textX = $logoOnRight ? $padding : ($imgW - $padding - $textW);
                 $textY = $bottomY - $charH;
                 imagestring($img, $font, $textX, $textY, $website, $white);
             }
@@ -349,7 +516,10 @@ class AIService
         return $saved ? $imageWebUrl : $imageWebUrl;
     }
 
-    private function kieCreateTask(string $prompt): ?string
+    /**
+     * @return string|array Task ID string on success, or error array on failure
+     */
+    private function kieCreateTask(string $prompt): string|array
     {
         $payload = json_encode([
             'model' => KIE_MODEL,
@@ -379,16 +549,42 @@ class AIService
         $error    = curl_error($ch);
         curl_close($ch);
 
-        if ($error || $httpCode !== 200) {
-            error_log("Kie.ai create error [{$httpCode}]: {$error} | " . substr($response, 0, 500));
-            return null;
+        if ($error) {
+            error_log("Kie.ai create error [{$httpCode}]: {$error}");
+            return ['error' => "Connection error: {$error}", 'code' => 'CONNECTION_ERROR'];
         }
 
         $data = json_decode($response, true);
-        return $data['data']['taskId'] ?? null;
+
+        if ($httpCode === 401 || $httpCode === 403) {
+            error_log("Kie.ai auth error [{$httpCode}]: " . substr($response, 0, 500));
+            return ['error' => 'API authentication failed. Check your Kie.ai API key in Branding settings.', 'code' => 'AUTH_FAILED'];
+        }
+
+        if ($httpCode === 402 || $httpCode === 429 ||
+            (isset($data['msg']) && (stripos($data['msg'], 'credit') !== false || stripos($data['msg'], 'quota') !== false || stripos($data['msg'], 'limit') !== false))) {
+            error_log("Kie.ai credits/quota error [{$httpCode}]: " . ($data['msg'] ?? ''));
+            return ['error' => 'Image generation credits are depleted. Contact your administrator to add more credits.', 'code' => 'OUT_OF_CREDITS'];
+        }
+
+        if ($httpCode !== 200) {
+            $msg = $data['msg'] ?? "HTTP {$httpCode}";
+            error_log("Kie.ai create error [{$httpCode}]: {$msg}");
+            return ['error' => "Image service error: {$msg}", 'code' => 'API_ERROR', 'http_code' => $httpCode];
+        }
+
+        $taskId = $data['data']['taskId'] ?? null;
+        if (!$taskId) {
+            return ['error' => 'No task ID returned from image service', 'code' => 'NO_TASK_ID'];
+        }
+
+        return $taskId;
     }
 
-    private function kiePollResult(string $taskId, int $maxWait = 60): ?string
+    /**
+     * @return string|array Image URL on success, or error array on failure, or null on timeout
+     */
+    private function kiePollResult(string $taskId, int $maxWait = 120): string|array|null
     {
         $start = time();
 
@@ -425,10 +621,19 @@ class AIService
             if ($state === 'fail') {
                 $failMsg = $data['data']['failMsg'] ?? 'Unknown error';
                 error_log("Kie.ai task {$taskId} failed: {$failMsg}");
-                return null;
+
+                // Detect specific failure reasons
+                $failLower = strtolower($failMsg);
+                if (strpos($failLower, 'credit') !== false || strpos($failLower, 'quota') !== false || strpos($failLower, 'balance') !== false) {
+                    return ['error' => 'Image generation credits are depleted. Contact your administrator to add more credits.', 'code' => 'OUT_OF_CREDITS'];
+                }
+                if (strpos($failLower, 'nsfw') !== false || strpos($failLower, 'content') !== false || strpos($failLower, 'policy') !== false || strpos($failLower, 'safety') !== false) {
+                    return ['error' => 'The image prompt was flagged by the AI safety filter. This is usually automatic — click Try Again and it should work with a slightly different approach.', 'code' => 'CONTENT_FILTER', 'auto_retry' => true];
+                }
+
+                return ['error' => "Image generation failed: {$failMsg}", 'code' => 'GENERATION_FAILED'];
             }
 
-            // Still processing — wait 3 seconds before checking again
             sleep(3);
         }
 

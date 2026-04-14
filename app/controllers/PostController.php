@@ -56,6 +56,7 @@ class PostController extends Controller
     public function edit(string $id): void
     {
         $this->requireAuth();
+        $this->requireRole('admin', 'editor');
 
         $postModel = new Post();
         $post = $postModel->find((int) $id);
@@ -74,6 +75,7 @@ class PostController extends Controller
     public function save(): void
     {
         $this->requireAuth();
+        $this->requireRole('admin', 'editor');
         @ob_clean();
 
         $postModel = new Post();
@@ -97,6 +99,7 @@ class PostController extends Controller
             'topic' => trim($_POST['topic'] ?? ''),
             'keywords' => trim($_POST['keywords'] ?? ''),
             'angle' => trim($_POST['angle'] ?? ''),
+            'first_comment' => trim($_POST['first_comment'] ?? ''),
             'content_hash' => $memoryService->generateHash(
                 trim($_POST['topic'] ?? ''),
                 trim($_POST['keywords'] ?? ''),
@@ -116,6 +119,7 @@ class PostController extends Controller
     public function update(string $id): void
     {
         $this->requireAuth();
+        $this->requireRole('admin', 'editor');
         @ob_clean();
 
         $postModel = new Post();
@@ -136,6 +140,7 @@ class PostController extends Controller
             'topic' => trim($_POST['topic'] ?? ''),
             'keywords' => trim($_POST['keywords'] ?? ''),
             'angle' => trim($_POST['angle'] ?? ''),
+            'first_comment' => trim($_POST['first_comment'] ?? ''),
         ];
 
         $postModel->update((int) $id, $data);
@@ -146,6 +151,7 @@ class PostController extends Controller
     public function delete(string $id): void
     {
         $this->requireAuth();
+        $this->requireRole('admin', 'editor');
         @ob_clean();
 
         $postModel = new Post();
@@ -164,6 +170,7 @@ class PostController extends Controller
     public function schedule(string $id): void
     {
         $this->requireAuth();
+        $this->requireRole('admin', 'editor');
         @ob_clean();
 
         $postModel = new Post();
@@ -194,6 +201,7 @@ class PostController extends Controller
     public function postNow(string $id): void
     {
         $this->requireAuth();
+        $this->requireRole('admin', 'editor');
         @ob_clean();
 
         $postModel = new Post();
@@ -207,6 +215,7 @@ class PostController extends Controller
         $platforms = $this->getPostPlatforms($post);
         $content = $post['content'] ?? '';
         $imageUrl = $post['image_url'] ?? null;
+        $firstComment = !empty($post['first_comment']) ? $post['first_comment'] : null;
 
         $zernioService = new ZernioService();
         $results = [];
@@ -215,7 +224,7 @@ class PostController extends Controller
 
         foreach ($platforms as $platform) {
             try {
-                $result = $zernioService->postNow($platform, $content, $imageUrl);
+                $result = $zernioService->postNow($platform, $content, $imageUrl, $firstComment);
                 $success = !empty($result['success']);
 
                 if (!$success) $allSuccess = false;
@@ -261,6 +270,7 @@ class PostController extends Controller
     public function retry(string $id): void
     {
         $this->requireAuth();
+        $this->requireRole('admin', 'editor');
         @ob_clean();
 
         $postModel = new Post();
@@ -300,6 +310,7 @@ class PostController extends Controller
 
         $content = $post['content'] ?? '';
         $imageUrl = $post['image_url'] ?? null;
+        $firstComment = !empty($post['first_comment']) ? $post['first_comment'] : null;
 
         // If the post has a future scheduled time, just reset to 'scheduled'
         // and let the cron job handle it when the time arrives.
@@ -321,7 +332,7 @@ class PostController extends Controller
 
         foreach ($failedPlatforms as $platform) {
             try {
-                $result = $zernioService->postNow($platform, $content, $imageUrl);
+                $result = $zernioService->postNow($platform, $content, $imageUrl, $firstComment);
 
                 $success = !empty($result['success']);
                 if (!$success) $allSuccess = false;
