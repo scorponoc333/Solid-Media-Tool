@@ -52,9 +52,21 @@ class ContentStrategyService
 
     public function createTheme(int $clientId, array $data): int
     {
+        // Prevent duplicate theme names (case-insensitive)
+        $name = trim($data['name'] ?? '');
+        if (!empty($name)) {
+            $existing = Database::fetch(
+                "SELECT id FROM content_themes WHERE client_id = :cid AND LOWER(TRIM(name)) = LOWER(:name) LIMIT 1",
+                ['cid' => $clientId, 'name' => $name]
+            );
+            if ($existing) {
+                return (int)$existing['id'];
+            }
+        }
+
         $themeData = [
             'client_id' => $clientId,
-            'name' => trim($data['name'] ?? ''),
+            'name' => $name,
             'description' => trim($data['description'] ?? ''),
             'copy_instructions' => trim($data['copy_instructions'] ?? ''),
             'required_elements' => json_encode($data['required_elements'] ?? []),
