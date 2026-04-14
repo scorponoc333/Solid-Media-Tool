@@ -78,11 +78,13 @@ img { max-width: 100%; display: block; }
 
 .main-wrapper {
     flex: 1;
+    min-width: 0;
     margin-left: var(--sidebar-width);
     transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .main-wrapper.sidebar-collapsed {
@@ -94,6 +96,7 @@ img { max-width: 100%; display: block; }
     padding: 32px;
     max-width: 1400px;
     width: 100%;
+    min-width: 0;
     margin: 0 auto;
 }
 
@@ -1367,6 +1370,11 @@ tbody tr:hover {
 
 /* ═══ MOBILE: Tablet ═══ */
 @media (max-width: 768px) {
+    /* Prevent any overflow */
+    .app-layout, .main-wrapper, .main-content {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
     /* Off-canvas sidebar */
     .sidebar {
         transform: translateX(-100%);

@@ -742,9 +742,9 @@ document.addEventListener('DOMContentLoaded', function() { GenTracker.init(); })
 <div id="ee" style="display:none">
 <div id="eeBlack" style="position:fixed;inset:0;z-index:999999;background:#000;opacity:0;transition:opacity 1s ease;pointer-events:all"></div>
 <canvas id="eeCanvas" style="position:fixed;inset:0;z-index:1000000;pointer-events:none"></canvas>
-<div id="eeText" style="position:fixed;inset:0;z-index:1000001;display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none;opacity:0">
-    <div id="eeSubtitle" style="font-size:14px;font-weight:300;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:12px;font-family:monospace"></div>
-    <div id="eeName" style="font-size:0px;font-weight:900;color:#fff;letter-spacing:-2px;text-shadow:0 0 40px rgba(255,255,255,0.5);transition:all 0.8s cubic-bezier(0.34,1.56,0.64,1);filter:blur(20px);font-family:'Inter',sans-serif"></div>
+<div id="eeText" style="position:fixed;inset:0;z-index:1000001;display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none;opacity:0;padding:16px;overflow:hidden">
+    <div id="eeSubtitle" style="font-size:clamp(10px,3vw,14px);font-weight:300;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:12px;font-family:monospace;text-align:center;max-width:90vw"></div>
+    <div id="eeName" style="font-size:0px;font-weight:900;color:#fff;letter-spacing:-2px;text-shadow:0 0 40px rgba(255,255,255,0.5);transition:all 0.8s cubic-bezier(0.34,1.56,0.64,1);filter:blur(20px);font-family:'Inter',sans-serif;padding:0 16px;word-break:break-word;max-width:100vw"></div>
     <div id="ee333" style="font-size:120px;font-weight:900;color:rgba(255,255,255,0.03);position:absolute;font-family:monospace;pointer-events:none"></div>
 </div>
 <!-- Matrix rain layer -->
@@ -752,7 +752,7 @@ document.addEventListener('DOMContentLoaded', function() { GenTracker.init(); })
 <!-- Contact lightbox with matrix background -->
 <div id="eeLightbox" style="position:fixed;inset:0;z-index:1000002;display:none;align-items:center;justify-content:center;background:#000">
     <canvas id="eeLbMatrix" style="position:absolute;inset:0;z-index:0"></canvas>
-    <div id="eeLbCard" style="background:linear-gradient(165deg,#1a1a2e 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.08);border-radius:24px;max-width:420px;width:90%;padding:40px;text-align:center;position:relative;box-shadow:0 32px 80px rgba(0,0,0,0.6);overflow:hidden;z-index:5">
+    <div id="eeLbCard" style="background:linear-gradient(165deg,#1a1a2e 0%,#0a0a0a 100%);border:1px solid rgba(255,255,255,0.08);border-radius:24px;max-width:420px;width:92%;padding:clamp(24px,5vw,40px);text-align:center;position:relative;box-shadow:0 32px 80px rgba(0,0,0,0.6);overflow:hidden;z-index:5">
         <button onclick="closeEE()" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">&times;</button>
         <div id="eeLbParticles" style="position:absolute;inset:0;overflow:hidden;pointer-events:none"></div>
         <div style="position:relative;z-index:5">
@@ -780,7 +780,7 @@ document.addEventListener('DOMContentLoaded', function() { GenTracker.init(); })
 </div>
 <!-- Subliminal flash -->
 <div id="eeSubliminal" style="position:fixed;inset:0;z-index:1000003;display:none;align-items:center;justify-content:center;background:#000;pointer-events:all">
-    <div id="eeSubliminalText" style="font-size:48px;font-weight:900;color:#fff;text-align:center;font-family:'Inter',sans-serif"></div>
+    <div id="eeSubliminalText" style="font-size:clamp(28px,8vw,48px);font-weight:900;color:#fff;text-align:center;font-family:'Inter',sans-serif;padding:0 16px"></div>
 </div>
 <!-- Technical difficulties -->
 <div id="eeTechDiff" style="position:fixed;inset:0;z-index:1000003;display:none;align-items:center;justify-content:center;flex-direction:column;background:#0a0a0a;font-family:monospace;pointer-events:all">
@@ -918,7 +918,8 @@ function launchEasterEgg() {
     setTimeout(function() {
         var name = document.getElementById('eeName');
         name.textContent = 'JASON HOGAN';
-        name.style.fontSize = '72px';
+        name.style.fontSize = window.innerWidth < 500 ? '36px' : '72px';
+        name.style.letterSpacing = window.innerWidth < 500 ? '-1px' : '-2px';
         name.style.filter = 'blur(0px)';
         name.style.textShadow = '0 0 80px rgba(255,255,255,0.8), 0 0 160px rgba(255,100,100,0.4)';
 
@@ -1070,11 +1071,42 @@ window.sendEasterEggEmail = function() {
         btn.style.background = 'rgba(34,197,94,0.4)';
         status.textContent = '// profile sent to ' + email;
         status.style.color = 'rgba(100,255,150,0.4)';
-        setTimeout(function() {
-            btn.textContent = 'Send';
-            btn.disabled = false;
-            btn.style.background = '';
-        }, 3000);
+
+        // Retro 8-bit sound effect + laugh
+        try {
+            var a = new (window.AudioContext || window.webkitAudioContext)();
+            // 8-bit coin sound
+            var o1 = a.createOscillator(); var g1 = a.createGain();
+            o1.type = 'square'; o1.frequency.setValueAtTime(988, a.currentTime);
+            o1.frequency.setValueAtTime(1319, a.currentTime + 0.08);
+            g1.gain.setValueAtTime(0.3, a.currentTime);
+            g1.gain.exponentialRampToValueAtTime(0.01, a.currentTime + 0.3);
+            o1.connect(g1); g1.connect(a.destination);
+            o1.start(); o1.stop(a.currentTime + 0.3);
+            // Rising "haha" chirp
+            var o2 = a.createOscillator(); var g2 = a.createGain();
+            o2.type = 'sawtooth';
+            o2.frequency.setValueAtTime(300, a.currentTime + 0.35);
+            o2.frequency.exponentialRampToValueAtTime(600, a.currentTime + 0.5);
+            o2.frequency.exponentialRampToValueAtTime(400, a.currentTime + 0.6);
+            o2.frequency.exponentialRampToValueAtTime(800, a.currentTime + 0.75);
+            g2.gain.setValueAtTime(0.15, a.currentTime + 0.35);
+            g2.gain.exponentialRampToValueAtTime(0.01, a.currentTime + 0.9);
+            o2.connect(g2); g2.connect(a.destination);
+            o2.start(a.currentTime + 0.35); o2.stop(a.currentTime + 0.9);
+        } catch(e) {}
+
+        // Lightning flash
+        var flash = document.createElement('div');
+        flash.style.cssText = 'position:fixed;inset:0;z-index:1000004;background:#fff;pointer-events:none;opacity:0.6';
+        document.body.appendChild(flash);
+        setTimeout(function() { flash.style.opacity = '0'; flash.style.transition = 'opacity 0.15s'; }, 50);
+        setTimeout(function() { flash.style.opacity = '0.4'; }, 200);
+        setTimeout(function() { flash.style.opacity = '0'; }, 250);
+        setTimeout(function() { flash.remove(); }, 400);
+
+        // After 1.5s, auto-close and transition to the finale
+        setTimeout(function() { closeEE(); }, 1500);
     })
     .catch(function() {
         btn.textContent = 'Send';
