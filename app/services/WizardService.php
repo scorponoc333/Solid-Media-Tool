@@ -5,9 +5,12 @@ class WizardService
     public function isSetupComplete(int $clientId): bool
     {
         $branding = (new BrandingService())->get($clientId);
-        $name = trim($branding['company_name'] ?? '');
-        // Setup is complete if company name is set and not the default
-        return $name !== '' && $name !== 'SolidTech' && $name !== APP_NAME;
+        // Setup is complete if website and phone are set (wizard requires these)
+        $website = trim($branding['website'] ?? '');
+        $phone = trim($branding['phone'] ?? '');
+        $logo = trim($branding['logo_url'] ?? '');
+        // At least website OR phone must be set (wizard fills these in)
+        return !empty($website) || !empty($phone) || !empty($logo);
     }
 
     public function scanWebsite(string $url): array

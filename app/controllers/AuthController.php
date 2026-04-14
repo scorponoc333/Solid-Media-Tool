@@ -182,6 +182,38 @@ class AuthController extends Controller
         $this->json(['success' => true]);
     }
 
+    public function forgotPassword(): void
+    {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $email = trim($input['email'] ?? '');
+
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            @ob_clean();
+            $this->json(['error' => 'Please enter a valid email address.'], 400);
+            return;
+        }
+
+        $userModel = new User();
+        $user = $userModel->findByEmail($email);
+
+        // Always return success to prevent email enumeration
+        if (!$user) {
+            @ob_clean();
+            $this->json(['success' => true]);
+            return;
+        }
+
+        $service = new UserManagementService();
+        $tempPassword = $service->resetPassword($user['id'], $user['client_id']);
+
+        if ($tempPassword) {
+            $service->inviteUser($user['id'], $user['client_id'], $tempPassword);
+        }
+
+        @ob_clean();
+        $this->json(['success' => true]);
+    }
+
     public function logout(): void
     {
         session_destroy();

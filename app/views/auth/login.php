@@ -460,9 +460,110 @@ $csrfToken = $_SESSION['csrf_token'];
             <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
         </form>
 
+        <div style="text-align:center;margin-top:16px">
+            <a href="#" onclick="event.preventDefault();showForgotPassword()" style="color:rgba(255,255,255,0.4);font-size:13px;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Forgot your password?</a>
+        </div>
+
         <p class="footer-text">&copy; <?= date('Y') ?> <?= htmlspecialchars($companyName) ?>. All rights reserved.</p>
     </div>
 </div>
+
+<!-- ═══ Forgot Password Overlays ═══ -->
+
+<!-- Phase 1: Gradient intro -->
+<div id="fpIntro" style="position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(165deg,<?= htmlspecialchars($primaryColor) ?> 0%,color-mix(in srgb,<?= htmlspecialchars($primaryColor) ?> 35%,#0a0a0a) 55%,#0a0a0a 100%);overflow:hidden">
+    <!-- Atom -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;pointer-events:none">
+        <div style="position:absolute;width:320px;height:120px;top:calc(50% - 60px);left:calc(50% - 160px);border:1.5px solid rgba(255,255,255,0.08);border-radius:50%;animation:fpSpin 7s linear infinite"><div style="position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;top:-3px;left:calc(50% - 3px);box-shadow:0 0 12px rgba(255,255,255,0.7)"></div></div>
+        <div style="position:absolute;width:280px;height:100px;top:calc(50% - 50px);left:calc(50% - 140px);border:1.5px solid rgba(255,255,255,0.06);border-radius:50%;animation:fpSpin 5s linear infinite reverse;transform:rotate(55deg)"><div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2.5px;left:calc(50% - 2.5px);box-shadow:0 0 10px rgba(255,255,255,0.6)"></div></div>
+        <div style="position:absolute;width:100px;height:280px;top:calc(50% - 140px);left:calc(50% - 50px);border:1.5px solid rgba(255,255,255,0.05);border-radius:50%;animation:fpSpin 9s linear infinite;transform:rotate(25deg)"><div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2.5px;left:calc(50% - 2.5px);box-shadow:0 0 10px rgba(255,255,255,0.5)"></div></div>
+    </div>
+    <!-- Particles -->
+    <div id="fpParticles" style="position:absolute;inset:0;overflow:hidden;pointer-events:none"></div>
+    <!-- Pulse -->
+    <div style="position:absolute;top:50%;left:50%;width:100px;height:100px;margin:-50px 0 0 -50px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);animation:fpPulse 2.4s ease-out infinite;pointer-events:none"></div>
+    <div style="position:absolute;top:50%;left:50%;width:100px;height:100px;margin:-50px 0 0 -50px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);animation:fpPulse 2.4s ease-out infinite 0.8s;pointer-events:none"></div>
+    <!-- Center -->
+    <div style="position:relative;z-index:10;text-align:center">
+        <div style="width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,0.12);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;opacity:0;animation:fpIconIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s forwards">
+            <svg width="28" height="28" viewBox="0 0 512 512" fill="#fff"><path d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17v80c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24V448h40c13.3 0 24-10.7 24-24V384h40c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3zm40-176a40 40 0 1 1 0-80 40 40 0 1 1 0 80z"/></svg>
+        </div>
+        <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;opacity:0;animation:fpTextIn 0.4s ease 0.5s forwards">Password Recovery</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.5);opacity:0;animation:fpTextIn 0.4s ease 0.7s forwards" id="fpIntroSub">Initializing secure recovery...</div>
+    </div>
+</div>
+
+<!-- Phase 2: Email input form -->
+<div id="fpForm" style="position:fixed;inset:0;z-index:10001;display:none;align-items:center;justify-content:center;background:linear-gradient(165deg,<?= htmlspecialchars($primaryColor) ?> 0%,color-mix(in srgb,<?= htmlspecialchars($primaryColor) ?> 35%,#0a0a0a) 55%,#0a0a0a 100%);overflow:hidden">
+    <!-- Floating particles background -->
+    <div id="fpFormParticles" style="position:absolute;inset:0;overflow:hidden;pointer-events:none"></div>
+    <!-- Subtle orbits -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:400px;pointer-events:none;opacity:0.4">
+        <div style="position:absolute;width:400px;height:150px;top:calc(50% - 75px);left:calc(50% - 200px);border:1px solid rgba(255,255,255,0.04);border-radius:50%;animation:fpSpin 12s linear infinite"></div>
+        <div style="position:absolute;width:350px;height:130px;top:calc(50% - 65px);left:calc(50% - 175px);border:1px solid rgba(255,255,255,0.03);border-radius:50%;animation:fpSpin 9s linear infinite reverse;transform:rotate(60deg)"></div>
+    </div>
+    <div style="position:relative;z-index:10;max-width:400px;width:90%;text-align:center">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+            <svg width="24" height="24" viewBox="0 0 512 512" fill="#fff"><path d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17v80c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24V448h40c13.3 0 24-10.7 24-24V384h40c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3zm40-176a40 40 0 1 1 0-80 40 40 0 1 1 0 80z"/></svg>
+        </div>
+        <h2 style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px">Reset Your Password</h2>
+        <p style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:28px;line-height:1.6">Enter your email address and we'll send you a temporary password to get back in.</p>
+        <div style="position:relative;margin-bottom:20px">
+            <input type="email" id="fpEmail" placeholder="Enter your email address" style="width:100%;padding:16px 20px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:14px;color:#fff;font-size:15px;font-family:inherit;outline:none;transition:all 0.3s ease;box-shadow:0 0 0 0 transparent" onfocus="this.style.borderColor='rgba(255,255,255,0.35)';this.style.boxShadow='0 0 20px rgba(255,255,255,0.08)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)';this.style.boxShadow='0 0 0 0 transparent'">
+        </div>
+        <button id="fpSendBtn" onclick="submitForgotPassword()" style="width:100%;padding:15px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:10px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;position:relative;overflow:hidden;transition:all 0.2s ease;backdrop-filter:blur(4px)" onmouseover="this.style.background='rgba(255,255,255,0.22)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='translateY(0)'">
+            Send Reset Email
+            <span style="position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);animation:btnShineLoop 3s ease 1s infinite"></span>
+        </button>
+        <div style="margin-top:16px">
+            <a href="#" onclick="event.preventDefault();closeForgotPassword()" style="color:rgba(255,255,255,0.35);font-size:13px;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">&larr; Back to Sign In</a>
+        </div>
+    </div>
+</div>
+
+<!-- Phase 3: Sending animation -->
+<div id="fpSending" style="position:fixed;inset:0;z-index:10002;display:none;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(165deg,<?= htmlspecialchars($primaryColor) ?> 0%,color-mix(in srgb,<?= htmlspecialchars($primaryColor) ?> 35%,#0a0a0a) 55%,#0a0a0a 100%)">
+    <div style="width:48px;height:48px;border:2.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.7);border-radius:50%;animation:fpSpin 0.7s linear infinite;margin-bottom:16px"></div>
+    <div style="font-size:16px;font-weight:600;color:rgba(255,255,255,0.7)">Sending recovery email...</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:6px">Encrypting and dispatching</div>
+</div>
+
+<!-- Phase 4: Success — email sent -->
+<div id="fpSuccess" style="position:fixed;inset:0;z-index:10003;display:none;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(165deg,<?= htmlspecialchars($primaryColor) ?> 0%,color-mix(in srgb,<?= htmlspecialchars($primaryColor) ?> 35%,#0a0a0a) 55%,#0a0a0a 100%);overflow:hidden">
+    <!-- Atom behind -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:240px;height:240px;pointer-events:none">
+        <div style="position:absolute;width:260px;height:95px;top:calc(50% - 47px);left:calc(50% - 130px);border:1.5px solid rgba(255,255,255,0.08);border-radius:50%;animation:fpSpin 6s linear infinite"><div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2.5px;left:calc(50% - 2.5px);box-shadow:0 0 10px rgba(255,255,255,0.6)"></div></div>
+        <div style="position:absolute;width:220px;height:80px;top:calc(50% - 40px);left:calc(50% - 110px);border:1.5px solid rgba(255,255,255,0.06);border-radius:50%;animation:fpSpin 4.5s linear infinite reverse;transform:rotate(55deg)"><div style="position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.5)"></div></div>
+        <div style="position:absolute;width:70px;height:220px;top:calc(50% - 110px);left:calc(50% - 35px);border:1.5px solid rgba(255,255,255,0.04);border-radius:50%;animation:fpSpin 8s linear infinite;transform:rotate(25deg)"><div style="position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.4)"></div></div>
+    </div>
+    <!-- Pulse -->
+    <div style="position:absolute;top:45%;left:50%;width:90px;height:90px;margin:-45px 0 0 -45px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);animation:fpPulse 2.4s ease-out infinite;pointer-events:none"></div>
+    <div style="position:absolute;top:45%;left:50%;width:90px;height:90px;margin:-45px 0 0 -45px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);animation:fpPulse 2.4s ease-out infinite 0.8s;pointer-events:none"></div>
+    <!-- Content -->
+    <div style="position:relative;z-index:10;text-align:center;max-width:380px;padding:0 20px">
+        <div style="width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.12);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+            <svg width="32" height="32" viewBox="0 0 512 512" fill="#fff"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
+        </div>
+        <h2 style="font-size:22px;font-weight:700;color:#fff;margin-bottom:8px">Check Your Inbox</h2>
+        <p style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:32px">You'll receive your password reset in your inbox shortly. Use the temporary password to sign in, then set a new one.</p>
+        <button onclick="closeFpSuccess()" style="padding:14px 40px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:10px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;position:relative;overflow:hidden;transition:all 0.2s ease;backdrop-filter:blur(4px)" onmouseover="this.style.background='rgba(255,255,255,0.22)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='translateY(0)'">
+            Back to Sign In
+            <span style="position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);animation:btnShineLoop 3s ease 0.5s infinite"></span>
+        </button>
+    </div>
+</div>
+
+<style>
+@keyframes fpSpin { to { transform: rotate(360deg); } }
+@keyframes fpPulse { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(2.8);opacity:0} }
+@keyframes fpIconIn { from{opacity:0;transform:scale(0.5)} to{opacity:1;transform:scale(1)} }
+@keyframes fpTextIn { to{opacity:1} }
+@keyframes fpHexDissolve {
+    0% { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); opacity: 1; }
+    50% { clip-path: polygon(50% 20%, 80% 35%, 80% 65%, 50% 80%, 20% 65%, 20% 35%); opacity: 0.6; }
+    100% { clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%); opacity: 0; }
+}
+</style>
 
 <!-- ═══ Transition Overlay ═══ -->
 <div class="transition-overlay" id="transOverlay">
@@ -653,6 +754,124 @@ window.addEventListener('load', function() {
             window.location.href = BASE_URL + '/dashboard';
         }, 2900);
     }
+
+    // ═══ Forgot Password Flow ═══
+
+    // Generate particles for forgot password overlays
+    ['fpParticles','fpFormParticles'].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (!c) return;
+        for (var i = 0; i < 14; i++) {
+            var s = document.createElement('span');
+            var sz = 2 + Math.random() * 3;
+            s.style.cssText = 'position:absolute;width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:rgba(255,255,255,0.4);opacity:0;left:'+(3+Math.random()*94)+'%;animation:cinFloat '+(2.5+Math.random()*2.5)+'s ease-in-out infinite;animation-delay:-'+(Math.random()*4)+'s';
+            c.appendChild(s);
+        }
+    });
+
+    window.showForgotPassword = function() {
+        var intro = document.getElementById('fpIntro');
+        intro.style.display = 'flex';
+        intro.style.opacity = '0';
+        intro.style.transition = 'opacity 0.4s ease';
+        requestAnimationFrame(function() { intro.style.opacity = '1'; });
+
+        // Cycle intro messages
+        var sub = document.getElementById('fpIntroSub');
+        var msgs = ['Initializing secure recovery...', 'Preparing encryption layer...', 'Ready for your email...'];
+        var idx = 0;
+        var timer = setInterval(function() {
+            idx++;
+            if (idx < msgs.length) {
+                sub.style.opacity = '0';
+                setTimeout(function() { sub.textContent = msgs[idx]; sub.style.opacity = '1'; }, 200);
+            }
+        }, 700);
+
+        // After 2s, show email form
+        setTimeout(function() {
+            clearInterval(timer);
+            intro.style.opacity = '0';
+            setTimeout(function() {
+                intro.style.display = 'none';
+                var form = document.getElementById('fpForm');
+                form.style.display = 'flex';
+                form.style.opacity = '0';
+                form.style.transition = 'opacity 0.4s ease';
+                requestAnimationFrame(function() { form.style.opacity = '1'; });
+                document.getElementById('fpEmail').focus();
+            }, 400);
+        }, 2000);
+    };
+
+    window.closeForgotPassword = function() {
+        var form = document.getElementById('fpForm');
+        form.style.opacity = '0';
+        setTimeout(function() { form.style.display = 'none'; }, 400);
+    };
+
+    window.submitForgotPassword = function() {
+        var email = document.getElementById('fpEmail').value.trim();
+        if (!email || email.indexOf('@') < 0) {
+            document.getElementById('fpEmail').style.borderColor = 'rgba(239,68,68,0.6)';
+            document.getElementById('fpEmail').style.boxShadow = '0 0 16px rgba(239,68,68,0.2)';
+            setTimeout(function() {
+                document.getElementById('fpEmail').style.borderColor = 'rgba(255,255,255,0.15)';
+                document.getElementById('fpEmail').style.boxShadow = 'none';
+            }, 1500);
+            return;
+        }
+
+        var btn = document.getElementById('fpSendBtn');
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+
+        // Show sending overlay
+        document.getElementById('fpForm').style.display = 'none';
+        var sending = document.getElementById('fpSending');
+        sending.style.display = 'flex';
+        sending.style.opacity = '0';
+        sending.style.transition = 'opacity 0.3s ease';
+        requestAnimationFrame(function() { sending.style.opacity = '1'; });
+
+        fetch(BASE_URL + '/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function() {
+            // Always show success (security: don't reveal if email exists)
+            setTimeout(function() {
+                sending.style.opacity = '0';
+                setTimeout(function() {
+                    sending.style.display = 'none';
+                    var success = document.getElementById('fpSuccess');
+                    success.style.display = 'flex';
+                    success.style.opacity = '0';
+                    success.style.transition = 'opacity 0.4s ease';
+                    requestAnimationFrame(function() { success.style.opacity = '1'; });
+                }, 300);
+            }, 1500);
+        })
+        .catch(function() {
+            sending.style.display = 'none';
+            document.getElementById('fpForm').style.display = 'flex';
+            btn.disabled = false;
+            btn.textContent = 'Send Reset Email';
+        });
+    };
+
+    window.closeFpSuccess = function() {
+        var el = document.getElementById('fpSuccess');
+        // Hexagonal dissolve transition
+        el.style.animation = 'fpHexDissolve 0.6s ease forwards';
+        setTimeout(function() {
+            el.style.display = 'none';
+            el.style.animation = '';
+            el.style.clipPath = '';
+        }, 600);
+    };
 })();
 </script>
 
