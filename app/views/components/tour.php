@@ -403,12 +403,150 @@ $tourSteps = match ($tourRole) {
     </div>
 </div>
 
-<!-- Page Transition Overlay -->
+<!-- Page Transition Overlay (between steps) -->
 <div class="tour-transition" id="tourTransition">
     <div class="tour-tr-particles" id="tourTrParticles"></div>
     <div class="tour-tr-ring"></div>
     <div class="tour-tr-text" id="tourTrText">Loading...</div>
 </div>
+
+<!-- Tour Boot Sequence (restart intro) -->
+<div class="tour-boot" id="tourBoot">
+    <div class="tour-boot-particles" id="tourBootParticles"></div>
+    <!-- Atom orbits -->
+    <div class="tour-boot-atom">
+        <div class="tb-orbit tb-orbit-1"><div class="tb-electron"></div></div>
+        <div class="tb-orbit tb-orbit-2"><div class="tb-electron"></div></div>
+        <div class="tb-orbit tb-orbit-3"><div class="tb-electron"></div></div>
+    </div>
+    <!-- Pulse rings -->
+    <div class="tb-pulse"></div>
+    <div class="tb-pulse" style="animation-delay:0.6s"></div>
+    <div class="tb-pulse" style="animation-delay:1.2s"></div>
+    <!-- Center content -->
+    <div class="tour-boot-center">
+        <div class="tour-boot-icon">
+            <img src="<?= $faviconUrl ?>" alt="">
+        </div>
+        <div class="tour-boot-title" id="tourBootTitle">Initializing Tour</div>
+        <div class="tour-boot-sub" id="tourBootSub">Preparing your guided experience...</div>
+        <div class="tour-boot-bar">
+            <div class="tour-boot-bar-fill" id="tourBootBar"></div>
+        </div>
+    </div>
+</div>
+<style>
+.tour-boot {
+    position: fixed; inset: 0; z-index: 100003;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(165deg, <?= htmlspecialchars($tourPrimaryColor) ?> 0%, color-mix(in srgb, <?= htmlspecialchars($tourPrimaryColor) ?> 35%, #0a0a0a) 55%, #0a0a0a 100%);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+    overflow: hidden;
+}
+.tour-boot.active { opacity: 1; pointer-events: all; }
+
+.tour-boot-particles {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+}
+.tour-boot-particles span {
+    position: absolute; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(255,255,255,0.4); opacity: 0;
+    animation: tourTrFloat 3s ease-in-out infinite;
+}
+
+/* Atom */
+.tour-boot-atom {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px; height: 300px; pointer-events: none;
+}
+.tb-orbit {
+    position: absolute; border-radius: 50%;
+}
+.tb-orbit-1 {
+    width: 320px; height: 120px; top: calc(50% - 60px); left: calc(50% - 160px);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    animation: tourTrSpin 7s linear infinite;
+}
+.tb-orbit-2 {
+    width: 280px; height: 100px; top: calc(50% - 50px); left: calc(50% - 140px);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    animation: tourTrSpin 5s linear infinite reverse;
+    transform: rotate(55deg);
+}
+.tb-orbit-3 {
+    width: 100px; height: 280px; top: calc(50% - 140px); left: calc(50% - 50px);
+    border: 1.5px solid rgba(255,255,255,0.06);
+    animation: tourTrSpin 9s linear infinite;
+    transform: rotate(25deg);
+}
+.tb-electron {
+    position: absolute; width: 6px; height: 6px;
+    background: #fff; border-radius: 50%;
+    top: -3px; left: calc(50% - 3px);
+    box-shadow: 0 0 14px rgba(255,255,255,0.7);
+}
+
+/* Pulse rings */
+.tb-pulse {
+    position: absolute; top: 50%; left: 50%;
+    width: 100px; height: 100px; margin: -50px 0 0 -50px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.25);
+    animation: tbPulse 2.4s ease-out infinite; pointer-events: none;
+}
+@keyframes tbPulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+/* Center content */
+.tour-boot-center {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+}
+.tour-boot-icon {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    opacity: 0; transform: scale(0.5);
+    animation: tbIconIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s forwards;
+}
+.tour-boot-icon img {
+    width: 42px; height: 42px; object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+@keyframes tbIconIn { to { opacity: 1; transform: scale(1); } }
+
+.tour-boot-title {
+    font-size: 20px; font-weight: 700; color: #fff;
+    margin-bottom: 8px;
+    opacity: 0; animation: tbTextIn 0.4s ease 0.6s forwards;
+}
+.tour-boot-sub {
+    font-size: 14px; color: rgba(255,255,255,0.5);
+    margin-bottom: 24px; min-height: 20px;
+    opacity: 0; animation: tbTextIn 0.4s ease 0.8s forwards;
+    transition: opacity 0.25s ease;
+}
+@keyframes tbTextIn { to { opacity: 1; } }
+
+.tour-boot-bar {
+    width: 160px; height: 2px;
+    background: rgba(255,255,255,0.1); border-radius: 2px;
+    overflow: hidden;
+    opacity: 0; animation: tbTextIn 0.3s ease 1s forwards;
+}
+.tour-boot-bar-fill {
+    width: 0; height: 100%;
+    background: linear-gradient(90deg, rgba(255,255,255,0.6), #fff);
+    border-radius: 2px;
+    transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+</style>
 
 <script>
 (function() {
@@ -417,7 +555,7 @@ $tourSteps = match ($tourRole) {
     var currentStep = 0;
     var isManualRestart = false;
 
-    // Generate particles for transition
+    // Generate particles for transition + boot
     var pCont = document.getElementById('tourTrParticles');
     for (var i = 0; i < 12; i++) {
         var sp = document.createElement('span');
@@ -425,6 +563,15 @@ $tourSteps = match ($tourRole) {
         sp.style.animationDuration = (2 + Math.random() * 2) + 's';
         sp.style.animationDelay = '-' + (Math.random() * 3) + 's';
         pCont.appendChild(sp);
+    }
+    var bCont = document.getElementById('tourBootParticles');
+    for (var i = 0; i < 18; i++) {
+        var sp = document.createElement('span');
+        sp.style.left = (3 + Math.random() * 94) + '%';
+        sp.style.animationDuration = (2.5 + Math.random() * 2.5) + 's';
+        sp.style.animationDelay = '-' + (Math.random() * 4) + 's';
+        sp.style.width = sp.style.height = (2 + Math.random() * 3) + 'px';
+        bCont.appendChild(sp);
     }
 
     // Check if resuming mid-tour
@@ -440,27 +587,96 @@ $tourSteps = match ($tourRole) {
     };
 
     window.startTourDirect = function() {
-        // Start without welcome (for restart button)
+        // Show cinematic boot sequence, then start tour
         isManualRestart = true;
-        localStorage.setItem('tourActive', '1');
-        localStorage.setItem('tourStep', '0');
-        currentStep = 0;
-        navigateToStep(0);
+        var boot = document.getElementById('tourBoot');
+        var subEl = document.getElementById('tourBootSub');
+        var barEl = document.getElementById('tourBootBar');
+        boot.classList.add('active');
+
+        // Start progress bar
+        setTimeout(function() { barEl.style.width = '100%'; }, 200);
+
+        // Cycle status messages
+        var msgs = [
+            'Preparing your guided experience...',
+            'Loading system modules...',
+            'Mapping interface components...',
+            'Calibrating AI tour engine...',
+            'Stand by — almost ready...'
+        ];
+        var msgIdx = 0;
+        var msgTimer = setInterval(function() {
+            msgIdx++;
+            if (msgIdx < msgs.length) {
+                subEl.style.opacity = '0';
+                setTimeout(function() {
+                    subEl.textContent = msgs[msgIdx];
+                    subEl.style.opacity = '1';
+                }, 200);
+            }
+        }, 600);
+
+        // After 3 seconds, start the actual tour
+        setTimeout(function() {
+            clearInterval(msgTimer);
+            boot.style.transition = 'opacity 0.4s ease';
+            boot.classList.remove('active');
+            setTimeout(function() {
+                localStorage.setItem('tourActive', '1');
+                localStorage.setItem('tourStep', '0');
+                currentStep = 0;
+                navigateToStep(0);
+            }, 400);
+        }, 3000);
     };
 
     window.beginTour = function() {
-        // Dismiss welcome, start tour
+        // Dismiss welcome, then show boot sequence
         var welcome = document.getElementById('tourWelcome');
         if (welcome) {
             welcome.style.transition = 'opacity 0.4s ease';
             welcome.style.opacity = '0';
             setTimeout(function() { welcome.remove(); }, 400);
         }
-        localStorage.setItem('tourActive', '1');
-        localStorage.setItem('tourStep', '0');
-        currentStep = 0;
-        // Small delay then show first step
-        setTimeout(function() { showStep(0); }, 500);
+        // Trigger the boot sequence (same as restart)
+        setTimeout(function() {
+            isManualRestart = false;
+            var boot = document.getElementById('tourBoot');
+            var subEl = document.getElementById('tourBootSub');
+            var barEl = document.getElementById('tourBootBar');
+            boot.classList.add('active');
+            setTimeout(function() { barEl.style.width = '100%'; }, 200);
+
+            var msgs = [
+                'Preparing your guided experience...',
+                'Loading system modules...',
+                'Mapping interface components...',
+                'Calibrating AI tour engine...',
+                'Stand by — almost ready...'
+            ];
+            var msgIdx = 0;
+            var msgTimer = setInterval(function() {
+                msgIdx++;
+                if (msgIdx < msgs.length) {
+                    subEl.style.opacity = '0';
+                    setTimeout(function() {
+                        subEl.textContent = msgs[msgIdx];
+                        subEl.style.opacity = '1';
+                    }, 200);
+                }
+            }, 600);
+
+            setTimeout(function() {
+                clearInterval(msgTimer);
+                boot.style.transition = 'opacity 0.4s ease';
+                boot.classList.remove('active');
+                localStorage.setItem('tourActive', '1');
+                localStorage.setItem('tourStep', '0');
+                currentStep = 0;
+                setTimeout(function() { showStep(0); }, 400);
+            }, 3000);
+        }, 450);
     };
 
     window.skipTourEntirely = function() {
