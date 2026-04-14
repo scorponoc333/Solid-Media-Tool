@@ -260,9 +260,34 @@ setTimeout(function() {
         <div class="empty-state">
             <i class="fas fa-feather-alt"></i>
             <p><?= $firstName ? "Hey {$firstName}, no" : 'No' ?> posts yet — let's get <?= $companyHtml ?>'s content rolling. Fire up the AI Generator and create your first post in seconds.</p>
-            <a href="<?= BASE_URL ?>/generator" class="btn btn-primary">
+            <a href="<?= BASE_URL ?>/generator" class="btn btn-primary cinematic-link cta-shine" data-cin-label="Preparing AI Engine..." style="position:relative;overflow:hidden">
                 <i class="fas fa-magic"></i> Generate Your First Post
             </a>
+            <style>
+            .cta-shine { animation: ctaPulseGlow 2s ease-in-out infinite; }
+            .cta-shine::before {
+                content: '';
+                position: absolute;
+                top: 0; left: -100%;
+                width: 100%; height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+                animation: ctaShineSweep 3s ease 0.5s infinite;
+            }
+            @keyframes ctaShineSweep {
+                0% { left: -100%; }
+                30% { left: 100%; }
+                100% { left: 100%; }
+            }
+            @keyframes ctaPulseGlow {
+                0%,100% { box-shadow: 0 0 12px rgba(<?php
+                    $cr = hexdec(substr($_primaryColor,1,2));
+                    $cg = hexdec(substr($_primaryColor,3,2));
+                    $cb = hexdec(substr($_primaryColor,5,2));
+                    echo "$cr,$cg,$cb";
+                ?>, 0.3); }
+                50% { box-shadow: 0 0 24px rgba(<?= "$cr,$cg,$cb" ?>, 0.5), 0 4px 16px rgba(<?= "$cr,$cg,$cb" ?>, 0.25); }
+            }
+            </style>
         </div>
     </div>
 <?php else: ?>

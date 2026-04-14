@@ -206,6 +206,9 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
                     <i class="fas fa-spinner fa-spin" style="margin-right:5px;font-size:10px"></i>
                     <span id="genStatusText">Generating...</span>
                 </div>
+                <button class="theme-toggle-branded" onclick="restartTour()" title="Take a guided tour" id="tourRestartBtn" style="background:<?= $isDark ? 'rgba(255,255,255,0.1)' : $primaryColor ?>">
+                    <i class="fas fa-question" style="color:#fff"></i>
+                </button>
                 <button class="theme-toggle-branded" onclick="toggleTheme()" title="Toggle dark mode" id="themeToggleBtn" style="background:<?= $isDark ? 'rgba(255,255,255,0.1)' : $primaryColor ?>">
                     <i class="fas <?= $isDark ? 'fa-sun' : 'fa-moon' ?>" id="theme-icon" style="color:#fff"></i>
                 </button>
@@ -227,6 +230,54 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
 
 <!-- Modal System -->
 <?= ModalService::render() ?>
+
+<!-- Cinematic Page Transition -->
+<div id="cinematicTransition" style="position:fixed;inset:0;z-index:99995;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(165deg,<?= $primaryColor ?> 0%,color-mix(in srgb,<?= $primaryColor ?> 35%,#0a0a0a) 55%,#0a0a0a 100%);opacity:0;pointer-events:none;transition:opacity 0.4s ease">
+    <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none" id="cinParticles"></div>
+    <div id="cinSpinner" style="width:48px;height:48px;border:2.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.7);border-radius:50%;animation:cinSpin 0.7s linear infinite;margin-bottom:16px"></div>
+    <div id="cinText" style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:0.03em">Loading...</div>
+    <div style="width:140px;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:14px;overflow:hidden">
+        <div id="cinBar" style="width:0;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0.7),#fff);border-radius:2px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)"></div>
+    </div>
+</div>
+<style>
+@keyframes cinSpin { to { transform: rotate(360deg); } }
+</style>
+<script>
+(function(){
+    // Generate particles
+    var pc = document.getElementById('cinParticles');
+    for(var i=0;i<10;i++){
+        var s=document.createElement('span');
+        s.style.cssText='position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.4);opacity:0;animation:cinFloat '+(2+Math.random()*2)+'s ease-in-out infinite;animation-delay:-'+(Math.random()*3)+'s;left:'+(5+Math.random()*90)+'%';
+        pc.appendChild(s);
+    }
+    var st=document.createElement('style');
+    st.textContent='@keyframes cinFloat{0%{bottom:-5px;opacity:0}20%{opacity:.5}80%{opacity:.15}100%{bottom:105%;opacity:0}}';
+    document.head.appendChild(st);
+
+    // Cinematic navigation function
+    window.cinematicNav = function(href, label) {
+        var el = document.getElementById('cinematicTransition');
+        document.getElementById('cinText').textContent = label || 'Preparing...';
+        el.style.opacity = '1';
+        el.style.pointerEvents = 'all';
+        setTimeout(function(){ document.getElementById('cinBar').style.width = '100%'; }, 50);
+        setTimeout(function(){ window.location.href = href; }, 1000);
+    };
+
+    // Auto-attach to .cinematic-link elements
+    document.addEventListener('click', function(e) {
+        var link = e.target.closest('.cinematic-link');
+        if (link) {
+            e.preventDefault();
+            var href = link.getAttribute('href');
+            var label = link.getAttribute('data-cin-label') || 'Loading...';
+            cinematicNav(href, label);
+        }
+    });
+})();
+</script>
 
 <!-- Toast Container -->
 <div id="toast-container"></div>
@@ -292,14 +343,27 @@ function submitPasswordChange() {
 </script>
 <?php endif; ?>
 
-<!-- Onboarding Tour -->
-<?php if (!empty($_SESSION['needs_tour']) && empty($_SESSION['must_change_password'])): ?>
+<!-- Onboarding Tour (always loaded for resume/restart capability) -->
+<?php if (empty($_SESSION['must_change_password'])): ?>
 <?php include APP_ROOT . '/app/views/components/tour.php'; ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(startTour, 800);
+    <?php if (!empty($_SESSION['needs_tour'])): ?>
+    // First-time user — auto-start after delay
+    if (localStorage.getItem('tourActive') !== '1') {
+        setTimeout(startTour, 800);
+    }
+    <?php endif; ?>
 });
+
+function restartTour() {
+    if (typeof startTourDirect === 'function') {
+        startTourDirect();
+    }
+}
 </script>
+<?php else: ?>
+<script>function restartTour() { if (typeof showToast === 'function') showToast('Please change your password first.', 'info'); }</script>
 <?php endif; ?>
 
 <script src="<?= BASE_URL ?>/js/app.js"></script>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Projects — SolidTech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: linear-gradient(180deg, #8B1A1A 0%, #1a0a0a 55%, #000000 100%);
+            overflow: hidden;
+            color: #fff;
+        }
+
+        /* ── Particles ── */
+        #particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── Boot loader ── */
+        .boot-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: #000;
+            animation: bootOut 0.5s ease 1.2s forwards;
+        }
+        .boot-loader svg { width: 72px; height: 72px; margin-bottom: 16px; }
+        .boot-arc {
+            fill: none;
+            stroke: #8B1A1A;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 190;
+            stroke-dashoffset: 190;
+            animation: arcFill 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+            filter: drop-shadow(0 0 8px #8B1A1A88);
+        }
+        .boot-text {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            opacity: 0;
+            animation: fadeIn 0.3s ease 0.5s forwards;
+        }
+        @keyframes arcFill { to { stroke-dashoffset: 0; } }
+        @keyframes bootOut { to { opacity: 0; pointer-events: none; } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* ── Main content ── */
+        .landing-wrapper {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 20px 20px;
+            margin-top: -8vh;
+            opacity: 0;
+            animation: wrapperIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) 1.4s forwards;
+        }
+        @media (max-width: 660px) {
+            .landing-wrapper { margin-top: 0; }
+        }
+        @keyframes wrapperIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .landing-logo {
+            max-width: 320px;
+            max-height: 90px;
+            object-fit: contain;
+            /* Logo is already white — no filter needed */
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.85);
+            animation: logoPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.5s forwards;
+        }
+        @keyframes logoPopIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .landing-title {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 8px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 1.8s forwards;
+        }
+
+        .landing-heading {
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: 900;
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: headingFlash 0.5s ease 2.0s forwards;
+        }
+        @keyframes headingFlash {
+            0% { opacity: 0; filter: brightness(2); transform: scale(1.04); }
+            60% { opacity: 1; filter: brightness(1.5); }
+            100% { opacity: 1; filter: brightness(1); transform: scale(1); }
+        }
+
+        .landing-sub {
+            font-size: 16px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 60px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 2.2s forwards;
+        }
+
+        /* ── Glass Tiles ── */
+        .tiles-grid {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .tile {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .tile:nth-child(1) { animation: tileIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 2.4s forwards; }
+        .tile:nth-child(2) { animation: tileIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 2.6s forwards; }
+
+        @keyframes tileIn {
+            0% { opacity: 0; transform: translateY(30px) scale(0.9); filter: blur(4px); }
+            60% { filter: blur(0); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Glass shine sweep on entrance */
+        .tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+            pointer-events: none;
+        }
+        .tile:nth-child(1)::before { animation: tileShineSweep 0.6s ease 2.8s forwards; }
+        .tile:nth-child(2)::before { animation: tileShineSweep 0.6s ease 3.0s forwards; }
+        @keyframes tileShineSweep { to { left: 100%; } }
+
+        /* Hover glow */
+        .tile::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            background: linear-gradient(135deg, rgba(139,26,26,0.3), transparent 50%, rgba(139,26,26,0.15));
+            pointer-events: none;
+        }
+        .tile:hover::after { opacity: 1; }
+
+        .tile:hover {
+            opacity: 1 !important;
+            transform: translateY(-6px) scale(1.03) !important;
+            border-color: rgba(139,26,26,0.4);
+            box-shadow:
+                0 20px 60px rgba(139,26,26,0.25),
+                0 0 40px rgba(139,26,26,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .tile-icon {
+            font-size: 36px;
+            margin-bottom: 14px;
+            filter: grayscale(1) brightness(10);
+            transition: all 0.3s ease;
+        }
+        .tile:hover .tile-icon {
+            transform: scale(1.1);
+            filter: grayscale(0.3) brightness(1.2) sepia(1) hue-rotate(-30deg) saturate(3);
+        }
+
+        .tile-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .tile-desc {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            font-weight: 400;
+        }
+
+        /* Subtle glow pulse on hover via box-shadow transition */
+        .tile {
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+        }
+
+        /* ── Transition overlay ── */
+        .page-transition {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: linear-gradient(165deg, #8B1A1A 0%, #1a0a0a 60%, #000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .page-transition.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .page-transition.exiting {
+            animation: transExit 0.3s ease forwards;
+        }
+        @keyframes transExit {
+            to { opacity: 0; filter: brightness(2) blur(3px); }
+        }
+
+        .trans-center {
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .page-transition.active .trans-center {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .trans-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            margin-top: 12px;
+        }
+        .trans-bar {
+            width: 120px;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin: 16px auto 0;
+            overflow: hidden;
+        }
+        .trans-bar-fill {
+            width: 0;
+            height: 100%;
+            background: #fff;
+            border-radius: 2px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ── Footer ── */
+        .landing-footer {
+            position: fixed;
+            bottom: 24px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255,255,255,0.2);
+            font-size: 12px;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 3.2s forwards;
+        }
+
+        @media (max-width: 660px) {
+            .tiles-grid { flex-direction: column; align-items: center; }
+            .tile { width: 280px; height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Boot Loader -->
+<div class="boot-loader" id="bootLoader">
+    <svg viewBox="0 0 72 72">
+        <circle class="boot-arc" cx="36" cy="36" r="30"/>
+    </svg>
+    <div class="boot-text">Loading</div>
+</div>
+
+<!-- Particles -->
+<canvas id="particles"></canvas>
+
+<!-- Main Content -->
+<div class="landing-wrapper">
+    <img src="/social/img/Solid Tech White.png" alt="SolidTech" class="landing-logo">
+    <div class="landing-title">AI Agent Projects</div>
+    <h1 class="landing-heading">Marketing Tools</h1>
+    <p class="landing-sub">Enterprise-grade AI tools for content creation, social media management, and digital artwork generation.</p>
+
+    <div class="tiles-grid">
+        <a class="tile" id="tileSocial" href="/social/public/login" data-app="social">
+            <div class="tile-icon">&#x1F4F1;</div>
+            <div class="tile-title">Solid Social Media</div>
+            <div class="tile-desc">AI-powered content management</div>
+        </a>
+
+        <a class="tile" id="tileArtwork" href="#" data-app="artwork">
+            <div class="tile-icon">&#x1F3A8;</div>
+            <div class="tile-title">Solid Artwork Generator</div>
+            <div class="tile-desc">AI image creation suite</div>
+        </a>
+    </div>
+</div>
+
+<!-- Transition Overlay -->
+<div class="page-transition" id="pageTransition">
+    <div class="trans-center">
+        <div style="font-size:40px;margin-bottom:8px" id="transIcon"></div>
+        <div class="trans-text" id="transText">Loading...</div>
+        <div class="trans-bar"><div class="trans-bar-fill" id="transBarFill"></div></div>
+    </div>
+</div>
+
+<div class="landing-footer">&copy; 2026 SolidTech Technology Solutions Inc. All rights reserved.</div>
+
+<script>
+// Remove boot loader
+setTimeout(function() {
+    var bl = document.getElementById('bootLoader');
+    if (bl) bl.style.display = 'none';
+}, 1700);
+
+// Constellation particles
+(function() {
+    var canvas = document.getElementById('particles');
+    var ctx = canvas.getContext('2d');
+    var nodes = [], nodeCount = 50, linkDist = 120;
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    for (var i = 0; i < nodeCount; i++) {
+        nodes.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            r: Math.random() * 1.5 + 0.5
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (var i = 0; i < nodes.length; i++) {
+            var n = nodes[i];
+            n.x += n.vx; n.y += n.vy;
+            if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
+            if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+        }
+        for (var i = 0; i < nodes.length; i++) {
+            for (var j = i + 1; j < nodes.length; j++) {
+                var dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+                var dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < linkDist) {
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.strokeStyle = 'rgba(139,26,26,' + ((1 - dist/linkDist) * 0.2) + ')';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+        for (var i = 0; i < nodes.length; i++) {
+            ctx.beginPath();
+            ctx.arc(nodes[i].x, nodes[i].y, nodes[i].r, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(139,26,26,0.4)';
+            ctx.fill();
+        }
+        requestAnimationFrame(draw);
+    }
+    draw();
+
+    // Pause on hidden tab
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) draw();
+    });
+})();
+
+// Tile click transitions
+document.querySelectorAll('.tile').forEach(function(tile) {
+    tile.addEventListener('click', function(e) {
+        e.preventDefault();
+        var href = this.getAttribute('href');
+        var appName = this.getAttribute('data-app');
+        var overlay = document.getElementById('pageTransition');
+        var icon = document.getElementById('transIcon');
+        var text = document.getElementById('transText');
+        var bar = document.getElementById('transBarFill');
+
+        if (appName === 'social') {
+            icon.textContent = '\u{1F4F1}';
+            text.textContent = 'Opening Solid Social Media...';
+        } else {
+            icon.textContent = '\u{1F3A8}';
+            text.textContent = 'Coming Soon';
+        }
+
+        overlay.classList.add('active');
+        setTimeout(function() { bar.style.width = '100%'; }, 100);
+
+        if (href && href !== '#') {
+            setTimeout(function() {
+                overlay.classList.add('exiting');
+            }, 1000);
+            setTimeout(function() {
+                window.location.href = href;
+            }, 1200);
+        } else {
+            setTimeout(function() {
+                overlay.classList.remove('active');
+                bar.style.width = '0';
+            }, 1500);
+        }
+    });
+});
+</script>
+</body>
+</html>
