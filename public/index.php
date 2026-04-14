@@ -39,6 +39,7 @@ require_once APP_ROOT . '/app/services/WizardService.php';
 require_once APP_ROOT . '/app/services/EmailService.php';
 require_once APP_ROOT . '/app/services/UserManagementService.php';
 require_once APP_ROOT . '/app/services/ApprovalService.php';
+require_once APP_ROOT . '/app/services/ProfilePdfService.php';
 
 // Single client mode
 $GLOBALS['client_id'] = CLIENT_ID;
