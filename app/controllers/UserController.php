@@ -43,7 +43,7 @@ class UserController extends Controller
             return;
         }
 
-        if (!in_array($role, ['editor', 'reviewer'], true)) {
+        if (!in_array($role, ['admin', 'editor', 'reviewer'], true)) {
             $role = 'editor';
         }
 
