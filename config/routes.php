@@ -17,6 +17,8 @@ $router->post('/generator/week', 'GeneratorController', 'generateWeek');
 $router->post('/generator/single', 'GeneratorController', 'generateSingle');
 $router->post('/generator/regenerate-text', 'GeneratorController', 'regenerateText');
 $router->post('/generator/regenerate-image', 'GeneratorController', 'regenerateImage');
+$router->post('/generator/start-image-job', 'GeneratorController', 'startImageJob');
+$router->get('/generator/check-image-jobs', 'GeneratorController', 'checkImageJobs');
 
 // Posts / Editor
 $router->get('/posts', 'PostController', 'index');

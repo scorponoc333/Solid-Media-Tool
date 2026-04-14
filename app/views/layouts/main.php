@@ -512,101 +512,135 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ---- Global Generation Status Tracking ----
+// Global image generation tracker — polls server for image job status
 var GenTracker = {
-    KEY: 'solidgen_active',
     pill: null,
     pillText: null,
+    pollInterval: null,
+    completedUids: [],
 
     init: function() {
         this.pill = document.getElementById('genStatusPill');
         this.pillText = document.getElementById('genStatusText');
-        // Check if there are active tasks on page load
-        var tasks = this.getTasks();
-        if (tasks.length > 0) {
+
+        // Check if there are active image jobs in sessionStorage
+        var jobs = this.getActiveJobs();
+        if (Object.keys(jobs).length > 0) {
             this.showPill();
-            this.pollTasks();
+            this.startPolling();
         }
     },
 
-    getTasks: function() {
-        try { return JSON.parse(localStorage.getItem(this.KEY) || '[]'); } catch(e) { return []; }
-    },
-
-    addTask: function(postId, label) {
-        var tasks = this.getTasks();
-        tasks.push({ postId: postId, label: label || 'image', startedAt: Date.now() });
-        localStorage.setItem(this.KEY, JSON.stringify(tasks));
-        this.showPill();
-    },
-
-    removeTask: function(postId) {
-        var tasks = this.getTasks().filter(function(t) { return t.postId != postId; });
-        localStorage.setItem(this.KEY, JSON.stringify(tasks));
-        if (tasks.length === 0) {
-            this.showDone(postId);
-        }
-    },
-
-    clearAll: function() {
-        localStorage.removeItem(this.KEY);
-        if (this.pill) this.pill.style.display = 'none';
+    getActiveJobs: function() {
+        try { return JSON.parse(sessionStorage.getItem('gen_image_jobs') || '{}'); } catch(e) { return {}; }
     },
 
     showPill: function() {
         if (!this.pill) return;
-        var tasks = this.getTasks();
-        if (tasks.length === 0) return;
-        var count = tasks.length;
-        this.pillText.textContent = count > 1 ? count + ' images generating...' : 'Generating image...';
+        var jobs = this.getActiveJobs();
+        var count = Object.keys(jobs).length;
+        if (count === 0 && this.completedUids.length === 0) {
+            this.pill.style.display = 'none';
+            return;
+        }
+
         this.pill.style.display = '';
-        this.pill.querySelector('i').className = 'fas fa-spinner fa-spin';
-        this.pill.querySelector('i').style.marginRight = '5px';
+
+        if (count > 0) {
+            // Still generating
+            var icon = this.pill.querySelector('i');
+            icon.className = 'fas fa-spinner fa-spin';
+            icon.style.marginRight = '5px';
+            this.pillText.textContent = count > 1 ? count + ' images generating...' : '1 image generating...';
+            this.pill.style.background = '';
+            this.pill.style.animation = '';
+            this.pill.style.boxShadow = '';
+        } else if (this.completedUids.length > 0) {
+            // All done — show "View Posts" button
+            var icon = this.pill.querySelector('i');
+            icon.className = 'fas fa-check-circle';
+            var n = this.completedUids.length;
+            this.pillText.textContent = n + ' image' + (n > 1 ? 's' : '') + ' ready — View Posts';
+            this.pill.style.animation = 'none';
+            this.pill.style.boxShadow = '0 0 12px rgba(34,197,94,0.4)';
+            this.pill.style.background = 'var(--success)';
+
+            // Auto-hide after 10 seconds
+            var self = this;
+            setTimeout(function() {
+                self.completedUids = [];
+                self.pill.style.display = 'none';
+                self.pill.style.animation = '';
+                self.pill.style.boxShadow = '';
+                self.pill.style.background = '';
+            }, 10000);
+        }
     },
 
-    showDone: function(postId) {
-        if (!this.pill) return;
-        this.pill.querySelector('i').className = 'fas fa-check-circle';
-        this.pillText.textContent = 'Image ready — click to view';
-        this.pill.style.animation = 'none';
-        this.pill.style.boxShadow = '0 0 12px rgba(34,197,94,0.4)';
-        this.pill.style.background = 'var(--success)';
-        this.pill.dataset.donePostId = postId;
-
-        // Auto-hide after 15 seconds
-        setTimeout(function() {
-            GenTracker.pill.style.display = 'none';
-            GenTracker.pill.style.animation = '';
-            GenTracker.pill.style.boxShadow = '';
-            GenTracker.pill.style.background = '';
-            delete GenTracker.pill.dataset.donePostId;
-        }, 15000);
-    },
-
-    pollTasks: function() {
-        // Simple heartbeat — checks if tasks are still tracked
-        // In a full implementation this would poll the server for Kie.ai task status
+    startPolling: function() {
+        if (this.pollInterval) return;
         var self = this;
-        setInterval(function() {
-            var tasks = self.getTasks();
-            if (tasks.length > 0) {
-                // Check if any task has been running too long (> 5 min)
-                var now = Date.now();
-                tasks.forEach(function(t) {
-                    if (now - t.startedAt > 300000) {
-                        self.removeTask(t.postId);
+        this.pollInterval = setInterval(function() {
+            var jobs = self.getActiveJobs();
+            if (Object.keys(jobs).length === 0) {
+                clearInterval(self.pollInterval);
+                self.pollInterval = null;
+                self.showPill();
+                return;
+            }
+
+            // Poll server for job status
+            fetch('<?= BASE_URL ?>/generator/check-image-jobs')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var serverJobs = data.jobs || [];
+                var activeJobs = self.getActiveJobs();
+                var changed = false;
+
+                serverJobs.forEach(function(sj) {
+                    if (activeJobs[sj.uid]) {
+                        if (sj.status === 'completed') {
+                            self.completedUids.push(sj.uid);
+                            delete activeJobs[sj.uid];
+                            changed = true;
+
+                            // Update sessionStorage gen_posts with the image URL
+                            try {
+                                var posts = JSON.parse(sessionStorage.getItem('gen_posts') || '[]');
+                                posts.forEach(function(p) {
+                                    if (p.uid === sj.uid) p.image_url = sj.image_url;
+                                });
+                                sessionStorage.setItem('gen_posts', JSON.stringify(posts));
+                            } catch(e) {}
+                        } else if (sj.status === 'failed') {
+                            delete activeJobs[sj.uid];
+                            changed = true;
+                        }
                     }
                 });
-                self.showPill();
-            }
-        }, 5000);
+
+                if (changed) {
+                    sessionStorage.setItem('gen_image_jobs', JSON.stringify(activeJobs));
+                    self.showPill();
+                }
+            })
+            .catch(function() {});
+        }, 7000); // Poll every 7 seconds
+    }
+};
+
+window.updateGenPill = function() {
+    GenTracker.showPill();
+    var jobs = GenTracker.getActiveJobs();
+    if (Object.keys(jobs).length > 0 && !GenTracker.pollInterval) {
+        GenTracker.startPolling();
     }
 };
 
 function onGenPillClick() {
-    var postId = GenTracker.pill.dataset.donePostId;
-    if (postId) {
-        // Navigate to the post with transition
-        window.location.href = '<?= BASE_URL ?>/posts/edit/' + postId;
+    if (GenTracker.completedUids.length > 0) {
+        // Navigate to generator to see the posts
+        window.location.href = '<?= BASE_URL ?>/generator';
     }
 }
 

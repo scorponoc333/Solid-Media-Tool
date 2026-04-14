@@ -365,7 +365,7 @@ class AIService
      * Stamp the brand logo (bottom-left) and website (bottom-right)
      * onto the image with a subtle dark gradient fade at the bottom.
      */
-    private function watermarkImage(string $imageWebUrl): ?string
+    public function watermarkImage(string $imageWebUrl): ?string
     {
         // Check art direction watermark settings
         $artService = new ArtDirectionService();
@@ -519,7 +519,7 @@ class AIService
     /**
      * @return string|array Task ID string on success, or error array on failure
      */
-    private function kieCreateTask(string $prompt): string|array
+    public function kieCreateTask(string $prompt): string|array
     {
         $payload = json_encode([
             'model' => KIE_MODEL,
@@ -584,7 +584,7 @@ class AIService
     /**
      * @return string|array Image URL on success, or error array on failure, or null on timeout
      */
-    private function kiePollResult(string $taskId, int $maxWait = 120): string|array|null
+    public function kiePollResult(string $taskId, int $maxWait = 120): string|array|null
     {
         $start = time();
 
@@ -641,7 +641,7 @@ class AIService
         return null;
     }
 
-    private function downloadImage(string $url): ?string
+    public function downloadImage(string $url): ?string
     {
         $ch = curl_init($url);
         curl_setopt_array($ch, [

@@ -894,6 +894,173 @@ function renderResults(posts, append = false) {
     });
 
     updateResultsCount();
+
+    // Persist to sessionStorage
+    persistGeneratedPosts();
+}
+
+function persistGeneratedPosts() {
+    var cards = document.querySelectorAll('.result-card');
+    var posts = [];
+    cards.forEach(function(card) {
+        var uid = card.id.replace('card-', '');
+        var titleEl = document.getElementById('title-' + uid);
+        var contentEl = document.getElementById('content-' + uid);
+        if (!titleEl || !contentEl) return;
+        posts.push({
+            uid: uid,
+            title: titleEl.value,
+            content: contentEl.value,
+            image_url: card.dataset.imageUrl || '',
+            image_prompt: card.dataset.imagePrompt || '',
+            post_type: card.dataset.postType || 'educational',
+            topic: card.dataset.topic || '',
+            keywords: card.dataset.keywords || '',
+            angle: card.dataset.angle || ''
+        });
+    });
+    if (posts.length > 0) {
+        sessionStorage.setItem('gen_posts', JSON.stringify(posts));
+    } else {
+        sessionStorage.removeItem('gen_posts');
+    }
+}
+
+function restoreGeneratedPosts() {
+    var saved = sessionStorage.getItem('gen_posts');
+    if (!saved) return;
+    try {
+        var posts = JSON.parse(saved);
+        if (!posts.length) return;
+        // Render with the saved UIDs
+        var container = document.getElementById('generator-results');
+        var grid = document.createElement('div');
+        grid.className = 'results-grid';
+        container.innerHTML = '';
+        container.appendChild(grid);
+
+        posts.forEach(function(post) {
+            var uid = post.uid;
+            var typeLabel = (post.post_type || 'educational').replace(/_/g, ' ');
+            var imageHtml = post.image_url
+                ? '<img src="' + escHtml(post.image_url) + '" alt="Post image">'
+                : '<div class="placeholder-icon"><i class="fas fa-image"></i><span>Image will be generated</span></div>';
+
+            var card = document.createElement('div');
+            card.className = 'result-card card';
+            card.id = 'card-' + uid;
+            card.dataset.imageUrl = post.image_url || '';
+            card.dataset.imagePrompt = post.image_prompt || '';
+            card.dataset.postType = post.post_type || 'educational';
+            card.dataset.topic = post.topic || '';
+            card.dataset.keywords = post.keywords || '';
+            card.dataset.angle = post.angle || '';
+
+            card.innerHTML = '<div class="post-card">'
+                + '<div class="post-card-image-wrap" id="img-wrap-' + uid + '">' + imageHtml + '</div>'
+                + '<div class="post-card-body">'
+                + '<input type="text" class="editable-title" id="title-' + uid + '" value="' + escAttr(post.title || 'Untitled Post') + '">'
+                + '<textarea class="editable-content" id="content-' + uid + '" rows="8" style="white-space:pre-wrap;line-height:1.7">' + escHtml(post.content || '') + '</textarea>'
+                + '<div class="post-card-meta mt-1">'
+                + '<span class="badge badge-draft" style="text-transform:capitalize">' + escHtml(typeLabel) + '</span>'
+                + (post.topic ? '<span class="text-muted text-small">' + escHtml(post.topic) + '</span>' : '')
+                + '</div></div>'
+                + '<div class="post-card-actions">'
+                + '<button class="btn btn-ghost btn-sm" onclick="regenerateText(\'' + uid + '\')"><i class="fas fa-sync-alt"></i> Regen Text</button>'
+                + '<button class="btn btn-ghost btn-sm" onclick="regenerateImage(\'' + uid + '\')"><i class="fas fa-image"></i> Generate Image</button>'
+                + '<button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="saveDraft(\'' + uid + '\',\'' + escAttr(post.post_type || 'educational') + '\',\'' + escAttr(post.topic || '') + '\',\'' + escAttr(post.keywords || '') + '\',\'' + escAttr(post.angle || '') + '\')"><i class="fas fa-save"></i> Save Draft</button>'
+                + '</div></div>';
+
+            grid.appendChild(card);
+        });
+
+        updateResultsCount();
+    } catch (e) {
+        // Corrupted data, clear it
+        sessionStorage.removeItem('gen_posts');
+    }
+}
+
+// Restore on page load + resume polling for any in-flight image jobs
+document.addEventListener('DOMContentLoaded', function() {
+    restoreGeneratedPosts();
+    resumeImagePolling();
+});
+
+function pollImageJob(uid, jobId, msgInterval) {
+    var pollTimer = setInterval(function() {
+        fetch(BASE + '/generator/check-image-jobs')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var jobs = data.jobs || [];
+            for (var i = 0; i < jobs.length; i++) {
+                if (jobs[i].uid === uid) {
+                    if (jobs[i].status === 'completed' && jobs[i].image_url) {
+                        clearInterval(pollTimer);
+                        if (msgInterval) clearInterval(msgInterval);
+
+                        var imgWrap = document.getElementById('img-wrap-' + uid);
+                        var card = document.getElementById('card-' + uid);
+                        if (imgWrap) imgWrap.innerHTML = '<img src="' + escHtml(jobs[i].image_url) + '" alt="Post image">';
+                        if (card) card.dataset.imageUrl = jobs[i].image_url;
+
+                        // Remove from active jobs
+                        var active = JSON.parse(sessionStorage.getItem('gen_image_jobs') || '{}');
+                        delete active[uid];
+                        sessionStorage.setItem('gen_image_jobs', JSON.stringify(active));
+
+                        persistGeneratedPosts();
+                        if (typeof updateGenPill === 'function') updateGenPill();
+                        showToast('Image generated!', 'success');
+                    } else if (jobs[i].status === 'failed') {
+                        clearInterval(pollTimer);
+                        if (msgInterval) clearInterval(msgInterval);
+
+                        var imgWrap = document.getElementById('img-wrap-' + uid);
+                        if (imgWrap) {
+                            var ol = imgWrap.querySelector('.img-loading-overlay');
+                            if (ol) ol.remove();
+                        }
+
+                        var active = JSON.parse(sessionStorage.getItem('gen_image_jobs') || '{}');
+                        delete active[uid];
+                        sessionStorage.setItem('gen_image_jobs', JSON.stringify(active));
+                        if (typeof updateGenPill === 'function') updateGenPill();
+
+                        showImageErrorModal(jobs[i].error || 'Image generation failed', function() { regenerateImage(uid); });
+                    }
+                    break;
+                }
+            }
+        })
+        .catch(function() {});
+    }, 6000); // Poll every 6 seconds
+}
+
+function resumeImagePolling() {
+    var active = JSON.parse(sessionStorage.getItem('gen_image_jobs') || '{}');
+    var uids = Object.keys(active);
+    if (!uids.length) return;
+
+    uids.forEach(function(uid) {
+        var job = active[uid];
+        // Check if the card exists on this page
+        var card = document.getElementById('card-' + uid);
+        if (card) {
+            // Show loading overlay if not already there
+            var imgWrap = document.getElementById('img-wrap-' + uid);
+            if (imgWrap && !imgWrap.querySelector('.img-loading-overlay')) {
+                // Re-add loading overlay
+                var gPrimary = '<?= $primaryColor ?>';
+                imgWrap.innerHTML += '<div class="img-loading-overlay" style="background:linear-gradient(165deg,'+gPrimary+' 0%,#0a0a0a 70%,#000 100%);flex-direction:column;gap:10px">'
+                    + '<div style="width:48px;height:48px;border:2.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.7);border-radius:50%;animation:aiSpin 0.7s linear infinite"></div>'
+                    + '<div style="font-size:11px;color:rgba(255,255,255,0.6);z-index:2">Generating image...</div>'
+                    + '<style>@keyframes aiSpin{to{transform:rotate(360deg)}}</style>'
+                    + '</div>';
+            }
+            pollImageJob(uid, job.job_id, null);
+        }
+    });
 }
 
 function updateResultsCount() {
@@ -984,36 +1151,29 @@ async function regenerateImage(uid) {
         const formData = new FormData();
         formData.append('csrf_token', csrfToken());
         formData.append('prompt', prompt);
+        formData.append('uid', uid);
 
-        const res = await fetch(BASE + '/generator/regenerate-image', {
+        // Start async job — returns immediately with job ID
+        const res = await fetch(BASE + '/generator/start-image-job', {
             method: 'POST',
             body: formData
         });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to start image generation');
 
-        clearInterval(imgMsgInterval);
+        // Store job tracking info
+        var activeJobs = JSON.parse(sessionStorage.getItem('gen_image_jobs') || '{}');
+        activeJobs[uid] = { job_id: data.job_id, started: Date.now() };
+        sessionStorage.setItem('gen_image_jobs', JSON.stringify(activeJobs));
 
-        const text = await res.text();
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (e) {
-            throw new Error('The image generation request timed out.');
-        }
-        if (!res.ok) throw new Error(data.error || 'Image generation failed');
+        // Update global tracker
+        if (typeof updateGenPill === 'function') updateGenPill();
 
-        if (data.image_url) {
-            if (data.image_url.includes('placehold.co') || data.image_url.includes('Image+')) {
-                throw new Error('The AI could not generate this image. The request may have been too complex or the service is busy.');
-            }
-            imgWrap.innerHTML = `<img src="${escHtml(data.image_url)}" alt="Post image">`;
-            card.dataset.imageUrl = data.image_url;
-            showToast('Image generated!', 'success');
-        } else {
-            throw new Error('No image was returned from the AI service.');
-        }
+        // Start local polling for this image (if on generator page)
+        pollImageJob(uid, data.job_id, imgMsgInterval);
+
     } catch (err) {
         clearInterval(imgMsgInterval);
-        // Show error lightbox instead of just a toast
         var overlay = imgWrap.querySelector('.img-loading-overlay');
         if (overlay) overlay.remove();
         showImageErrorModal(err.message, function() { regenerateImage(uid); });
@@ -1056,6 +1216,8 @@ async function saveDraft(uid, postType, topic, keywords, angle) {
         btn.innerHTML = '<i class="fas fa-check"></i> Saved';
         btn.classList.add('btn-success');
         btn.classList.remove('btn-primary');
+        // Remove from sessionStorage
+        persistGeneratedPosts();
         setTimeout(() => {
             btn.innerHTML = '<i class="fas fa-save"></i> Save Draft';
             btn.classList.remove('btn-success');
