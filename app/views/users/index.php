@@ -366,9 +366,14 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
                     <td><span class="badge" style="opacity:0.5"><?= ucfirst(htmlspecialchars($du['role'])) ?></span></td>
                     <td><span class="text-small text-muted">—</span></td>
                     <td>
-                        <button class="btn btn-ghost btn-sm" onclick="restoreUser(<?= $duid ?>, '<?= addslashes($dname) ?>')" style="color:var(--success)">
-                            <i class="fas fa-undo" style="margin-right:4px"></i> Restore
-                        </button>
+                        <div style="display:flex;gap:6px">
+                            <button class="btn btn-ghost btn-sm" onclick="restoreUser(<?= $duid ?>, '<?= addslashes($dname) ?>')" style="color:var(--success)">
+                                <i class="fas fa-undo" style="margin-right:4px"></i> Restore
+                            </button>
+                            <button class="btn btn-ghost btn-sm" onclick="permanentDeleteUser(<?= $duid ?>, '<?= addslashes($dname) ?>')" style="color:var(--danger)">
+                                <i class="fas fa-skull-crossbones" style="margin-right:4px"></i> Permanently Delete
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -726,6 +731,42 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
             .catch(function() {
                 showToast('Network error. Please try again.', 'error');
             });
+        });
+    };
+
+    // ---- Permanently Delete User ----
+    window.permanentDeleteUser = function(id, name) {
+        alertModal(
+            'Permanently Delete User',
+            '<div style="text-align:center">'
+            + '<i class="fas fa-exclamation-triangle" style="font-size:36px;color:var(--danger);margin-bottom:12px"></i>'
+            + '<p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px">This action is irreversible.</p>'
+            + '<p>You are about to permanently delete <strong>' + escHtml(name) + '</strong> and all associated data from the system. This cannot be undone — the account, activity history, and all records will be erased forever.</p>'
+            + '<div style="margin-top:16px;display:flex;gap:8px;justify-content:center">'
+            + '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>'
+            + '<button class="btn" style="background:var(--danger);color:#fff" onclick="closeModal();executePermanentDelete(' + id + ',\'' + escHtml(name).replace(/'/g, "\\'") + '\')"><i class="fas fa-skull-crossbones" style="margin-right:4px"></i> Delete Forever</button>'
+            + '</div></div>',
+            'error'
+        );
+    };
+
+    window.executePermanentDelete = function(id, name) {
+        fetch(BASE + '/users/permanent-delete/' + id, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ csrf_token: CSRF })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                showToast(name + ' has been permanently deleted.', 'success');
+                setTimeout(function() { location.reload(); }, 600);
+            } else {
+                showToast(data.error || 'Failed to delete user.', 'error');
+            }
+        })
+        .catch(function() {
+            showToast('Network error. Please try again.', 'error');
         });
     };
 

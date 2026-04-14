@@ -161,6 +161,42 @@ class UserController extends Controller
         $this->json(['success' => $result]);
     }
 
+    public function permanentDelete(string $id): void
+    {
+        $this->requireRole('admin');
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input || ($input['csrf_token'] ?? '') !== ($_SESSION['csrf_token'] ?? '')) {
+            $this->json(['error' => 'Invalid request.'], 403);
+            return;
+        }
+
+        $userId = (int)$id;
+        $clientId = $GLOBALS['client_id'];
+
+        // Can't delete yourself
+        if ($userId === (int)($_SESSION['user_id'] ?? 0)) {
+            @ob_clean();
+            $this->json(['error' => 'You cannot delete your own account.'], 400);
+            return;
+        }
+
+        // Verify user exists and belongs to this client
+        $user = Database::fetch("SELECT id FROM users WHERE id = :id AND client_id = :cid", ['id' => $userId, 'cid' => $clientId]);
+        if (!$user) {
+            @ob_clean();
+            $this->json(['error' => 'User not found.'], 404);
+            return;
+        }
+
+        // Permanently delete
+        $db = Database::connect();
+        $db->prepare("DELETE FROM users WHERE id = ? AND client_id = ?")->execute([$userId, $clientId]);
+
+        @ob_clean();
+        $this->json(['success' => true]);
+    }
+
     public function resendInvite(string $id): void
     {
         $this->requireRole('admin');
