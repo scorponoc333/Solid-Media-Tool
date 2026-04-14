@@ -170,6 +170,15 @@ class WizardService
         if (!empty($data['primary_color'])) $brandingData['primary_color'] = trim($data['primary_color']);
         if (!empty($data['secondary_color'])) $brandingData['secondary_color'] = trim($data['secondary_color']);
         if (!empty($data['favicon_url'])) $brandingData['favicon_url'] = trim($data['favicon_url']);
+        // Business context fields
+        if (!empty($data['industry'])) $brandingData['industry'] = trim($data['industry']);
+        if (!empty($data['about'])) $brandingData['about_company'] = trim($data['about']);
+        if (!empty($data['services'])) {
+            $brandingData['key_services'] = is_array($data['services']) ? implode(', ', $data['services']) : trim($data['services']);
+        }
+        if (!empty($data['keywords'])) {
+            $brandingData['industry_keywords'] = is_array($data['keywords']) ? implode(', ', $data['keywords']) : trim($data['keywords']);
+        }
         if (!empty($brandingData)) {
             $brandingService->save($clientId, $brandingData);
         }

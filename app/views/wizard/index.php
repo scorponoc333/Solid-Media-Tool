@@ -400,7 +400,13 @@ $isMandatory = $isMandatory ?? false;
         </div>
 
         <div class="wizard-body">
-            <?php if ($isRerun): ?>
+            <?php $isSubsequentAdmin = $isSubsequentAdmin ?? false; ?>
+            <?php if ($isSubsequentAdmin): ?>
+            <div class="rerun-banner" style="background:rgba(var(--primary-rgb),0.08);border-color:var(--primary);color:var(--text)">
+                <i class="fas fa-info-circle" style="color:var(--primary)"></i>
+                <span>This wizard has already been completed by the first administrator. All settings are pre-populated from the existing configuration. You can review and adjust anything, or simply <strong>Cancel</strong> to skip and start using the system.</span>
+            </div>
+            <?php elseif ($isRerun): ?>
             <div class="rerun-banner">
                 <i class="fas fa-exclamation-triangle"></i>
                 Re-running wizard. Your current values are shown as defaults. Changes will override existing settings.
@@ -426,24 +432,19 @@ $isMandatory = $isMandatory ?? false;
                 </div>
                 <div class="form-group">
                     <label class="form-label">Industry</label>
+                    <?php $wizIndustry = $b['industry'] ?? ''; ?>
                     <select id="wiz_industry" class="form-input">
                         <option value="">Select your industry</option>
-                        <option value="Information Technology">Information Technology</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Real Estate">Real Estate</option>
-                        <option value="Education">Education</option>
-                        <option value="Legal">Legal</option>
-                        <option value="Construction">Construction</option>
-                        <option value="Retail">Retail</option>
-                        <option value="Manufacturing">Manufacturing</option>
-                        <option value="Other">Other</option>
+                        <?php foreach (['Information Technology', 'Healthcare', 'Finance', 'Marketing', 'Real Estate', 'Education', 'Legal', 'Construction', 'Retail', 'Manufacturing', 'Other'] as $opt): ?>
+                        <option value="<?= $opt ?>" <?= $wizIndustry === $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
                 <div class="wizard-footer">
-                    <?php if ($isRerun && empty($isMandatory)): ?>
+                    <?php if (!empty($isSubsequentAdmin)): ?>
+                    <a href="<?= BASE_URL ?>/dashboard" class="btn btn-ghost" onclick="sessionStorage.removeItem('needs_wizard')">Skip Wizard</a>
+                    <?php elseif ($isRerun && empty($isMandatory)): ?>
                     <a href="<?= BASE_URL ?>/branding" class="btn btn-ghost">Cancel</a>
                     <?php else: ?>
                     <div></div>
@@ -469,15 +470,15 @@ $isMandatory = $isMandatory ?? false;
 
                     <div class="form-group">
                         <label class="form-label">About Your Company</label>
-                        <textarea id="wiz_about" class="form-textarea" rows="3" placeholder="Brief description of what your company does"></textarea>
+                        <textarea id="wiz_about" class="form-textarea" rows="3" placeholder="Brief description of what your company does"><?= htmlspecialchars($b['about_company'] ?? '') ?></textarea>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Key Services</label>
-                        <input type="text" id="wiz_services" class="form-input" placeholder="Comma-separated services">
+                        <input type="text" id="wiz_services" class="form-input" placeholder="Comma-separated services" value="<?= htmlspecialchars($b['key_services'] ?? '') ?>">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Industry Keywords</label>
-                        <input type="text" id="wiz_keywords" class="form-input" placeholder="Comma-separated keywords for social media">
+                        <input type="text" id="wiz_keywords" class="form-input" placeholder="Comma-separated keywords for social media" value="<?= htmlspecialchars($b['industry_keywords'] ?? '') ?>">
                     </div>
                 </div>
 

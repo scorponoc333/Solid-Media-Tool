@@ -15,13 +15,21 @@ class WizardController extends Controller
         $strategyService = new ContentStrategyService();
         $existingThemes = $strategyService->getThemes($clientId);
 
-        $isMandatory = !empty($_SESSION['needs_wizard']);
+        $wizardService = new WizardService();
+        $setupComplete = $wizardService->isSetupComplete($clientId);
+        $isNewAdmin = !empty($_SESSION['needs_wizard']);
+
+        // First admin ever: mandatory, can't cancel
+        // Subsequent admins: wizard shown but can cancel
+        $isMandatory = $isNewAdmin && !$setupComplete;
+        $isSubsequentAdmin = $isNewAdmin && $setupComplete;
 
         $this->view('wizard/index', [
             'pageTitle' => 'Setup Wizard',
             'branding' => $branding,
-            'isRerun' => $isRerun,
+            'isRerun' => $isRerun || $isSubsequentAdmin,
             'isMandatory' => $isMandatory,
+            'isSubsequentAdmin' => $isSubsequentAdmin,
             'existingThemes' => $existingThemes,
         ]);
     }

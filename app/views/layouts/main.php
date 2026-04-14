@@ -13,8 +13,25 @@ $currentPath = $currentPath ?: '/';
 
 // Admin first-time: force wizard before anything else
 if (!empty($_SESSION['needs_wizard']) && $_SESSION['role'] === 'admin' && $currentPath !== '/wizard') {
-    header('Location: ' . BASE_URL . '/wizard');
-    exit;
+    $wizService = new WizardService();
+    if (!$wizService->isSetupComplete($GLOBALS['client_id'])) {
+        // First admin ever — must complete wizard
+        header('Location: ' . BASE_URL . '/wizard');
+        exit;
+    } else {
+        // Subsequent admin — redirect to wizard but they can cancel
+        // Only redirect once (not in a loop)
+        if (empty($_SESSION['wizard_shown'])) {
+            $_SESSION['wizard_shown'] = true;
+            header('Location: ' . BASE_URL . '/wizard');
+            exit;
+        } else {
+            // They've been shown the wizard — clear flag, start tour
+            unset($_SESSION['needs_wizard']);
+            unset($_SESSION['wizard_shown']);
+            $_SESSION['needs_tour'] = true;
+        }
+    }
 }
 
 $darkMode = $_COOKIE['darkMode'] ?? 'false';

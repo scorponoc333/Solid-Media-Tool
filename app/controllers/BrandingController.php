@@ -35,6 +35,10 @@ class BrandingController extends Controller
             'tagline' => trim($_POST['tagline'] ?? ''),
             'website' => trim($_POST['website'] ?? ''),
             'phone' => trim($_POST['phone'] ?? ''),
+            'industry' => trim($_POST['industry'] ?? ''),
+            'about_company' => trim($_POST['about_company'] ?? ''),
+            'key_services' => trim($_POST['key_services'] ?? ''),
+            'industry_keywords' => trim($_POST['industry_keywords'] ?? ''),
             'first_comment' => trim($_POST['first_comment'] ?? ''),
             'particles_enabled' => isset($_POST['particles_enabled']) ? 1 : 0,
         ];

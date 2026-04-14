@@ -4,6 +4,10 @@ $companyName = htmlspecialchars($b['company_name'] ?? '');
 $tagline = htmlspecialchars($b['tagline'] ?? '');
 $website = htmlspecialchars($b['website'] ?? '');
 $phone = htmlspecialchars($b['phone'] ?? '');
+$industry = htmlspecialchars($b['industry'] ?? '');
+$aboutCompany = htmlspecialchars($b['about_company'] ?? '');
+$keyServices = htmlspecialchars($b['key_services'] ?? '');
+$industryKeywords = htmlspecialchars($b['industry_keywords'] ?? '');
 $firstComment = htmlspecialchars($b['first_comment'] ?? '');
 $primaryColor = htmlspecialchars($b['primary_color'] ?? '#6366f1');
 $secondaryColor = htmlspecialchars($b['secondary_color'] ?? '#8b5cf6');
@@ -351,6 +355,31 @@ $csrfToken = $_SESSION['csrf_token'];
                 <div class="form-group">
                     <label class="form-label" for="phone">Phone Number</label>
                     <input type="text" id="phone" name="phone" class="form-input" value="<?= $phone ?>" placeholder="e.g. 587-557-1234">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="industry">Industry</label>
+                    <select id="industry" name="industry" class="form-input">
+                        <option value="">Select your industry</option>
+                        <?php foreach (['Information Technology', 'Healthcare', 'Finance & Banking', 'Real Estate', 'Education', 'Retail & E-commerce', 'Manufacturing', 'Legal', 'Marketing & Advertising', 'Construction', 'Other'] as $opt): ?>
+                        <option value="<?= $opt ?>" <?= $industry === $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="about_company">About Your Company <span style="font-weight:400;color:var(--text-muted)">(used by AI for context)</span></label>
+                    <textarea id="about_company" name="about_company" class="form-textarea" rows="3" placeholder="A brief description of what your company does and who you serve"><?= $aboutCompany ?></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="key_services">Key Services <span style="font-weight:400;color:var(--text-muted)">(comma-separated)</span></label>
+                    <input type="text" id="key_services" name="key_services" class="form-input" value="<?= $keyServices ?>" placeholder="e.g. Managed IT, Cybersecurity, Cloud Solutions">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="industry_keywords">Industry Keywords <span style="font-weight:400;color:var(--text-muted)">(comma-separated, used by AI)</span></label>
+                    <input type="text" id="industry_keywords" name="industry_keywords" class="form-input" value="<?= $industryKeywords ?>" placeholder="e.g. IT support, network security, HIPAA compliance">
                 </div>
 
                 <div class="form-group">
