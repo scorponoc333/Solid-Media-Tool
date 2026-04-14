@@ -288,16 +288,39 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
 <!-- Toast Container -->
 <div id="toast-container"></div>
 
-<!-- Forced Password Change Lightbox -->
+<!-- Forced Password Change — Cinematic Flow -->
 <?php if (!empty($_SESSION['must_change_password'])): ?>
-<div id="pwChangeOverlay" style="position:fixed;inset:0;z-index:99990;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center">
-    <div style="background:var(--bg-card);border-radius:24px;max-width:420px;width:92%;padding:32px;box-shadow:0 24px 80px rgba(0,0,0,0.4);animation:wizSlideUp 0.5s cubic-bezier(0.34,1.56,0.64,1)">
-        <div style="text-align:center;margin-bottom:20px">
-            <div style="width:56px;height:56px;border-radius:50%;background:<?= $primaryColor ?>;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-                <i class="fas fa-lock" style="color:#fff;font-size:22px"></i>
+
+<!-- Phase 1: Intro gradient with lock + atom -->
+<div id="pwIntroOverlay" style="position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(165deg,<?= $primaryColor ?> 0%,color-mix(in srgb,<?= $primaryColor ?> 35%,#0a0a0a) 55%,#0a0a0a 100%);opacity:1;overflow:hidden">
+    <!-- Atom orbits -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;height:280px;pointer-events:none">
+        <div style="position:absolute;width:300px;height:110px;top:calc(50% - 55px);left:calc(50% - 150px);border:1.5px solid rgba(255,255,255,0.1);border-radius:50%;animation:cinSpin 7s linear infinite"><div style="position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;top:-3px;left:calc(50% - 3px);box-shadow:0 0 12px rgba(255,255,255,0.7)"></div></div>
+        <div style="position:absolute;width:260px;height:90px;top:calc(50% - 45px);left:calc(50% - 130px);border:1.5px solid rgba(255,255,255,0.08);border-radius:50%;animation:cinSpin 5s linear infinite reverse;transform:rotate(55deg)"><div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2.5px;left:calc(50% - 2.5px);box-shadow:0 0 10px rgba(255,255,255,0.6)"></div></div>
+        <div style="position:absolute;width:80px;height:250px;top:calc(50% - 125px);left:calc(50% - 40px);border:1.5px solid rgba(255,255,255,0.06);border-radius:50%;animation:cinSpin 9s linear infinite;transform:rotate(25deg)"><div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2.5px;left:calc(50% - 2.5px);box-shadow:0 0 10px rgba(255,255,255,0.5)"></div></div>
+    </div>
+    <!-- Pulse rings -->
+    <div style="position:absolute;top:50%;left:50%;width:100px;height:100px;margin:-50px 0 0 -50px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);animation:tbPulse 2.4s ease-out infinite;pointer-events:none"></div>
+    <div style="position:absolute;top:50%;left:50%;width:100px;height:100px;margin:-50px 0 0 -50px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);animation:tbPulse 2.4s ease-out infinite 0.8s;pointer-events:none"></div>
+    <!-- Center content -->
+    <div style="position:relative;z-index:10;text-align:center">
+        <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;animation:tbIconIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s both">
+            <svg width="28" height="28" viewBox="0 0 448 512" fill="#fff"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></svg>
+        </div>
+        <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;opacity:0;animation:tbTextIn 0.4s ease 0.5s forwards">Password Reset Required</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.5);opacity:0;animation:tbTextIn 0.4s ease 0.7s forwards" id="pwIntroSub">Securing your account...</div>
+    </div>
+</div>
+
+<!-- Phase 2: Password form lightbox -->
+<div id="pwChangeOverlay" style="position:fixed;inset:0;z-index:99991;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center">
+    <div style="background:var(--bg-card);border-radius:24px;max-width:420px;width:92%;padding:36px;box-shadow:0 24px 80px rgba(0,0,0,0.4);animation:wizSlideUp 0.5s cubic-bezier(0.34,1.56,0.64,1)">
+        <div style="text-align:center;margin-bottom:24px">
+            <div style="width:56px;height:56px;border-radius:50%;background:<?= $primaryColor ?>;display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+                <svg width="22" height="22" viewBox="0 0 448 512" fill="#fff"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></svg>
             </div>
-            <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px">Change Your Password</h3>
-            <p style="font-size:13px;color:var(--text-muted)">You must set a new password before continuing</p>
+            <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px">Set Your New Password</h3>
+            <p style="font-size:13px;color:var(--text-muted)">Choose a strong password to secure your account</p>
         </div>
         <div class="form-group">
             <label class="form-label" for="pw_new">New Password</label>
@@ -307,44 +330,114 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
             <label class="form-label" for="pw_confirm">Confirm Password</label>
             <input type="password" id="pw_confirm" class="form-input" placeholder="Re-enter password">
         </div>
-        <button class="btn btn-primary w-full" id="pwChangeBtn" onclick="submitPasswordChange()" style="margin-top:8px">
+        <button class="btn btn-primary w-full" id="pwChangeBtn" onclick="submitPasswordChange()" style="margin-top:8px;position:relative;overflow:hidden">
             <i class="fas fa-check"></i> Set New Password
+            <span style="position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);animation:alertShine 3s ease 1s infinite"></span>
         </button>
     </div>
 </div>
-<style>@keyframes wizSlideUp { from { transform: translateY(40px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }</style>
+
+<!-- Phase 3: Saving overlay -->
+<div id="pwSavingOverlay" style="position:fixed;inset:0;z-index:99992;display:none;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(165deg,<?= $primaryColor ?> 0%,color-mix(in srgb,<?= $primaryColor ?> 35%,#0a0a0a) 55%,#0a0a0a 100%)">
+    <div style="position:relative;z-index:10;text-align:center">
+        <div style="width:48px;height:48px;border:2.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.7);border-radius:50%;animation:cinSpin 0.7s linear infinite;margin:0 auto 16px"></div>
+        <div style="font-size:16px;font-weight:600;color:rgba(255,255,255,0.7)">Updating your password...</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:6px">One moment please</div>
+    </div>
+</div>
+
+<!-- Phase 4: Success lightbox -->
+<div id="pwSuccessOverlay" style="position:fixed;inset:0;z-index:99993;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px)">
+    <div style="background:var(--bg-card);border-radius:24px;max-width:380px;width:90%;padding:36px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.4);animation:wizSlideUp 0.5s cubic-bezier(0.34,1.56,0.64,1)">
+        <div style="width:56px;height:56px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <i class="fas fa-check" style="color:#fff;font-size:24px"></i>
+        </div>
+        <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px">Password Updated</h3>
+        <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px">Your password has been successfully updated. You can now close this window.</p>
+        <button class="btn btn-primary" onclick="dismissPwSuccess()" style="padding:12px 32px;position:relative;overflow:hidden">
+            OK
+            <span style="position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:alertShine 3s ease 0.5s infinite"></span>
+        </button>
+    </div>
+</div>
+
+<style>
+@keyframes wizSlideUp { from { transform: translateY(40px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+@keyframes alertShine { 0%{left:-100%} 30%{left:100%} 100%{left:100%} }
+@keyframes tbPulse { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(3);opacity:0} }
+@keyframes tbIconIn { to{opacity:1;transform:scale(1)} }
+@keyframes tbTextIn { to{opacity:1} }
+</style>
 <script>
+(function() {
+    // Phase 1: Show intro for 2 seconds with cycling text
+    var introSub = document.getElementById('pwIntroSub');
+    var introMsgs = ['Securing your account...', 'Preparing password reset...', 'Almost ready...'];
+    var iIdx = 0;
+    var introTimer = setInterval(function() {
+        iIdx++;
+        if (iIdx < introMsgs.length) {
+            introSub.style.opacity = '0';
+            setTimeout(function() {
+                introSub.textContent = introMsgs[iIdx];
+                introSub.style.opacity = '1';
+            }, 200);
+        }
+    }, 700);
+
+    // After 2s, fade intro and show form
+    setTimeout(function() {
+        clearInterval(introTimer);
+        var intro = document.getElementById('pwIntroOverlay');
+        intro.style.transition = 'opacity 0.4s ease';
+        intro.style.opacity = '0';
+        setTimeout(function() {
+            intro.style.display = 'none';
+            var form = document.getElementById('pwChangeOverlay');
+            form.style.display = 'flex';
+        }, 400);
+    }, 2000);
+})();
+
 function submitPasswordChange() {
     var newPw = document.getElementById('pw_new').value;
-    var confirm = document.getElementById('pw_confirm').value;
+    var confirmPw = document.getElementById('pw_confirm').value;
     if (newPw.length < 8) { showToast('Password must be at least 8 characters', 'warning'); return; }
-    if (newPw !== confirm) { showToast('Passwords do not match', 'warning'); return; }
+    if (newPw !== confirmPw) { showToast('Passwords do not match', 'warning'); return; }
 
-    var btn = document.getElementById('pwChangeBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    // Show saving overlay
+    document.getElementById('pwChangeOverlay').style.display = 'none';
+    var saving = document.getElementById('pwSavingOverlay');
+    saving.style.display = 'flex';
 
     fetch('<?= BASE_URL ?>/auth/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ new_password: newPw, confirm_password: confirm, csrf_token: '<?= $_SESSION['csrf_token'] ?? '' ?>' })
+        body: JSON.stringify({ new_password: newPw, confirm_password: confirmPw, csrf_token: '<?= $_SESSION['csrf_token'] ?? '' ?>' })
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
         if (data.success) {
-            document.getElementById('pwChangeOverlay').style.display = 'none';
-            showToast('Password updated!', 'success');
+            // Show saving for 1.5s, then show success
+            setTimeout(function() {
+                saving.style.display = 'none';
+                document.getElementById('pwSuccessOverlay').style.display = 'flex';
+            }, 1500);
         } else {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-check"></i> Set New Password';
+            saving.style.display = 'none';
+            document.getElementById('pwChangeOverlay').style.display = 'flex';
             showToast(data.error || 'Failed to update password', 'error');
         }
     })
     .catch(function() {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-check"></i> Set New Password';
+        saving.style.display = 'none';
+        document.getElementById('pwChangeOverlay').style.display = 'flex';
         showToast('Network error', 'error');
     });
+}
+
+function dismissPwSuccess() {
+    document.getElementById('pwSuccessOverlay').style.display = 'none';
 }
 </script>
 <?php endif; ?>

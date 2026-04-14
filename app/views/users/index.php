@@ -311,12 +311,10 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
                                 <button class="btn btn-ghost btn-sm btn-icon" title="Edit" onclick="openEditModal(<?= $uid ?>)">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <?php if (!empty($user['must_change_password'])): ?>
-                                <button class="btn btn-ghost btn-sm btn-icon" title="Resend Invite" onclick="resendInvite(<?= $uid ?>, '<?= addslashes($fname ?: $uname) ?>')">
+                                <?php if ($uid !== (int)($_SESSION['user_id'] ?? 0)): ?>
+                                <button class="btn btn-ghost btn-sm btn-icon" title="Reset Password (Email)" onclick="resendInvite(<?= $uid ?>, '<?= addslashes($fname ?: $uname) ?>')">
                                     <i class="fas fa-paper-plane"></i>
                                 </button>
-                                <?php endif; ?>
-                                <?php if ($uid !== (int)($_SESSION['user_id'] ?? 0)): ?>
                                 <button class="btn btn-ghost btn-sm btn-icon" title="<?= $uactive ? 'Deactivate' : 'Activate' ?>" onclick="deactivateUser(<?= $uid ?>, '<?= addslashes($fname ?: $uname) ?>', <?= $uactive ?>)">
                                     <i class="fas fa-<?= $uactive ? 'ban' : 'check-circle' ?>" style="<?= $uactive ? 'color:var(--danger)' : 'color:var(--success)' ?>"></i>
                                 </button>

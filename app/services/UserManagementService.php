@@ -130,7 +130,7 @@ class UserManagementService
             $branding['logo_url'] ?? '',
             $branding['primary_color'] ?? '#6366f1',
             $branding['company_name'] ?? APP_NAME,
-            $user['first_name'] ?: $user['username'],
+            $user['email'] ?: $user['username'],
             $tempPassword,
             BASE_URL . '/login'
         );
