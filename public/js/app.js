@@ -142,25 +142,44 @@ function toggleNavGroup(btn) {
 function toggleSidebar() {
     var sidebar = document.getElementById('sidebar');
     var wrapper = document.querySelector('.main-wrapper');
-    var isCollapsing = !sidebar.classList.contains('collapsed');
+    var isMobile = window.innerWidth <= 768;
 
-    sidebar.classList.toggle('collapsed');
-    wrapper.classList.toggle('sidebar-collapsed');
+    if (isMobile) {
+        // Mobile: off-canvas toggle
+        var backdrop = document.getElementById('sidebarBackdrop');
+        if (sidebar.classList.contains('mobile-open')) {
+            closeMobileSidebar();
+        } else {
+            sidebar.classList.add('mobile-open');
+            backdrop.classList.add('visible');
+        }
+    } else {
+        // Desktop: collapse toggle
+        var isCollapsing = !sidebar.classList.contains('collapsed');
+        sidebar.classList.toggle('collapsed');
+        wrapper.classList.toggle('sidebar-collapsed');
 
-    // Shine effect on the collapsed initial circle when collapsing
-    if (isCollapsing) {
-        setTimeout(function() {
-            var initial = sidebar.querySelector('.sidebar-collapsed-initial');
-            if (initial) {
-                initial.style.boxShadow = '0 0 0 2px rgba(255,255,255,0.35), 0 0 20px rgba(255,255,255,0.15)';
-                setTimeout(function() {
-                    initial.style.transition = 'box-shadow 0.8s ease, opacity 0.3s ease 0.1s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s';
-                    initial.style.boxShadow = 'none';
-                    setTimeout(function() { initial.style.transition = ''; }, 800);
-                }, 500);
-            }
-        }, 250);
+        if (isCollapsing) {
+            setTimeout(function() {
+                var initial = sidebar.querySelector('.sidebar-collapsed-initial');
+                if (initial) {
+                    initial.style.boxShadow = '0 0 0 2px rgba(255,255,255,0.35), 0 0 20px rgba(255,255,255,0.15)';
+                    setTimeout(function() {
+                        initial.style.transition = 'box-shadow 0.8s ease, opacity 0.3s ease 0.1s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s';
+                        initial.style.boxShadow = 'none';
+                        setTimeout(function() { initial.style.transition = ''; }, 800);
+                    }, 500);
+                }
+            }, 250);
+        }
     }
+}
+
+function closeMobileSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var backdrop = document.getElementById('sidebarBackdrop');
+    sidebar.classList.remove('mobile-open');
+    backdrop.classList.remove('visible');
 }
 
 // ---- AJAX Helper ----
@@ -195,6 +214,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const theme = document.documentElement.getAttribute('data-theme') || 'light';
     updateThemeIcon(theme);
     initConstellation();
+
+    // Mobile: close sidebar when a nav link is clicked
+    document.querySelectorAll('.sidebar .nav-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            if (window.innerWidth <= 768) closeMobileSidebar();
+        });
+    });
 });
 
 /* Constellation / geometry network behind sidebar logo */

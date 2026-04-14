@@ -58,6 +58,8 @@ $secB = hexdec(substr(ltrim($secondaryColor, '#'), 4, 2));
 <body>
 
 <div class="app-layout">
+    <!-- Mobile sidebar backdrop -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
@@ -796,12 +798,31 @@ document.addEventListener('DOMContentLoaded', function() { GenTracker.init(); })
 <script>
 (function(){
 var eeActive = false;
+// Desktop: Ctrl+Shift+J
 document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.shiftKey && e.key === 'J') {
         e.preventDefault();
         if (eeActive) return;
         eeActive = true;
         launchEasterEgg();
+    }
+});
+// Mobile: Triple-tap on the page title in the topbar
+var eeTapCount = 0, eeTapTimer = null;
+document.addEventListener('DOMContentLoaded', function() {
+    var title = document.querySelector('.topbar-title');
+    if (title) {
+        title.addEventListener('click', function() {
+            eeTapCount++;
+            if (eeTapCount === 1) {
+                eeTapTimer = setTimeout(function() { eeTapCount = 0; }, 800);
+            }
+            if (eeTapCount >= 3) {
+                clearTimeout(eeTapTimer);
+                eeTapCount = 0;
+                if (!eeActive) { eeActive = true; launchEasterEgg(); }
+            }
+        });
     }
 });
 
