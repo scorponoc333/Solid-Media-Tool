@@ -1369,7 +1369,7 @@ function getContentChangePercent() {
     return Math.round((1 - similarity) * 100);
 }
 
-async function critiquePost() {
+function critiquePost() {
     var content = document.getElementById('edit-content').value.trim();
     if (!content) { showToast('Enter some content first', 'warning'); return; }
 
@@ -1404,14 +1404,13 @@ async function critiquePost() {
     panel.style.display = 'block';
     panel.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)"><i class="fas fa-spinner fa-spin" style="font-size:20px;margin-bottom:8px;display:block"></i>Running AI-powered content analysis...</div>';
 
-    try {
-        var res = await fetch(BASE + '/content-strategy/critique', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: content, csrf_token: csrfToken() })
-        });
-        var data = await res.json();
-
+    fetch(BASE + '/content-strategy/critique', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: content, csrf_token: csrfToken() })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
         panel.style.display = 'block';
         var html = '';
         if (data.strengths && data.strengths.length) {
@@ -1439,13 +1438,15 @@ async function critiquePost() {
         }
         panel.innerHTML = html || '<div style="color:var(--text-muted)">No feedback available.</div>';
         panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } catch (err) {
+    })
+    .catch(function(err) {
         panel.style.display = 'block';
         panel.innerHTML = '<div style="color:var(--danger)"><i class="fas fa-exclamation-circle" style="margin-right:4px"></i> Analysis failed: ' + (err.message || 'Try again.') + '</div>';
-    } finally {
+    })
+    .finally(function() {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-robot"></i> AI Critique';
-    }
+    });
 }
 
 // Platform checkbox toggle — sync .selected class with checkbox state
