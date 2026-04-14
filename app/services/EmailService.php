@@ -44,28 +44,7 @@ class EmailService
             return ['success' => false, 'error' => 'SMTP host or user not configured'];
         }
 
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-        $headers .= "From: {$fromName} <{$fromEmail}>\r\n";
-        $headers .= "Reply-To: {$fromEmail}\r\n";
-        $headers .= "X-Mailer: SolidSocial/1.0\r\n";
-
-        // Try PHP's mail() with custom SMTP ini settings
-        $prevHost = ini_get('SMTP');
-        $prevPort = ini_get('smtp_port');
-        ini_set('SMTP', $host);
-        ini_set('smtp_port', $port);
-
-        $sent = @mail($to, $subject, $htmlBody, $headers);
-
-        ini_set('SMTP', $prevHost);
-        ini_set('smtp_port', $prevPort);
-
-        if ($sent) {
-            return ['success' => true];
-        }
-
-        // Fallback: try fsockopen-based SMTP
+        // Always use authenticated SMTP socket (mail() silently fails on shared hosting)
         return $this->sendSmtpSocket($host, $port, $user, $pass, $encryption, $fromEmail, $fromName, $to, $subject, $htmlBody);
     }
 
