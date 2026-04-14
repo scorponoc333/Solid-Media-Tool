@@ -724,6 +724,7 @@ $firstName = htmlspecialchars($_SESSION['first_name'] ?? '');
 </div>
 
 <script>
+(function() {
 const BASE = '<?= rtrim(BASE_URL, '/') ?>';
 const postId = document.getElementById('post-id').value;
 const csrfToken = () => document.getElementById('csrf-token').value;
@@ -1449,5 +1450,14 @@ function critiquePost() {
     });
 }
 
-
+// Expose functions to global scope for onclick handlers
+window.savePost = savePost;
+window.schedulePost = schedulePost;
+window.postNow = postNow;
+window.retryPost = retryPost;
+window.deletePost = deletePost;
+window.regenerateImage = regenerateImage;
+window.critiquePost = critiquePost;
+window.loadPostLogs = loadPostLogs;
+})();
 </script>
