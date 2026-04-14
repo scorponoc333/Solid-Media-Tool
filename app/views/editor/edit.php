@@ -1400,20 +1400,9 @@ async function critiquePost() {
     }
 
     btn.disabled = true;
-
-    // Show the posting lightbox as an analysis animation
-    showPostingLightbox(['Analysis']);
-    postingTitle.textContent = 'Analyzing your post';
-    postingSubtitle.textContent = 'Running AI-powered content analysis...';
-
-    var analysisMsgs = ['Scanning content structure...', 'Evaluating tone & messaging...', 'Checking engagement elements...', 'Crafting improved version...'];
-    var amIdx = 0;
-    var amInterval = setInterval(function() {
-        amIdx++;
-        if (amIdx < analysisMsgs.length) {
-            postingSubtitle.textContent = analysisMsgs[amIdx];
-        }
-    }, 900);
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+    panel.style.display = 'block';
+    panel.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)"><i class="fas fa-spinner fa-spin" style="font-size:20px;margin-bottom:8px;display:block"></i>Running AI-powered content analysis...</div>';
 
     try {
         var res = await fetch(BASE + '/content-strategy/critique', {
@@ -1422,14 +1411,6 @@ async function critiquePost() {
             body: JSON.stringify({ content: content, csrf_token: csrfToken() })
         });
         var data = await res.json();
-
-        clearInterval(amInterval);
-
-        // Keep lightbox for at least 2.5s
-        await new Promise(function(resolve) { setTimeout(resolve, 2500); });
-        hidePostingLightbox(true, 'Analysis');
-
-        await new Promise(function(resolve) { setTimeout(resolve, 600); });
 
         panel.style.display = 'block';
         var html = '';
@@ -1459,10 +1440,8 @@ async function critiquePost() {
         panel.innerHTML = html || '<div style="color:var(--text-muted)">No feedback available.</div>';
         panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
-        clearInterval(amInterval);
-        hidePostingLightbox(false, 'Analysis');
         panel.style.display = 'block';
-        panel.innerHTML = '<div style="color:var(--danger)">Analysis failed. Try again.</div>';
+        panel.innerHTML = '<div style="color:var(--danger)"><i class="fas fa-exclamation-circle" style="margin-right:4px"></i> Analysis failed: ' + (err.message || 'Try again.') + '</div>';
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-robot"></i> AI Critique';
