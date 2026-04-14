@@ -424,6 +424,10 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
                 <?php endif; ?>
             </select>
         </div>
+        <div class="form-group">
+            <label class="form-label" for="edit-password">New Password <span style="font-weight:400;color:var(--text-muted)">(leave blank to keep current)</span></label>
+            <input type="password" id="edit-password" class="form-input" placeholder="Min 8 characters (optional)">
+        </div>
         <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
             <button class="btn btn-ghost" onclick="closeEditModal()">Cancel</button>
             <button class="btn btn-primary" onclick="updateUser()" id="updateBtn">
@@ -518,6 +522,7 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
         document.getElementById('edit-first-name').value = row.getAttribute('data-first-name') || '';
         document.getElementById('edit-email').value = row.getAttribute('data-email') || '';
         document.getElementById('edit-role').value = row.getAttribute('data-role') || 'editor';
+        document.getElementById('edit-password').value = '';
         document.getElementById('editModal').classList.add('visible');
     };
 
@@ -530,20 +535,29 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
         var firstName = document.getElementById('edit-first-name').value.trim();
         var email = document.getElementById('edit-email').value.trim();
         var role = document.getElementById('edit-role').value;
+        var newPassword = document.getElementById('edit-password').value;
+
+        if (newPassword && newPassword.length < 8) {
+            showToast('Password must be at least 8 characters', 'warning');
+            return;
+        }
 
         var btn = document.getElementById('updateBtn');
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
+        var payload = {
+            first_name: firstName,
+            email: email,
+            role: role,
+            csrf_token: CSRF
+        };
+        if (newPassword) payload.new_password = newPassword;
+
         fetch(BASE + '/users/update/' + userId, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                first_name: firstName,
-                email: email,
-                role: role,
-                csrf_token: CSRF
-            })
+            body: JSON.stringify(payload)
         })
         .then(function(r) { return r.json(); })
         .then(function(data) {

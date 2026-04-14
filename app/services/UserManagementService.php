@@ -77,6 +77,13 @@ class UserManagementService
 
         $allowed = ['first_name', 'email', 'role', 'is_active'];
         $filtered = array_intersect_key($data, array_flip($allowed));
+
+        // Handle optional password change
+        if (!empty($data['new_password']) && strlen($data['new_password']) >= 8) {
+            $filtered['password'] = password_hash($data['new_password'], PASSWORD_BCRYPT);
+            $filtered['must_change_password'] = 0;
+        }
+
         if (empty($filtered)) return false;
 
         $this->userModel->update($userId, $filtered);
