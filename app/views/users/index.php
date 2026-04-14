@@ -736,18 +736,40 @@ $uPrimary = $brandData['primary_color'] ?? '#6366f1';
 
     // ---- Permanently Delete User ----
     window.permanentDeleteUser = function(id, name) {
-        alertModal(
-            'Permanently Delete User',
-            '<div style="text-align:center">'
-            + '<i class="fas fa-exclamation-triangle" style="font-size:36px;color:var(--danger);margin-bottom:12px"></i>'
-            + '<p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px">This action is irreversible.</p>'
-            + '<p>You are about to permanently delete <strong>' + escHtml(name) + '</strong> and all associated data from the system. This cannot be undone — the account, activity history, and all records will be erased forever.</p>'
-            + '<div style="margin-top:16px;display:flex;gap:8px;justify-content:center">'
-            + '<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>'
-            + '<button class="btn" style="background:var(--danger);color:#fff" onclick="closeModal();executePermanentDelete(' + id + ',\'' + escHtml(name).replace(/'/g, "\\'") + '\')"><i class="fas fa-skull-crossbones" style="margin-right:4px"></i> Delete Forever</button>'
-            + '</div></div>',
-            'error'
-        );
+        closeModal();
+        var primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#8B1A1A';
+
+        // Build cinematic overlay
+        var overlay = document.createElement('div');
+        overlay.id = 'permDeleteOverlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);opacity:0;transition:opacity 0.3s ease';
+
+        overlay.innerHTML = '<div style="background:linear-gradient(165deg,' + primary + ' 0%,color-mix(in srgb,' + primary + ' 30%,#0a0a0a) 55%,#0a0a0a 100%);border-radius:24px;max-width:440px;width:92%;padding:44px 36px;text-align:center;position:relative;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.6)">'
+            // Atom orbits
+            + '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:200px;height:200px;pointer-events:none">'
+            + '<div style="position:absolute;width:220px;height:80px;top:calc(50% - 40px);left:calc(50% - 110px);border:1.5px solid rgba(255,255,255,0.08);border-radius:50%;animation:cinSpin 6s linear infinite"><div style="position:absolute;width:5px;height:5px;background:#fff;border-radius:50%;top:-2.5px;left:calc(50% - 2.5px);box-shadow:0 0 10px rgba(255,255,255,0.6)"></div></div>'
+            + '<div style="position:absolute;width:190px;height:70px;top:calc(50% - 35px);left:calc(50% - 95px);border:1.5px solid rgba(255,255,255,0.06);border-radius:50%;animation:cinSpin 4.5s linear infinite reverse;transform:rotate(55deg)"><div style="position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.5)"></div></div>'
+            + '<div style="position:absolute;width:60px;height:180px;top:calc(50% - 90px);left:calc(50% - 30px);border:1.5px solid rgba(255,255,255,0.05);border-radius:50%;animation:cinSpin 8s linear infinite;transform:rotate(25deg)"><div style="position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;top:-2px;left:calc(50% - 2px);box-shadow:0 0 8px rgba(255,255,255,0.4)"></div></div>'
+            + '</div>'
+            // Pulse rings
+            + '<div style="position:absolute;top:35%;left:50%;width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;border:2px solid rgba(255,255,255,0.12);animation:tbPulse 2.4s ease-out infinite;pointer-events:none"></div>'
+            + '<div style="position:absolute;top:35%;left:50%;width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;border:2px solid rgba(255,255,255,0.12);animation:tbPulse 2.4s ease-out infinite 0.8s;pointer-events:none"></div>'
+            // Trash icon
+            + '<div style="position:relative;z-index:10;width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 0 20px rgba(255,255,255,0.08)">'
+            + '<i class="fas fa-trash-alt" style="color:#fff;font-size:28px;filter:drop-shadow(0 0 8px rgba(255,255,255,0.4))"></i></div>'
+            // Text
+            + '<div style="position:relative;z-index:10">'
+            + '<h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:6px">Permanent Deletion</h3>'
+            + '<p style="font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:8px">You are about to permanently erase <strong style="color:#fff">' + escHtml(name) + '</strong> from the system.</p>'
+            + '<p style="font-size:12px;color:rgba(239,100,100,0.7);margin-bottom:24px">This cannot be undone. All account data will be destroyed forever.</p>'
+            + '<div style="display:flex;gap:10px;justify-content:center">'
+            + '<button onclick="document.getElementById(\'permDeleteOverlay\').style.opacity=\'0\';setTimeout(function(){document.getElementById(\'permDeleteOverlay\').remove()},300)" style="padding:12px 28px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.2s" onmouseover="this.style.background=\'rgba(255,255,255,0.18)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.1)\'">Cancel</button>'
+            + '<button onclick="document.getElementById(\'permDeleteOverlay\').style.opacity=\'0\';setTimeout(function(){document.getElementById(\'permDeleteOverlay\').remove()},300);executePermanentDelete(' + id + ',\'' + escHtml(name).replace(/'/g, "\\'") + '\')" style="padding:12px 28px;background:rgba(239,68,68,0.8);border:1px solid rgba(239,68,68,0.9);color:#fff;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;position:relative;overflow:hidden;transition:all 0.2s" onmouseover="this.style.background=\'rgba(239,68,68,1)\'" onmouseout="this.style.background=\'rgba(239,68,68,0.8)\'"><i class="fas fa-trash-alt" style="margin-right:6px"></i>Delete Forever<span style="position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);animation:alertShine 3s ease 0.5s infinite"></span></button>'
+            + '</div></div>'
+            + '</div>';
+
+        document.body.appendChild(overlay);
+        requestAnimationFrame(function() { overlay.style.opacity = '1'; });
     };
 
     window.executePermanentDelete = function(id, name) {
